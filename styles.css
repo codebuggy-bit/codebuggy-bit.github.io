@@ -30,19 +30,26 @@
   --tap:     44px;                   /* minimum comfortable touch target */
 }
 
-/* ---------- Light ---------- */
+/* ---------- Light ----------
+   Note the direction of the two text tokens. On the dark theme secondary text
+   is lighter than body text; on the light theme it has to be lighter too, or
+   the hierarchy inverts and dates, captions and descriptions shout louder than
+   the prose they belong to. #55504a measures 7.6:1 on #fafafa, so it is still
+   WCAG AAA and still clearly quieter than the 14.3:1 body text. */
 [data-theme="light"] {
   --accent-color:        #96000f;
   --link-hover-color:    #003ACE;
   --link-visited-color:  #6a60b0;
   --font-color:          #2a2722;
-  --light-font-color:    #111111;
+  --light-font-color:    #55504a;
   --bold-color:          #000;
   --background-color:    #fafafa;
   --light-background-color: rgb(226, 226, 226);
   --link-underline-color: rgb(0, 0, 50);
   --edge:                rgba(42, 39, 34, 0.22);
-  --rain-opacity:        0.15;
+  /* Dark-on-light text already reads heavier than light-on-dark, so the rain
+     needs less of it. Deep red behind dark glyphs turns into smudges. */
+  --rain-opacity:        0.11;
   --rain-blur:           6.5px;
 }
 @media (prefers-color-scheme: light) {
@@ -51,13 +58,13 @@
     --link-hover-color:    #003ACE;
     --link-visited-color:  #6a60b0;
     --font-color:          #2a2722;
-    --light-font-color:    #111111;
+    --light-font-color:    #55504a;
     --bold-color:          #000;
     --background-color:    #fafafa;
     --light-background-color: rgb(226, 226, 226);
     --link-underline-color: rgb(0, 0, 50);
     --edge:                rgba(42, 39, 34, 0.22);
-    --rain-opacity:        0.15;
+    --rain-opacity:        0.11;
     --rain-blur:           6.5px;
   }
 }
@@ -93,7 +100,7 @@ body {
   color: var(--font-color);
   font-family: var(--mono);
   font-size: 18px;
-  line-height: 1.65;
+  line-height: 1.7;
   overflow-wrap: break-word;
   word-break: break-word;
   -webkit-text-size-adjust: 100%;
@@ -213,11 +220,81 @@ hr, .rule {
 .contact-line { color: var(--light-font-color); }
 .contact-line .sep { color: var(--accent-color); padding: 0 4px; }
 
+/* ---------- Hero ----------
+   A recruiter who reads only the first screen should still come away knowing
+   what the four pillars are and what the numbers behind them look like. */
+.hero-eyebrow {
+  margin: 0 0 10px;
+  font-size: 14.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--light-font-color);
+}
+
+/* Hairline grid: the cell backgrounds sit on an --edge background, so the 1px
+   gaps read as dividers. Flat, and no shadows, matching the rest of the site. */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+}
+.pillars li {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--background-color);
+}
+.pillar-name {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 15.5px;
+  font-weight: bold;
+  color: var(--bold-color);
+}
+.pillar-name::before { content: "# "; color: var(--accent-color); }
+.pillar-desc {
+  display: block;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--light-font-color);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  margin: 22px 0 0;
+  padding: 0;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+}
+.stat { margin: 0; padding: 12px 14px; background: var(--background-color); }
+.stat dt {
+  font-size: 23px;
+  font-weight: bold;
+  line-height: 1.1;
+  color: var(--accent-color);
+}
+.stat dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--light-font-color);
+}
+
+/* The hero's own prose should not run the full measure, or the lede competes
+   with the pillars underneath it. */
+.hero > .lede, .hero > p { max-width: 40rem; }
+
 /* ---------- Meta ---------- */
 .meta { color: var(--light-font-color); font-size: 16px; margin-bottom: 6px; }
 .note { color: var(--accent-color); font-size: 16px; font-style: italic; margin-bottom: 8px; }
 .muted { color: var(--light-font-color); }
-.small { font-size: 15px; }
+.small { font-size: 15.5px; }
 
 /* ---------- Entries ---------- */
 .entry { margin-bottom: 34px; }
@@ -242,7 +319,7 @@ hr, .rule {
 .site-footer {
   border-top: 1px solid var(--rule-color);
   margin-top: 46px; padding: 22px 0 34px;
-  color: var(--light-font-color); font-size: 15px;
+  color: var(--light-font-color); font-size: 15.5px;
 }
 .footer-inner { display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: space-between; }
 .site-footer p { margin: 0; }
@@ -562,9 +639,9 @@ main, .site-footer { position: relative; z-index: 1; }
    rain to breathe in; the portfolio is paragraphs edge to edge, so the intensity
    that reads as atmosphere in an article competes with the text here. */
 body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
-[data-theme="light"] body.rain-quiet { --rain-opacity: 0.10; --rain-blur: 8px; }
+[data-theme="light"] body.rain-quiet { --rain-opacity: 0.07; --rain-blur: 8px; }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) body.rain-quiet { --rain-opacity: 0.10; --rain-blur: 8px; }
+  :root:not([data-theme]) body.rain-quiet { --rain-opacity: 0.07; --rain-blur: 8px; }
 }
 
 /* =========================================================================
@@ -1003,7 +1080,7 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
 .vault-label {
   display: block;
   margin-bottom: 6px;
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--light-font-color);
 }
 .vault-row { display: flex; gap: 9px; flex-wrap: wrap; }
@@ -1055,7 +1132,7 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
 .vault-note {
   margin: 12px 0 0;
   padding: 0 14px 14px;
-  font-size: 13.5px;
+  font-size: 14.5px;
   line-height: 1.55;
   color: var(--light-font-color);
 }
@@ -1283,7 +1360,7 @@ body.palette-open { overflow: hidden; }
 .filter { margin: 0 0 26px; padding-top: 14px; border-top: 1px solid var(--edge); }
 .filter-label {
   display: block; margin-bottom: 6px;
-  font-size: 13.5px; color: var(--light-font-color);
+  font-size: 14.5px; color: var(--light-font-color);
 }
 .filter-input {
   width: 100%; min-height: var(--tap);
@@ -1295,7 +1372,7 @@ body.palette-open { overflow: hidden; }
 .filter-input:focus-visible { outline: 2px dashed var(--accent-color); outline-offset: 2px; }
 .filter-count {
   margin: 8px 0 0; min-height: 1.3em;
-  font-size: 13.5px; color: var(--light-font-color);
+  font-size: 14.5px; color: var(--light-font-color);
 }
 
 /* ---------- Interactive layer: responsive ---------- */

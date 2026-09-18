@@ -21,7 +21,7 @@
 <meta name="twitter:description" content="Detection engineering, threat hunting, adversary emulation and control validation. Sentinel, Defender XDR, CrowdStrike, Azure.">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=6">
 
 <!-- Apply the saved colour theme before first paint so there is no flash. -->
 <script>
@@ -94,8 +94,10 @@
 <main id="main">
   <div class="wrap" style="padding-top:38px">
 
-    <!-- ================= INTRO ================= -->
-    <section id="top">
+    <!-- ================= HERO ================= -->
+    <section id="top" class="hero">
+      <p class="hero-eyebrow">Niagara Region, Ontario &nbsp;/&nbsp; Cyber defence and purple team</p>
+
       <h1>Akash Raj</h1>
       <p class="role">Security Analyst II, Cyber Defense
         <span class="role-focus">Detection engineering | Threat hunting | Adversary emulation | Incident response</span>
@@ -110,10 +112,36 @@
         myself, watch what the detections do about it, and fix the ones that stayed quiet than wait for a real
         adversary to find out for me.
       </p>
-      <p>
-        This site is the informal version of my resume and my LinkedIn profile. Same facts, fewer buzzwords, and a
-        bit more about how I actually work.
-      </p>
+
+      <!-- The four things this page is actually about, one line each, so a
+           reader who stops here still knows what they are looking at. -->
+      <ul class="pillars">
+        <li>
+          <span class="pillar-name">Detection engineering</span>
+          <span class="pillar-desc">Sentinel rules tuned down to the ones worth waking someone up for</span>
+        </li>
+        <li>
+          <span class="pillar-name">Adversary emulation</span>
+          <span class="pillar-desc">Monthly breach and attack simulation, plus retesting penetration test findings</span>
+        </li>
+        <li>
+          <span class="pillar-name">Threat hunting</span>
+          <span class="pillar-desc">Hypothesis-driven hunting across endpoint and network</span>
+        </li>
+        <li>
+          <span class="pillar-name">Incident response</span>
+          <span class="pillar-desc">Tier III escalation from detection through containment and review</span>
+        </li>
+      </ul>
+
+      <!-- Proof points, all of them evidenced further down this page. -->
+      <dl class="stats">
+        <div class="stat"><dt>4 yrs</dt><dd>in security operations</dd></div>
+        <div class="stat"><dt>150+</dt><dd>penetration test findings retested</dd></div>
+        <div class="stat"><dt>+25%</dt><dd>more control gaps surfaced</dd></div>
+        <div class="stat"><dt>-30%</dt><dd>false positive alert volume</dd></div>
+      </dl>
+
       <p class="contact-line">
         <a href="resume/Akash_Raj_Resume.pdf" download>Resume (PDF)</a>
         <span class="sep">|</span>
@@ -148,6 +176,11 @@
     <!-- ================= ABOUT ================= -->
     <section id="about">
       <h2>About</h2>
+
+      <p>
+        This site is the informal version of my resume and my LinkedIn profile. Same facts, fewer buzzwords, and a
+        bit more about how I actually work.
+      </p>
 
       <p>
         I didn't set out to work in security. My first job was building websites and web applications, and I kept
@@ -545,9 +578,9 @@
 <!-- The rain runs site-wide now, but the portfolio gets a quieter setting than
      the essays: this page is dense with text, so it is tuned to read as texture
      rather than as something moving behind the paragraphs. See .rain-quiet. -->
-<script src="matrix.js?v=5" defer></script>
-<script src="vault.js?v=5" defer></script>
-<script src="main.js?v=5" defer></script>
-<script src="ui.js?v=5" defer></script>
+<script src="matrix.js?v=6" defer></script>
+<script src="vault.js?v=6" defer></script>
+<script src="main.js?v=6" defer></script>
+<script src="ui.js?v=6" defer></script>
 </body>
 </html>
