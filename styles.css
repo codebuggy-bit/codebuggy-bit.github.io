@@ -299,7 +299,27 @@ hr, .rule {
 
 /* ---------- Hero ----------
    A recruiter who reads only the first screen should still come away knowing
-   what the four pillars are and what the numbers behind them look like. */
+   what the four pillars are and what the numbers behind them look like.
+
+   The hero sits on the same rail grid as every section below it. It used to be
+   full width while the sections were indented, so the hero text began 264px to
+   the left of every section body and the first place that showed was #about
+   refusing to line up. The eyebrow rides in the rail so the column is not left
+   empty. */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  gap: 0 3.5rem;
+  align-items: start;
+}
+.hero-eyebrow { grid-column: 1; grid-row: 1; }
+.hero-body { grid-column: 2; grid-row: 1; min-width: 0; }
+
+@media (max-width: 1000px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .hero-eyebrow, .hero-body { grid-column: 1; grid-row: auto; }
+}
+
 .hero-eyebrow {
   margin: 0 0 10px;
   font-size: 14.5px;
@@ -1869,9 +1889,10 @@ body.palette-open { overflow: hidden; }
   .reveal { opacity: 1 !important; transform: none !important; }
   /* Two-column shells collapse: paper has one column and the rail would waste
      a third of every page. */
-  .section, .hero-grid, .grid-2 {
+  .section, .hero, .hero-grid, .grid-2 {
     display: block !important;
   }
+  .hero-eyebrow, .hero-body { grid-column: auto !important; }
   .section > h2 { position: static !important; }
   .grid-2 > .entry { margin-bottom: 22px !important; }
   .trace-grid line, .trace-drop { display: none; }
