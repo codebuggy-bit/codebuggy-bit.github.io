@@ -204,10 +204,10 @@
      ======================================================================= */
 
   var COMMANDS = [
-    { title: "About",                    kind: "Section", href: "#about",       kw: "bio background story" },
-    { title: "Skills",                   kind: "Section", href: "#skills",      kw: "tools stack sentinel defender falcon" },
+    { title: "About",                    kind: "Section", href: "#about",       kw: "bio background story purple team cyber defence" },
+    { title: "Skills",                   kind: "Section", href: "#skills",      kw: "tools stack sentinel defender falcon purple team adversary emulation detection engineering cymulate" },
     { title: "Experience",               kind: "Section", href: "#experience",  kw: "jobs work history intact" },
-    { title: "Selected work",            kind: "Section", href: "#work",        kw: "projects outcomes metrics" },
+    { title: "Selected work",            kind: "Section", href: "#work",        kw: "projects outcomes metrics bas pentest retest validation" },
     { title: "Certifications and education", kind: "Section", href: "#credentials", kw: "az-500 cysa az-104 qualys conestoga" },
     { title: "Contact",                  kind: "Section", href: "#contact",     kw: "email reach hire" },
     { title: "Writing",                  kind: "Page",    href: "blog/",        kw: "blog essays posts index" },
@@ -490,7 +490,7 @@
         return ["akash raj", "security analyst ii, cyber defense", "niagara region, ontario"];
       } },
       focus: { desc: "what I work on", run: function () {
-        return ["incident response | threat hunting | detection engineering"];
+        return ["detection engineering | threat hunting | adversary emulation | incident response"];
       } },
       stack: { desc: "tools I use", run: function () {
         return [

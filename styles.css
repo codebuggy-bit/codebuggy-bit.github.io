@@ -200,6 +200,16 @@ hr, .rule {
 /* ---------- Lead block ---------- */
 .lede { font-size: 19px; }
 .role { color: var(--accent-color); font-weight: bold; margin-bottom: 20px; }
+/* The focus line rides inside the role paragraph so it sits tight against it,
+   rather than fighting .role's own bottom margin. */
+.role-focus {
+  display: block;
+  margin-top: 4px;
+  font-weight: normal;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--light-font-color);
+}
 .contact-line { color: var(--light-font-color); }
 .contact-line .sep { color: var(--accent-color); padding: 0 4px; }
 
