@@ -47,10 +47,13 @@
   --light-background-color: rgb(226, 226, 226);
   --link-underline-color: rgb(0, 0, 50);
   --edge:                rgba(42, 39, 34, 0.22);
-  /* Dark-on-light text already reads heavier than light-on-dark, so the rain
-     needs less of it. Deep red behind dark glyphs turns into smudges. */
-  --rain-opacity:        0.11;
-  --rain-blur:           6.5px;
+  /* Light theme needs MORE opacity than the dark one, not less. The dark
+     theme draws coral on near-black, where a light glyph against a dark field
+     is easy to see. Here the glyph is #96000f on #fafafa, so at 0.11 the red
+     channel moved 11 points and the rain was invisible. 0.26 blends to
+     rgb(224,185,189): clearly present, still light enough to read over. */
+  --rain-opacity:        0.26;
+  --rain-blur:           4.5px;
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
@@ -64,8 +67,8 @@
     --light-background-color: rgb(226, 226, 226);
     --link-underline-color: rgb(0, 0, 50);
     --edge:                rgba(42, 39, 34, 0.22);
-    --rain-opacity:        0.11;
-    --rain-blur:           6.5px;
+    --rain-opacity:        0.26;
+    --rain-blur:           4.5px;
   }
 }
 
@@ -668,9 +671,9 @@ main, .site-footer { position: relative; z-index: 1; }
    rain to breathe in; the portfolio is paragraphs edge to edge, so the intensity
    that reads as atmosphere in an article competes with the text here. */
 body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
-[data-theme="light"] body.rain-quiet { --rain-opacity: 0.07; --rain-blur: 8px; }
+[data-theme="light"] body.rain-quiet { --rain-opacity: 0.20; --rain-blur: 5px; }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) body.rain-quiet { --rain-opacity: 0.07; --rain-blur: 8px; }
+  :root:not([data-theme]) body.rain-quiet { --rain-opacity: 0.20; --rain-blur: 5px; }
 }
 
 /* =========================================================================
