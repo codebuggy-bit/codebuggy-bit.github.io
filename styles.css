@@ -25,7 +25,8 @@
   --rain-opacity:        0.42;
   --rain-blur:           5px;
   --mono: 'Courier New', Courier, monospace;
-  --measure: 46rem;                  /* monospace needs a narrower column */
+  --measure: 46rem;                  /* prose measure, kept even in a wide column */
+  --wide:    82rem;                  /* page container: rail + body */
   --gutter:  22px;
   --tap:     44px;                   /* minimum comfortable touch target */
 }
@@ -113,11 +114,64 @@ body {
    sideways. env() resolves to 0 on everything without a safe area. */
 .wrap {
   width: 100%;
-  max-width: var(--measure);
+  max-width: var(--wide);
   margin: 0 auto;
   padding-left: max(var(--gutter), env(safe-area-inset-left));
   padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
+
+/* =========================================================================
+   SECTION LAYOUT
+   A narrow single column wasted most of a wide screen. Sections are now a
+   two-column grid: a sticky rail holding the heading, and the body beside it.
+   The rail is what absorbs the extra width, so prose keeps its readable
+   measure instead of stretching to 1300px.
+
+   Below 1000px the rail collapses and everything returns to one column, which
+   is what the site was before and still works on a phone.
+   ========================================================================= */
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  gap: 0 3.5rem;
+  align-items: start;
+}
+.section > h2 {
+  margin: 0;
+  padding-top: 2px;
+  position: sticky;
+  top: 5.5rem;          /* clears the sticky header */
+}
+.section-body { min-width: 0; }
+
+/* Prose stays at a readable measure even though its column is wider. Grids and
+   panels inside the body are allowed the full column. */
+.section-body > p,
+.section-body > .lede,
+.section-body > .contact-line,
+.section-body > blockquote,
+.entry > p,
+.entry > ul,
+.entry > .note,
+.entry > .outcome {
+  max-width: var(--measure);
+}
+
+@media (max-width: 1000px) {
+  .section { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .section > h2 { position: static; margin-bottom: 14px; }
+}
+
+/* Two-column grids inside a section body, for the parts that are lists of
+   comparable things rather than prose. auto-fit means these reflow without
+   needing a breakpoint each. */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.grid-2 > .entry { margin-bottom: 0; }
 
 /* ---------- Layout utilities ----------
    These exist so that no page carries a style="" attribute. The Content
@@ -315,9 +369,79 @@ hr, .rule {
   color: var(--light-font-color);
 }
 
-/* The hero's own prose should not run the full measure, or the lede competes
-   with the pillars underneath it. */
+/* The hero's own prose should not run the full measure. */
 .hero > .lede, .hero > p { max-width: 40rem; }
+
+/* ---------- Hero layout ----------
+   Two columns on a wide screen: the introduction on the left, the visual work
+   on the right. The pillars and stats stay full width underneath, because they
+   are lists that read better across the page than down a half-width column. */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: start;
+}
+.hero-lead { min-width: 0; }
+.hero-lead .lede, .hero-lead > p { max-width: 40rem; }
+.hero-aside { min-width: 0; }
+.hero-aside .terminal { margin-top: 0; }
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+}
+
+/* ---------- Trace motif ----------
+   Line art, not a chart. It carries no numbers and is aria-hidden: it is the
+   shape of an emulated attack landing and a detection answering it. */
+.trace-figure { margin: 0 0 18px; }
+.trace { display: block; width: 100%; height: 132px; }
+
+.trace-grid line { stroke: var(--edge); stroke-width: 1; }
+.trace-line {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.trace-marker { fill: var(--accent-color); }
+.trace-drop {
+  stroke: var(--accent-color);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  opacity: .55;
+}
+.trace-caption {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  letter-spacing: .04em;
+  color: var(--light-font-color);
+}
+
+/* The trace draws itself once, when it scrolls into view. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .trace.is-revealed .trace-line {
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    animation: trace-draw 1.7s cubic-bezier(.4, 0, .2, 1) forwards;
+  }
+  html.js .trace.is-revealed .trace-marker,
+  html.js .trace.is-revealed .trace-drop {
+    opacity: 0;
+    animation: trace-reveal .45s ease-out .95s forwards;
+  }
+}
+@keyframes trace-draw { to { stroke-dashoffset: 0 } }
+@keyframes trace-reveal { to { opacity: 1 } }
+
+/* Standalone pages - contact, the 404, the writing index - are a single prose
+   column rather than a rail layout. Their content keeps the reading measure
+   even though the container is wide now, or a line of text would run 1300px. */
+.lede, .article-standfirst, .contact-form, .post-list, .vault {
+  max-width: var(--measure);
+}
 
 /* ---------- Meta ---------- */
 .meta { color: var(--light-font-color); font-size: 16px; margin-bottom: 6px; }
@@ -1682,6 +1806,13 @@ body.palette-open { overflow: hidden; }
   }
   html.js .reveal.is-revealed { opacity: 1; transform: none; }
 
+  /* Items in a grid arrive one after another rather than all at once. */
+  html.js .grid-2 > .reveal:nth-child(2) { transition-delay: .08s; }
+  html.js .grid-2 > .reveal:nth-child(3) { transition-delay: .16s; }
+  html.js .grid-2 > .reveal:nth-child(4) { transition-delay: .24s; }
+  html.js .grid-2 > .reveal:nth-child(5) { transition-delay: .32s; }
+  html.js .grid-2 > .reveal:nth-child(6) { transition-delay: .40s; }
+
   /* The bar grows when the row scrolls into view rather than on page load, so
      it is actually watched. Without JavaScript, or with reduced motion, the
      bar simply renders at its full width. */
@@ -1736,6 +1867,17 @@ body.palette-open { overflow: hidden; }
   .entry.work { border-left-color: #333 !important; }
   .loop-num, .stack-cat { color: #333 !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
+  /* Two-column shells collapse: paper has one column and the rail would waste
+     a third of every page. */
+  .section, .hero-grid, .grid-2 {
+    display: block !important;
+  }
+  .section > h2 { position: static !important; }
+  .grid-2 > .entry { margin-bottom: 22px !important; }
+  .trace-grid line, .trace-drop { display: none; }
+  .trace-line { stroke: #333 !important; stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
+  .trace-marker { fill: #333 !important; }
+  .trace-caption { color: #333 !important; }
   /* Plates: keep the shapes, drop colour, never split across pages. */
   .plate, .transcript {
     break-inside: avoid;
