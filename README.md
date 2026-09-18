@@ -182,29 +182,46 @@ the deployment and should not be served from the live site.
 ## Contact form
 
 `contact.html` posts to `functions/api/contact.js`, a Pages Function, which
-sends the message through Cloudflare's Email Sending REST API.
+validates the message and forwards it by email.
+
+**Sending is free.** The function tries two senders in order and uses whichever
+is configured:
+
+1. **Web3Forms** — free forever, 250 submissions/month, no card. The access key
+   is designed to be public, but it is kept server-side here so the browser
+   never talks to a third party and the CSP can stay `form-action 'self'`.
+2. **Cloudflare Email Sending** — kept because it works and is free when sending
+   to a *verified destination address*. Note that onboarding the sending product
+   itself is paid on the Workers Free plan, which is why Web3Forms is the
+   default.
 
 **Not the `send_email` binding** — Pages Functions do not support it. The
 bindings available to them are KV, D1, Durable Objects, R2, Queues, Vectorize,
-service bindings and Workers AI; email is not among them. The REST API is
-documented as working from any backend, so that is the route used.
+service bindings and Workers AI; email is not among them. That is why both
+senders go over HTTP instead.
 
-Three environment variables are required on the Pages project:
+Environment variables on the Pages project:
 
 | Variable | Purpose |
 |---|---|
-| `CF_EMAIL_API_TOKEN` | **Secret.** Token with `Email Sending: Edit` |
-| `CONTACT_TO` | Destination. Must be a **verified destination address**, which is what keeps sending free on the Workers Free plan |
-| `CONTACT_FROM` | Sender, on a domain onboarded for Email Sending |
-| `CLOUDFLARE_ACCOUNT_ID` | Needed to build the REST API URL |
+| `WEB3FORMS_ACCESS_KEY` | **Secret.** Free key from web3forms.com |
+| `CF_EMAIL_API_TOKEN` | **Secret.** Cloudflare token with `Email Sending: Edit` |
+| `CONTACT_TO` | Destination. Must be a **verified destination address** for the Cloudflare sender |
+| `CONTACT_FROM` | Sender address for the Cloudflare sender |
+| `CLOUDFLARE_ACCOUNT_ID` | Needed only by the Cloudflare sender |
 
-If those are missing the function does not pretend to succeed: it logs the
-problem and redirects back with `?status=failed`.
+If none are configured the function does not pretend to succeed: it logs the
+problem and redirects back with `?status=failed`, and the page tells the visitor
+to email directly.
 
 Spam is handled with a honeypot field rather than a CAPTCHA, so the site keeps
 its "no third-party scripts" property and the CSP keeps `script-src 'self'`.
 Submissions that fill the honeypot get a success response and are silently
 dropped.
+
+`contact@akashraj.ca` forwards to Gmail through Cloudflare Email Routing, which
+is free and unlimited on every plan including Workers Free. That is separate
+from sending and needs no paid anything.
 
 ## Notes on privacy
 
