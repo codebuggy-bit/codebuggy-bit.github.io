@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../styles.css?v=2">
 
 <script>
   (function () {
@@ -97,7 +97,12 @@
       </ul>
 
       <figure class="transcript">
-        <pre><span class="p">trinity@zion:~$</span> <span class="c">nmap -sV 10.2.4.1</span>
+        <!-- Cloudflare's Email Address Obfuscation rewrites anything that looks
+             like an address, and "root@10.2.4.1" matches its pattern. Without
+             the opt-out below it ships as "[email protected]" and mangles the
+             transcript. The site's own address is assembled in JavaScript, so
+             Cloudflare never sees it and the feature buys nothing here. -->
+        <!--email_off--><pre><span class="p">trinity@zion:~$</span> <span class="c">nmap -sV 10.2.4.1</span>
 <span class="o">PORT    STATE SERVICE  VERSION
 22/tcp  open  ssh      OpenSSH 1.2.3 (protocol 1.5)</span>
 <span class="p">trinity@zion:~$</span> <span class="c">./sshnuke 10.2.4.1</span>
@@ -105,7 +110,7 @@
 root shell acquired</span>
 <span class="p">root@10.2.4.1:~#</span> <span class="c">passwd</span>
 <span class="o">New password: Z1ON0101</span>
-<span class="p">root@10.2.4.1:~#</span> <span class="c">_</span></pre>
+<span class="p">root@10.2.4.1:~#</span> <span class="c">_</span></pre><!--/email_off-->
         <figcaption><span class="plate-num">Fig. 2</span> &nbsp;The exploit chain as it appears on screen. <code>nmap</code> and <code>sshnuke</code> are real tools and the CRC-32 compensation attack detector was a real SSH1 vulnerability.</figcaption>
       </figure>
 
@@ -477,8 +482,8 @@ root shell acquired</span>
   </div>
 </footer>
 
-<script src="../matrix.js" defer></script>
-<script src="../main.js" defer></script>
-<script src="../ui.js" defer></script>
+<script src="../matrix.js?v=2" defer></script>
+<script src="../main.js?v=2" defer></script>
+<script src="../ui.js?v=2" defer></script>
 </body>
 </html>
