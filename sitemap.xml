@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Replace codebuggy-bit.github.io and update lastmod whenever you publish changes. -->
+<!-- Replace akashraj.ca and update lastmod whenever you publish changes. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://codebuggy-bit.github.io/</loc>
+    <loc>https://akashraj.ca/</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://codebuggy-bit.github.io/blog/</loc>
+    <loc>https://akashraj.ca/blog/</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://codebuggy-bit.github.io/blog/matrix.html</loc>
+    <loc>https://akashraj.ca/blog/matrix.html</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://codebuggy-bit.github.io/blog/agi-cybersecurity.html</loc>
+    <loc>https://akashraj.ca/blog/agi-cybersecurity.html</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://codebuggy-bit.github.io/blog/ai-eschatology.html</loc>
+    <loc>https://akashraj.ca/blog/ai-eschatology.html</loc>
     <lastmod>2026-09-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>

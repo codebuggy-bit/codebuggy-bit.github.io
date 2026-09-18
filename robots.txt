@@ -8,4 +8,4 @@ Allow: /
 # click through, not for scrapers building contact lists.
 Disallow: /resume/
 
-Sitemap: https://codebuggy-bit.github.io/sitemap.xml
+Sitemap: https://akashraj.ca/sitemap.xml
