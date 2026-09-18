@@ -15,11 +15,37 @@ resume/             downloadable resume (PDF, DOCX, plain text)
 styles.css          all styling, dark and light themes
 main.js             theme toggle, mobile nav, terminal typing effect
 ui.js               command palette, scroll progress, live terminal, ToC, filter
-matrix.js           Matrix rain background (blog pages only)
+matrix.js           Matrix rain background (every page)
 vault.js            client-side decryption for the private contact details
 robots.txt          keeps /resume/ out of search results
 sitemap.xml         for Search Console
 ```
+
+## The rain
+
+`matrix.js` paints a Matrix rain field behind every page. It reads its colours
+from the CSS custom properties, so it is coral on the dark theme and deep red on
+the light one, and it re-reads them when the theme is toggled.
+
+Four things keep it from being a distraction:
+
+- **A real gaussian blur** via `filter: blur(var(--rain-blur))`. That is what
+  turns the glyphs into texture, and it also hides the canvas being rendered at
+  half resolution and upscaled.
+- **A quiet variant.** `<body class="rain-quiet">` dials the opacity down and the
+  blur up. The portfolio and the 404 use it, because they are dense with text
+  edge to edge; the essays have wide prose margins and run at full strength.
+- **A bright leading glyph.** Each column's head is drawn in `--bold-color` and
+  demoted to the trail colour behind it. That contrast is the detail that makes
+  it read as the films rather than as generic falling text.
+- **A top mask** so the rain emerges from under the sticky header instead of
+  starting abruptly beneath it. If a browser ignores the mask the canvas simply
+  paints unmasked, so the failure mode is a lost gradient, not lost rain.
+
+It is cheap on purpose: half-resolution render, roughly 18fps, paused when the
+tab is hidden, and `<body>` rebuilds only when the viewport *width* changes so
+that a mobile URL bar hiding does not re-randomise the field mid-scroll. With
+`prefers-reduced-motion` it draws one static frame and never animates.
 
 ## Interactive layer
 
@@ -84,11 +110,13 @@ caused real breakage here:
    what left the terminal prompt disabled after the interactive layer shipped.
 2. **Email Address Obfuscation rewrites anything that looks like an address.**
    It turned `root@10.2.4.1` in the Matrix transcript into `[email protected]`
-   and injected a decode script into the page. The transcript is now wrapped in
-   `<!--email_off-->`/`<!--/email_off-->` to stop that. The site gets no benefit
-   from the feature at all, since the real address is assembled in JavaScript
-   and Cloudflare only ever sees the HTML, so turning it off under
-   Security > Settings would be the tidier fix.
+   and injected a decode script into the page. That setting is now **off** at
+   the zone (Security > Settings > Client-side abuse), which fixes it at the
+   source. The transcript is additionally wrapped in
+   `<!--email_off-->`/`<!--/email_off-->` as a belt-and-braces measure in case
+   the setting is ever switched back on. The feature was never useful here:
+   the real address is assembled in JavaScript, so Cloudflare only ever saw the
+   HTML and never the address itself.
 
 ## Accessibility and performance
 

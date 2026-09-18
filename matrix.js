@@ -38,7 +38,7 @@
 
   var w = 0, h = 0, cols = 0;
   var rows = [], acc = [], speed = [];
-  var headColor = "#FA7575", bgRgb = "23,24,25";
+  var headColor = "#FA7575", tipColor = "#FFFFFF", bgRgb = "23,24,25";
   var lastFrame = 0, rafId = 0, running = false;
 
   var motionQuery = window.matchMedia
@@ -72,6 +72,11 @@
   function readTheme() {
     var cs = getComputedStyle(document.documentElement);
     headColor = (cs.getPropertyValue("--accent-color") || "#FA7575").trim();
+    /* The leading glyph is brighter than the trail it drags behind it. That
+       bright head is the detail that makes the effect read as the films rather
+       than as generic falling text, so it follows --bold-color, which is white
+       on the dark theme and black on the light one. */
+    tipColor = (cs.getPropertyValue("--bold-color") || "#FFFFFF").trim();
     bgRgb = parseRgb(cs.getPropertyValue("--background-color")).join(",");
   }
 
@@ -126,7 +131,6 @@
 
     ctx.font = FONT_SIZE + "px 'Courier New', Courier, monospace";
     ctx.textBaseline = "top";
-    ctx.fillStyle = headColor;
 
     for (var i = 0; i < cols; i++) {
       acc[i] += speed[i];
@@ -141,6 +145,15 @@
         continue;
       }
 
+      /* Demote the old head into the trail colour, then draw the new head
+         bright. Without the demotion every glyph keeps whatever colour it was
+         first drawn in, so the trail ends up the same shade as the head and the
+         falling line loses its leading edge. */
+      if (y > 0) {
+        ctx.fillStyle = headColor;
+        ctx.fillText(glyph(), i * FONT_SIZE, y - FONT_SIZE);
+      }
+      ctx.fillStyle = tipColor;
       ctx.fillText(glyph(), i * FONT_SIZE, y);
     }
   }
@@ -151,13 +164,12 @@
     ctx.fillRect(0, 0, w, h);
     ctx.font = FONT_SIZE + "px 'Courier New', Courier, monospace";
     ctx.textBaseline = "top";
-    ctx.fillStyle = headColor;
-    ctx.globalAlpha = 0.5;
 
     for (var i = 0; i < cols; i++) {
       var len = 3 + ((Math.random() * 7) | 0);
       var start = Math.floor(Math.random() * (h / FONT_SIZE));
       for (var k = 0; k < len; k++) {
+        ctx.fillStyle = k === 0 ? tipColor : headColor;
         ctx.globalAlpha = 0.5 * (1 - k / len);
         ctx.fillText(glyph(), i * FONT_SIZE, (start + k) * FONT_SIZE);
       }

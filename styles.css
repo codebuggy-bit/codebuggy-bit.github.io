@@ -23,7 +23,7 @@
   --rule-color:          var(--accent-color);
   --edge:                rgba(224, 224, 224, 0.20);
   --rain-opacity:        0.42;
-  --rain-blur:           3.5px;
+  --rain-blur:           5px;
   --mono: 'Courier New', Courier, monospace;
   --measure: 46rem;                  /* monospace needs a narrower column */
   --gutter:  22px;
@@ -43,7 +43,7 @@
   --link-underline-color: rgb(0, 0, 50);
   --edge:                rgba(42, 39, 34, 0.22);
   --rain-opacity:        0.15;
-  --rain-blur:           4.5px;
+  --rain-blur:           6.5px;
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
@@ -58,7 +58,23 @@
     --link-underline-color: rgb(0, 0, 50);
     --edge:                rgba(42, 39, 34, 0.22);
     --rain-opacity:        0.15;
-    --rain-blur:           4.5px;
+    --rain-blur:           6.5px;
+  }
+}
+
+/* ---------- Theme switch transition ----------
+   Colours ease instead of snapping when the toggle is used. Scoped to
+   no-preference so it can never override the reduced-motion rule that flattens
+   every transition, and scoped to the .theme-anim class that main.js applies
+   for 320ms so ordinary hover and focus states stay instant. */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-anim,
+  html.theme-anim *,
+  html.theme-anim *::before,
+  html.theme-anim *::after {
+    transition: background-color .28s ease, color .28s ease,
+                border-color .28s ease, fill .28s ease, stroke .28s ease,
+                opacity .28s ease, filter .28s ease !important;
   }
 }
 
@@ -519,10 +535,27 @@ h2::before { content: "# "; color: var(--accent-color); }
   z-index: 0;
   pointer-events: none;
   opacity: var(--rain-opacity);
+  /* A real gaussian blur rather than a box blur, which is what turns the
+     glyphs into texture and hides the fact that the canvas renders at half
+     resolution and is upscaled. */
   filter: blur(var(--rain-blur));
+  /* Fade the top so the rain emerges from under the sticky header rather than
+     beginning abruptly beneath it. If a browser ignores this the canvas simply
+     paints unmasked, so the failure mode is a lost gradient, not lost rain. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 110px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 110px);
   transform: translateZ(0);   /* own compositor layer */
 }
 main, .site-footer { position: relative; z-index: 1; }
+
+/* Text-dense pages get a quieter field. An essay has wide prose margins for the
+   rain to breathe in; the portfolio is paragraphs edge to edge, so the intensity
+   that reads as atmosphere in an article competes with the text here. */
+body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
+[data-theme="light"] body.rain-quiet { --rain-opacity: 0.10; --rain-blur: 8px; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) body.rain-quiet { --rain-opacity: 0.10; --rain-blur: 8px; }
+}
 
 /* =========================================================================
    ARTICLE / BLOG

@@ -15,9 +15,20 @@
      no flash of the wrong colours. This only wires up the button. */
   var toggle = document.getElementById("themeToggle");
   if (toggle) {
+    var animTimer = 0;
     toggle.addEventListener("click", function () {
       var isLight = root.getAttribute("data-theme") === "light";
       var next = isLight ? "dark" : "light";
+
+      /* Turn colour transitions on only for the moment of the switch. Leaving
+         them on permanently would make every hover and focus change feel
+         sluggish, and the rain canvas needs the same treatment as the text. */
+      root.classList.add("theme-anim");
+      window.clearTimeout(animTimer);
+      animTimer = window.setTimeout(function () {
+        root.classList.remove("theme-anim");
+      }, 320);
+
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("theme", next); } catch (e) { /* private mode */ }
       toggle.setAttribute("aria-label", "Switch to " + (next === "light" ? "dark" : "light") + " theme");
