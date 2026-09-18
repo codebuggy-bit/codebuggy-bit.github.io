@@ -75,7 +75,7 @@
 </script>
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=15">
+<link rel="stylesheet" href="styles.css?v=16">
 
 <!-- Apply the saved colour theme before first paint so there is no flash.
      The hash of this block is allowlisted in _headers; if you edit it, the
@@ -123,11 +123,11 @@
 <main id="main">
   <div class="wrap pad-lead">
 
-    <section class="section">
+    <section class="section" id="contact">
       <h1>Contact</h1>
 
-      <div class="section-body">
-        <p class="lede">
+      <div class="section-body split">
+        <div class="split-main">        <p class="lede">
           Hiring for a cyber defence, purple team, detection engineering or threat hunting role, or just want to argue
           about detection tuning? Send a message below. I read everything that arrives through it.
         </p>
@@ -195,19 +195,38 @@
             directly. Messages sent through this form also arrive at that address.
           </p>
         </form>
+        </div>
+
+        <!-- The privacy claim in the footer, as a path. A reader who wants to
+             know what happens to what they type should not have to read the
+             Pages Function to find out. -->
+        <figure class="route">
+          <figcaption class="route-title">Where it goes</figcaption>
+          <ol class="route-list">
+            <li><span class="route-what">A plain form POST, so it works with
+                JavaScript off.</span></li>
+            <li><span class="route-what">A Pages Function checks the honeypot
+                field, then relays it.</span></li>
+            <li><span class="route-what">It arrives at
+                contact@akashraj.ca</span></li>
+            <li><span class="route-what">Email Routing forwards it to my inbox.
+                No database on the way.</span></li>
+          </ol>
+        </figure>
+
       </div>
     </section>
 
     <hr>
 
-    <section class="section">
+    <section class="section section--send">
       <h2 class="reveal">Other ways to reach me</h2>
 
       <div class="section-body">
         <p class="contact-line">
           <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
           <span class="sep">|</span>
-          <a href="resume/Akash_Raj_Resume.pdf?v=15" download>Resume (PDF)</a>
+          <a href="resume/Akash_Raj_Resume.pdf?v=16" download>Resume (PDF)</a>
           <span class="sep">|</span>
           <a href="/#contact">Private details</a>
         </p>
@@ -230,14 +249,14 @@
     <p class="footer-links">
       <a href="/">Home</a>
       <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
-      <a href="resume/Akash_Raj_Resume.pdf?v=15" download>Resume</a>
+      <a href="resume/Akash_Raj_Resume.pdf?v=16" download>Resume</a>
     </p>
   </div>
 </footer>
 
-<script src="matrix.js?v=15" defer></script>
-<script src="main.js?v=15" defer></script>
-<script src="ui.js?v=15" defer></script>
-<script src="contact.js?v=15" defer></script>
+<script src="matrix.js?v=16" defer></script>
+<script src="main.js?v=16" defer></script>
+<script src="ui.js?v=16" defer></script>
+<script src="contact.js?v=16" defer></script>
 </body>
 </html>

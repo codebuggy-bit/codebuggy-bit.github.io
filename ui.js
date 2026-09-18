@@ -147,6 +147,10 @@
         navItems[i].link.classList.toggle("is-current", on);
         if (on) navItems[i].link.setAttribute("aria-current", "true");
         else navItems[i].link.removeAttribute("aria-current");
+        // The section carries the state too, so the rail marker on the sticky
+        // heading can react without a second observer watching the same thing.
+        var section = doc.getElementById(navItems[i].id);
+        if (section) section.classList.toggle("is-current", on);
       }
     }
 
