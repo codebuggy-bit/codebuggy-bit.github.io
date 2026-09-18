@@ -179,6 +179,33 @@ Other layers, all verified:
 `README.md` and `serve.py` are excluded from the deploy on purpose. They document
 the deployment and should not be served from the live site.
 
+## Contact form
+
+`contact.html` posts to `functions/api/contact.js`, a Pages Function, which
+sends the message through Cloudflare's Email Sending REST API.
+
+**Not the `send_email` binding** — Pages Functions do not support it. The
+bindings available to them are KV, D1, Durable Objects, R2, Queues, Vectorize,
+service bindings and Workers AI; email is not among them. The REST API is
+documented as working from any backend, so that is the route used.
+
+Three environment variables are required on the Pages project:
+
+| Variable | Purpose |
+|---|---|
+| `CF_EMAIL_API_TOKEN` | **Secret.** Token with `Email Sending: Edit` |
+| `CONTACT_TO` | Destination. Must be a **verified destination address**, which is what keeps sending free on the Workers Free plan |
+| `CONTACT_FROM` | Sender, on a domain onboarded for Email Sending |
+| `CLOUDFLARE_ACCOUNT_ID` | Needed to build the REST API URL |
+
+If those are missing the function does not pretend to succeed: it logs the
+problem and redirects back with `?status=failed`.
+
+Spam is handled with a honeypot field rather than a CAPTCHA, so the site keeps
+its "no third-party scripts" property and the CSP keeps `script-src 'self'`.
+Submissions that fill the honeypot get a success response and are silently
+dropped.
+
 ## Notes on privacy
 
 The contact area includes a password-protected block containing details that are
