@@ -45,11 +45,19 @@ jobs:
           node-version: "22"
 
       # wrangler uploads the directory it is given, so stage a clean copy.
-      # Without this the .git and .github directories would be published too.
+      # Without this the .git and .github directories would be published too,
+      # and so would README.md and serve.py, which document the deployment and
+      # have no business being served from the live site.
       - name: Stage the site
         run: |
           mkdir -p _site
-          rsync -a --exclude='.git' --exclude='.github' --exclude='_site' ./ _site/
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='_site' \
+            --exclude='README.md' \
+            --exclude='serve.py' \
+            ./ _site/
           echo "staged $(find _site -type f | wc -l) files"
 
       - name: Deploy

@@ -144,6 +144,41 @@ touch devices, `prefers-reduced-motion` respected throughout, `prefers-contrast`
 support, and a print stylesheet. The rain animation pauses when the tab is
 hidden and renders at half resolution.
 
+## Security
+
+`_headers` carries the security headers, because Pages runs no server. The
+notable choices:
+
+- **Content Security Policy with no `'unsafe-inline'` anywhere.** The single
+  inline script (the pre-paint theme bootstrap, identical on every page) is
+  allowed by SHA-256 hash, and every inline `style=""` attribute was moved into
+  `styles.css` so `style-src` can stay strict.
+  **If you edit that inline script, or add an inline style, the CSP will block
+  it** and the failure is silent. Recompute the hash and update `_headers`. The
+  commands are in the comment there.
+- `frame-ancestors 'none'` (plus `X-Frame-Options` for older browsers),
+  `object-src 'none'`, `base-uri 'none'`, `form-action 'none'`.
+- `connect-src 'none'`, since the site makes no network requests at all.
+- **HSTS** is set on the zone, not here, so it also covers redirects:
+  180 days with `includeSubDomains`, no preload.
+
+Other layers, all verified:
+
+- **DNS**: SPF (`v=spf1 -all`) at the apex, DMARC `p=quarantine`, TLS 1.0/1.1
+  refused, and DNSSEC signing enabled.
+- **CAA** is managed by Cloudflare and restricted to its five CA partners. The
+  records do not appear in the DNS records API, so query the authoritative
+  nameservers, not the dashboard, when checking them.
+- **No third-party resources.** No fonts, no analytics, no CDN script. The only
+  outbound links are the ones in the prose.
+- **GitHub**: secret scanning and push protection enabled, Actions token
+  permissions default to read.
+- **No metadata leakage**: the PDF carries no `/Info` dictionary (no author,
+  producer or tooling strings), and the DOCX has no `docProps/core.xml`.
+
+`README.md` and `serve.py` are excluded from the deploy on purpose. They document
+the deployment and should not be served from the live site.
+
 ## Notes on privacy
 
 The contact area includes a password-protected block containing details that are

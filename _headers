@@ -1,0 +1,42 @@
+# Security headers for Cloudflare Pages.
+#
+# Pages serves static files and runs no server, so this file is the only place
+# these can be set. Cloudflare reads it at deploy time and attaches the headers
+# below to every matching response.
+#
+# Syntax: a path pattern on its own line, then indented Name: value pairs.
+
+/*
+  # Everything this site loads is same-origin; nothing is fetched at runtime,
+  # framed, or posted anywhere.
+  #
+  # 'unsafe-inline' is deliberately absent from BOTH script-src and style-src:
+  #   - the one inline script (the pre-paint theme bootstrap, identical on every
+  #     page) is allowed by hash instead. If you edit that script you MUST
+  #     recompute the hash, or the page silently loses its saved theme until
+  #     first paint. Recompute with:
+  #       python3 -c "import hashlib,base64;print(base64.b64encode(hashlib.sha256(open('theme.js','rb').read()).digest()).decode())"
+  #   - every inline style="" attribute was moved into styles.css, so style-src
+  #     can stay strict. Keep it that way; adding one inline style will silently
+  #     drop the style for that element.
+  #
+  # connect-src 'none' is safe because the site makes no network requests. The
+  # Cloudflare NEL/report-to endpoint is a browser reporting channel, not a
+  # fetch(), so it is unaffected.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-bLLCZHfWvMLFTGZot8xFB11EIHYbM1FDtfoeIcssD84='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), usb=(), xr-spatial-tracking=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  # Cloudflare Pages defaults this to *, which is unnecessary for a site with no
+  # API and no credentialed requests.
+  Access-Control-Allow-Origin: https://akashraj.ca
+
+# The resume is meant for people who click through, not for scrapers building
+# contact lists. robots.txt asks crawlers to stay out, but a crawler that
+# mishandles the duplicate User-agent groups Cloudflare prepends could miss it.
+# A response header cannot be merged wrongly.
+/resume/*
+  X-Robots-Tag: noindex, nofollow, noarchive

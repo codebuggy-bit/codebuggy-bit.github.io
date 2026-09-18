@@ -116,6 +116,26 @@ body {
   padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
 
+/* ---------- Layout utilities ----------
+   These exist so that no page carries a style="" attribute. The Content
+   Security Policy forbids inline styles outright (style-src 'self'), which is
+   only possible if the one-off paddings and metric widths live here instead. */
+.pad-lead { padding-top: 38px; }
+.pad-lead-lg { padding-top: 60px; }
+.measure-article { max-width: 42rem; }
+
+/* Consumed by .metric-fill's width: var(--w). */
+.w25  { --w: 25%; }
+.w30  { --w: 30%; }
+.w40  { --w: 40%; }
+.w50  { --w: 50%; }
+.w75  { --w: 75%; }
+.w90  { --w: 90%; }
+.w100 { --w: 100%; }
+
+/* Split bar in the autonomy figure. */
+.pct-85 { --pct: 85%; }
+
 /* ---------- Type ----------
    Headings scale with the viewport instead of stepping at breakpoints. That
    removes the size cliff you get at exact breakpoint widths, and the clamps

@@ -1,11 +1,17 @@
 # Akash Raj - portfolio
-# Update these URLs when the custom domain goes live (akashraj.ca).
+#
+# Note: Cloudflare prepends its own managed block to this file (AI crawler
+# rules and content signals), which includes a second "User-agent: *" group.
+# RFC 9309 says groups with the same user-agent must be merged, and Google does
+# merge them, but a crawler that only honours the first matching group would
+# miss the Disallow below. The /resume/ path is therefore also excluded at the
+# response level via X-Robots-Tag in _headers, which cannot be merged wrongly.
 
 User-agent: *
 Allow: /
 
-# Keep the resume file out of search results. It is meant for humans who
-# click through, not for scrapers building contact lists.
+# Keep the resume out of search results. It is meant for humans who click
+# through, not for scrapers building contact lists.
 Disallow: /resume/
 
 Sitemap: https://akashraj.ca/sitemap.xml
