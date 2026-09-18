@@ -618,7 +618,9 @@ h2::before { content: "# "; color: var(--accent-color); }
   width: var(--w, 0%);
   background: var(--accent-color);
   transform-origin: left center;
-  animation: metric-grow .95s cubic-bezier(.4, 0, .2, 1) both;
+  /* The grow animation is added by the reveal observer in ui.js, so the bar
+     animates when it is scrolled into view rather than on page load. With
+     JavaScript off it just renders at its full width. */
 }
 @keyframes metric-grow { from { transform: scaleX(0) } to { transform: scaleX(1) } }
 
@@ -906,6 +908,7 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
   border-width: 2px;
   color: var(--accent-color);
   font-weight: bold;
+  background: var(--light-background-color);
   background: color-mix(in srgb, var(--accent-color) 8%, transparent);
 }
 
@@ -1506,6 +1509,180 @@ body.palette-open { overflow: hidden; }
   .btn-primary { width: 100%; }
 }
 
+/* =========================================================================
+   TINTED PANELS
+   A tint of the accent colour mixed into the page background, plus a matching
+   border. This is the one place the site departs from strictly flat: panels
+   give the dense sections edges without resorting to shadows.
+
+   color-mix() carries both themes from one formula, since --accent-color is
+   already themed. The plain background-color declaration before it is the
+   fallback for anything that does not support color-mix.
+   ========================================================================= */
+:root {
+  --panel-tint: 6%;
+  --panel-edge-tint: 26%;
+}
+[data-theme="light"] { --panel-tint: 4%; --panel-edge-tint: 18%; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) { --panel-tint: 4%; --panel-edge-tint: 18%; }
+}
+
+.panel,
+.skillset,
+.entry.work,
+.plain-list,
+.contact-form {
+  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--accent-color) var(--panel-tint), var(--background-color));
+  border: 1px solid var(--edge);
+  border-color: color-mix(in srgb, var(--accent-color) var(--panel-edge-tint), var(--edge));
+}
+
+.skillset { padding: 15px 17px; margin-bottom: 14px; }
+.entry.work { padding: 18px 20px; }
+.plain-list { padding: 14px 18px; }
+
+/* A left rule on the work entries, so a scannable column of them reads as a
+   sequence rather than as a stack of boxes. */
+.entry.work { border-left-width: 3px; border-left-color: var(--accent-color); }
+
+/* =========================================================================
+   PURPLE TEAM LOOP
+   Four steps that feed each other. Every step shows its own text, so nothing
+   depends on JavaScript to be readable; the interaction is highlighting.
+   ========================================================================= */
+.loop {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+}
+.loop-step {
+  position: relative;
+  margin: 0;
+  padding: 14px 16px 16px;
+  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--accent-color) 4%, var(--background-color));
+  border-left: 3px solid transparent;
+  transition: border-left-color .2s ease, opacity .2s ease;
+}
+.loop-step:hover { border-left-color: var(--accent-color); }
+
+/* Hovering the row dims the steps you are not pointing at, so four boxes read
+   as one sequence. Only where hover exists; on touch there is no pointer to
+   follow and everything should stay at full strength. */
+@media (hover: hover) {
+  .loop:hover .loop-step { opacity: .62; }
+  .loop:hover .loop-step:hover { opacity: 1; }
+}
+
+.loop-num {
+  display: block;
+  font-size: 12.5px;
+  letter-spacing: .08em;
+  color: var(--accent-color);
+}
+.loop-name {
+  display: block;
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--bold-color);
+}
+.loop-desc {
+  display: block;
+  margin-top: 5px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--light-font-color);
+}
+.loop-caption {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  color: var(--light-font-color);
+}
+
+/* =========================================================================
+   TECH STACK TILES
+   ========================================================================= */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+}
+.stack-grid li {
+  margin: 0;
+  padding: 13px 15px;
+  background: var(--background-color);
+  border-left: 3px solid transparent;
+  transition: border-left-color .18s ease, background-color .18s ease;
+}
+.stack-grid li:hover,
+.stack-grid li:focus-within {
+  border-left-color: var(--accent-color);
+  background: var(--light-background-color);
+}
+.stack-cat {
+  display: block;
+  font-size: 12.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+}
+.stack-name {
+  display: block;
+  margin-top: 3px;
+  font-size: 15.5px;
+  font-weight: bold;
+  color: var(--bold-color);
+}
+.stack-tools {
+  display: block;
+  margin-top: 3px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--light-font-color);
+}
+
+/* =========================================================================
+   SCROLL REVEALS
+   Scoped to html.js, which the inline head script sets before first paint, so
+   that with JavaScript off nothing is ever hidden. Without that guard a failed
+   script would leave the whole page invisible.
+   ========================================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  html.js .reveal.is-revealed { opacity: 1; transform: none; }
+
+  /* The bar grows when the row scrolls into view rather than on page load, so
+     it is actually watched. Without JavaScript, or with reduced motion, the
+     bar simply renders at its full width. */
+  html.js .metrics.is-revealed .metric-fill {
+    animation: metric-grow .95s cubic-bezier(.4, 0, .2, 1) both;
+  }
+}
+
+@media (max-width: 860px) {
+  .loop { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 460px) {
+  .loop { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------- Print ---------- */
 @media print {
   .site-header, .nav-toggle, .theme-toggle, .skip-link { display: none !important; }
@@ -1536,6 +1713,15 @@ body.palette-open { overflow: hidden; }
   .filter, .toc, .heading-anchor, .term-row {
     display: none !important;
   }
+  /* Tinted panels and the loop: keep the structure, drop the tint. */
+  .panel, .skillset, .entry.work, .plain-list, .contact-form,
+  .loop, .loop-step, .stack-grid, .stack-grid li {
+    background: #fff !important;
+    border-color: #999 !important;
+  }
+  .entry.work { border-left-color: #333 !important; }
+  .loop-num, .stack-cat { color: #333 !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
   /* Plates: keep the shapes, drop colour, never split across pages. */
   .plate, .transcript {
     break-inside: avoid;

@@ -782,6 +782,72 @@
   })();
 
   /* =======================================================================
+     10. Scroll reveals, metric bars and counters
+
+     One observer drives all three. Everything here is additive: with
+     JavaScript off, or with reduced motion, the content is simply already
+     there. The .reveal styles are scoped to html.js so a script failure cannot
+     leave the page invisible, and this unsticks them anyway if the browser has
+     no IntersectionObserver at all.
+     ======================================================================= */
+
+  (function motion() {
+    var reveals = doc.querySelectorAll(".reveal");
+    var metrics = doc.querySelectorAll(".metrics");
+    var counters = doc.querySelectorAll("[data-count]");
+    if (!reveals.length && !metrics.length && !counters.length) return;
+
+    function show(el) { el.classList.add("is-revealed"); }
+
+    function countUp(el) {
+      if (el.getAttribute("data-counted") === "1") return;
+      el.setAttribute("data-counted", "1");
+
+      var target = parseInt(el.getAttribute("data-count"), 10);
+      if (isNaN(target)) return;
+
+      var prefix = el.getAttribute("data-prefix") || "";
+      var suffix = el.getAttribute("data-suffix") || "";
+      // The markup already holds the final value, so reduced motion just leaves
+      // it alone rather than animating to the same number.
+      if (reduceMotion) return;
+
+      var duration = 900, start = 0;
+      var frame = function (now) {
+        if (!start) start = now;
+        var t = Math.min(1, (now - start) / duration);
+        var eased = 1 - Math.pow(1 - t, 3);          // easeOutCubic
+        el.textContent = prefix + Math.round(target * eased) + suffix;
+        if (t < 1) window.requestAnimationFrame(frame);
+        else el.textContent = prefix + target + suffix;
+      };
+      el.textContent = prefix + "0" + suffix;
+      window.requestAnimationFrame(frame);
+    }
+
+    // No observer: reveal everything at once and leave the numbers alone.
+    if (!("IntersectionObserver" in window)) {
+      Array.prototype.forEach.call(reveals, show);
+      Array.prototype.forEach.call(metrics, show);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        if (el.classList.contains("reveal") || el.classList.contains("metrics")) show(el);
+        if (el.hasAttribute("data-count")) countUp(el);
+        observer.unobserve(el);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.1 });
+
+    Array.prototype.forEach.call(reveals, function (el) { observer.observe(el); });
+    Array.prototype.forEach.call(metrics, function (el) { observer.observe(el); });
+    Array.prototype.forEach.call(counters, function (el) { observer.observe(el); });
+  })();
+
+  /* =======================================================================
      Footer year, in case main.js did not run
      ======================================================================= */
 

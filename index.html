@@ -21,11 +21,15 @@
 <meta name="twitter:description" content="Detection engineering, threat hunting, adversary emulation and control validation. Sentinel, Defender XDR, CrowdStrike, Azure.">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="stylesheet" href="styles.css?v=8">
 
 <!-- Apply the saved colour theme before first paint so there is no flash. -->
 <script>
   (function () {
+    /* Marks that scripting is available, before first paint. The scroll-reveal
+       styles are scoped to html.js so that a script failure cannot leave the
+       page invisible. */
+    document.documentElement.className += " js";
     try {
       var saved = localStorage.getItem("theme");
       if (saved === "light" || saved === "dark") {
@@ -136,10 +140,10 @@
 
       <!-- Proof points, all of them evidenced further down this page. -->
       <dl class="stats">
-        <div class="stat"><dt>4 yrs</dt><dd>in security operations</dd></div>
-        <div class="stat"><dt>150+</dt><dd>penetration test findings retested</dd></div>
-        <div class="stat"><dt>+25%</dt><dd>more control gaps surfaced</dd></div>
-        <div class="stat"><dt>-30%</dt><dd>false positive alert volume</dd></div>
+        <div class="stat"><dt data-count="4" data-suffix=" yrs">4 yrs</dt><dd>in security operations</dd></div>
+        <div class="stat"><dt data-count="150" data-suffix="+">150+</dt><dd>penetration test findings retested</dd></div>
+        <div class="stat"><dt data-count="25" data-prefix="+" data-suffix="%">+25%</dt><dd>more control gaps surfaced</dd></div>
+        <div class="stat"><dt data-count="30" data-prefix="-" data-suffix="%">-30%</dt><dd>false positive alert volume</dd></div>
       </dl>
 
       <p class="contact-line">
@@ -281,6 +285,55 @@
         <p>PowerShell, Python, Shell and Bash, mostly for detection support, patch automation, and taking the
           boring parts out of recurring security work.</p>
       </div>
+
+      <h3 class="reveal">The stack, grouped by what it is for</h3>
+      <ul class="stack-grid reveal">
+        <li>
+          <span class="stack-cat">SIEM</span>
+          <span class="stack-name">Microsoft Sentinel</span>
+          <span class="stack-tools">NGSIEM, detection rule authoring and tuning</span>
+        </li>
+        <li>
+          <span class="stack-cat">Endpoint and XDR</span>
+          <span class="stack-name">Defender XDR</span>
+          <span class="stack-tools">Defender for Endpoint, CrowdStrike Falcon</span>
+        </li>
+        <li>
+          <span class="stack-cat">Adversary emulation</span>
+          <span class="stack-name">Cymulate</span>
+          <span class="stack-tools">Breach and attack simulation across network and endpoint</span>
+        </li>
+        <li>
+          <span class="stack-cat">Exposure</span>
+          <span class="stack-name">Qualys</span>
+          <span class="stack-tools">VMDR, Patch Management, CSAM, plus Rapid7</span>
+        </li>
+        <li>
+          <span class="stack-cat">Cloud and identity</span>
+          <span class="stack-name">Microsoft Azure</span>
+          <span class="stack-tools">AZ-500, AZ-104, Intune and Group Policy</span>
+        </li>
+        <li>
+          <span class="stack-cat">Threat intelligence</span>
+          <span class="stack-name">Enrichment</span>
+          <span class="stack-tools">VirusTotal, MISP, Recorded Future, GreyNoise</span>
+        </li>
+        <li>
+          <span class="stack-cat">Malware triage</span>
+          <span class="stack-name">Sandboxes</span>
+          <span class="stack-tools">any.run, Joe Sandbox, Hybrid Analysis</span>
+        </li>
+        <li>
+          <span class="stack-cat">Automation</span>
+          <span class="stack-name">Scripting</span>
+          <span class="stack-tools">PowerShell, Python, Bash and shell</span>
+        </li>
+        <li>
+          <span class="stack-cat">Workflow</span>
+          <span class="stack-name">Jira and Confluence</span>
+          <span class="stack-tools">Incident coordination, knowledge base authoring</span>
+        </li>
+      </ul>
     </section>
 
     <hr>
@@ -392,7 +445,35 @@
         </figure>
       </div>
 
-      <div class="entry work">
+      <!-- The method behind the four entries below. Every step shows its text
+           outright: hiding three of them behind a click would lose the content
+           for anyone without JavaScript, and an interactive reveal is not worth
+           that. Hover and focus do the highlighting instead. -->
+      <ol class="loop reveal">
+        <li class="loop-step">
+          <span class="loop-num">01</span>
+          <span class="loop-name">Emulate</span>
+          <span class="loop-desc">Monthly Cymulate simulations across network and endpoint, plus retesting penetration test findings. Find the gap ourselves.</span>
+        </li>
+        <li class="loop-step">
+          <span class="loop-num">02</span>
+          <span class="loop-name">Detect</span>
+          <span class="loop-desc">Which rules fired, which stayed quiet, and how long the alert took to surface. A control nobody tested is a guess.</span>
+        </li>
+        <li class="loop-step">
+          <span class="loop-num">03</span>
+          <span class="loop-name">Investigate</span>
+          <span class="loop-desc">Tier III escalation from detection through containment, then the post-incident review and the root cause behind it.</span>
+        </li>
+        <li class="loop-step">
+          <span class="loop-num">04</span>
+          <span class="loop-name">Tune</span>
+          <span class="loop-desc">Rewrite the rule, cut the false positives, and re-test it against the next simulation rather than assuming it improved.</span>
+        </li>
+      </ol>
+      <p class="loop-caption reveal">The loop runs continuously, and each pass through it should make the next one quieter.</p>
+
+      <div class="entry work reveal">
         <h3>Emulating the attack to test whether the detection actually fires</h3>
         <p>
           I run monthly Cymulate breach and attack simulations across network and endpoint, and I retest penetration
@@ -415,7 +496,7 @@
         </div>
       </div>
 
-      <div class="entry work">
+      <div class="entry work reveal">
         <h3>Cutting false positives without losing signal</h3>
         <p>
           I tune Microsoft Sentinel detection rules with one goal: fewer alerts nobody acts on, and better coverage
@@ -432,7 +513,7 @@
         </div>
       </div>
 
-      <div class="entry work">
+      <div class="entry work reveal">
         <h3>Security policies and training people actually followed</h3>
         <p>
           Policy documents are easy to write and easy to ignore. I rewrote ours around what people could realistically
@@ -459,7 +540,7 @@
         </div>
       </div>
 
-      <div class="entry work">
+      <div class="entry work reveal">
         <h3>Patch automation that gave the team its week back</h3>
         <p>
           Patching was slow, manual, and inconsistent. I wrote scripts to handle the repeatable parts and left
@@ -482,7 +563,7 @@
 
       <!--
         ADD YOUR OWN PROJECTS HERE.
-        Copy one <div class="entry work"> block above and replace the text.
+        Copy one <div class="entry work reveal"> block above and replace the text.
         Before publishing, read "What never goes on this site" in the deploy guide.
         Good candidates: home lab builds, detection rules you wrote from scratch,
         CTF or lab writeups, scripts you are happy to open-source, malware analysis notes.
@@ -496,7 +577,7 @@
       <h2>Certifications and education</h2>
 
       <h4>Certifications</h4>
-      <ul class="plain-list">
+      <ul class="plain-list reveal">
         <li>Microsoft Certified: Azure Security Engineer Associate (AZ-500)</li>
         <li>CompTIA CySA+ ce (CS0-003)</li>
         <li>Microsoft Certified: Azure Administrator Associate (AZ-104)</li>
@@ -507,7 +588,7 @@
       <p class="small muted">Credential IDs available on request.</p>
 
       <h4>Education</h4>
-      <ul class="plain-list">
+      <ul class="plain-list reveal">
         <li>Post Graduate, Enterprise Content Management | Conestoga College, Kitchener, ON | 2019 to 2020</li>
         <li>B.Tech, Computer Science | University of Kerala, Kerala, India | August 2012 to March 2016</li>
       </ul>
@@ -578,9 +659,9 @@
 <!-- The rain runs site-wide now, but the portfolio gets a quieter setting than
      the essays: this page is dense with text, so it is tuned to read as texture
      rather than as something moving behind the paragraphs. See .rain-quiet. -->
-<script src="matrix.js?v=7" defer></script>
-<script src="vault.js?v=7" defer></script>
-<script src="main.js?v=7" defer></script>
-<script src="ui.js?v=7" defer></script>
+<script src="matrix.js?v=8" defer></script>
+<script src="vault.js?v=8" defer></script>
+<script src="main.js?v=8" defer></script>
+<script src="ui.js?v=8" defer></script>
 </body>
 </html>
