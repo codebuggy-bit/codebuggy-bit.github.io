@@ -209,7 +209,7 @@ hr, .rule {
 .brand:hover { color: var(--accent-color); }
 .brand::after { content: ">_"; color: var(--accent-color); margin-left: 8px; }
 
-.site-nav { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.site-nav { display: flex; align-items: center; gap: 16px; flex-wrap: nowrap; }
 .site-nav ul { display: flex; gap: 16px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
 .site-nav li { margin: 0; }
 .site-nav a, .theme-toggle {
@@ -372,10 +372,11 @@ hr, .rule {
 }
 
 /* ---------- Tablet: collapse the navigation ----------
-   The full nav needs roughly 840px once the brand, search trigger and theme
-   toggle are counted, so it collapses before that rather than overflowing.
-   The search trigger pushed this up from 900px. */
-@media (max-width: 1000px) {
+   The full nav needs roughly 900px once the brand, the search trigger and the
+   theme toggle are counted. It is nowrap, so it cannot wrap to a second line
+   when it runs out of room; it must collapse instead. 1180px leaves ~1130px
+   after gutters, which is comfortable slack rather than a tight fit. */
+@media (max-width: 1180px) {
   .nav-toggle { display: inline-flex; align-items: center; min-height: var(--tap); }
   .site-nav {
     display: none;
@@ -1405,7 +1406,7 @@ body.palette-open { overflow: hidden; }
 }
 
 /* ---------- Interactive layer: responsive ---------- */
-@media (max-width: 1000px) {
+@media (max-width: 1180px) {
   .search-btn { text-align: left; min-height: var(--tap); margin-top: 4px; }
 }
 
