@@ -78,24 +78,43 @@ terminal, filter and table of contents:
 
 ```bash
 cd ../tools && node smoke_ui.js
+python3 check_links.py          # crawls the local server for broken links
 ```
 
-It needs the local server running on port 8000.
+Both need the local server running on port 8000.
 
 ## Local preview
 
 ```bash
-python3 -m http.server 8000
+python3 serve.py
 ```
 
-Then open <http://localhost:8000>. Do not open the files directly from disk:
-`vault.js` needs a secure context, which means https or localhost.
+Then open <http://127.0.0.1:8000>. `serve.py` is a stock `http.server` plus
+exactly one behaviour: it resolves extensionless URLs, so `/blog/matrix` serves
+`blog/matrix.html` the way the CDN does.
+
+**Do not use `python -m http.server` for this site.** The canonical URLs have no
+`.html` extension (Cloudflare Pages 308-redirects the `.html` form), so the stock
+server makes every internal link 404.
+
+Do not open the files directly from disk either: `vault.js` needs a secure
+context, which means https or localhost.
 
 ## Deploying
 
-GitHub Pages serves this repository root directly. There is no build step, so a
-push is a deploy. `.nojekyll` is present so that Jekyll does not process or
-exclude any files.
+The live site is **Cloudflare Pages**, proxied by Cloudflare DNS on
+`akashraj.ca`. `.github/workflows/deploy-pages.yml` builds nothing and publishes
+the repository root to the `akashraj` Pages project on every push to `main`, so
+a push is a deploy. The workflow needs two repository secrets,
+`CLOUDFLARE_API_TOKEN` (Pages edit only) and `CLOUDFLARE_ACCOUNT_ID`.
+
+There is no build step. The `rsync` step in the workflow exists only to keep
+`.git` and `.github` out of the upload.
+
+GitHub Pages is still enabled on this repository and still builds, but it no
+longer serves the domain. It is what made the repository able to stay public:
+Cloudflare Pages is used instead because GitHub Pages needs a paid plan to serve
+from a private repository.
 
 ### Two things the CDN does that will bite you
 

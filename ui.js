@@ -211,11 +211,11 @@
     { title: "Certifications and education", kind: "Section", href: "#credentials", kw: "az-500 cysa az-104 qualys conestoga" },
     { title: "Contact",                  kind: "Section", href: "#contact",     kw: "email reach hire" },
     { title: "Writing",                  kind: "Page",    href: "blog/",        kw: "blog essays posts index" },
-    { title: "There Is No Spoon",        kind: "Post",    href: "blog/matrix.html",
+    { title: "There Is No Spoon",        kind: "Post",    href: "blog/matrix",
       hint: "The Matrix, philosophy and security", kw: "matrix neo trinity spoon essay" },
-    { title: "This Was a Warning Shot",  kind: "Post",    href: "blog/agi-cybersecurity.html",
+    { title: "This Was a Warning Shot",  kind: "Post",    href: "blog/agi-cybersecurity",
       hint: "1,200 agents, one package registry", kw: "ai agents openai hugging face swarm intrusion" },
-    { title: "No Fate But What We Make", kind: "Post",    href: "blog/ai-eschatology.html",
+    { title: "No Fate But What We Make", kind: "Post",    href: "blog/ai-eschatology",
       hint: "Eschatology and dark prophecy", kw: "religion eschatology terminator prophecy basilisk" },
     { title: "Toggle light or dark theme", kind: "Action", action: "theme",    kw: "dark light mode colour" },
     { title: "Copy email address",       kind: "Action",  action: "email",      kw: "mail contact clipboard" },
@@ -527,9 +527,9 @@
       } },
       blog: { desc: "list the writing", run: function () {
         return [
-          "there is no spoon          blog/matrix.html",
-          "this was a warning shot    blog/agi-cybersecurity.html",
-          "no fate but what we make   blog/ai-eschatology.html"
+          "there is no spoon          blog/matrix",
+          "this was a warning shot    blog/agi-cybersecurity",
+          "no fate but what we make   blog/ai-eschatology"
         ];
       } },
       theme: { desc: "flip light/dark", run: function () {
