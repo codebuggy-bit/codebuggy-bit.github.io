@@ -266,7 +266,8 @@ hr, .rule {
 .pillars li {
   margin: 0;
   padding: 12px 14px;
-  background: var(--background-color);
+  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--accent-color) var(--panel-tint), var(--background-color));
 }
 .pillar-name {
   display: block;
@@ -292,7 +293,12 @@ hr, .rule {
   background: var(--edge);
   border: 1px solid var(--edge);
 }
-.stat { margin: 0; padding: 12px 14px; background: var(--background-color); }
+.stat {
+  margin: 0;
+  padding: 12px 14px;
+  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--accent-color) var(--panel-tint), var(--background-color));
+}
 .stat dt {
   font-size: 23px;
   font-weight: bold;
@@ -1520,12 +1526,12 @@ body.palette-open { overflow: hidden; }
    fallback for anything that does not support color-mix.
    ========================================================================= */
 :root {
-  --panel-tint: 6%;
-  --panel-edge-tint: 26%;
+  --panel-tint: 13%;
+  --panel-edge-tint: 48%;
 }
-[data-theme="light"] { --panel-tint: 4%; --panel-edge-tint: 18%; }
+[data-theme="light"] { --panel-tint: 9%; --panel-edge-tint: 34%; }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) { --panel-tint: 4%; --panel-edge-tint: 18%; }
+  :root:not([data-theme]) { --panel-tint: 9%; --panel-edge-tint: 34%; }
 }
 
 .panel,
@@ -1543,9 +1549,12 @@ body.palette-open { overflow: hidden; }
 .entry.work { padding: 18px 20px; }
 .plain-list { padding: 14px 18px; }
 
-/* A left rule on the work entries, so a scannable column of them reads as a
-   sequence rather than as a stack of boxes. */
-.entry.work { border-left-width: 3px; border-left-color: var(--accent-color); }
+/* A left rule on every panel, so a column of them reads as a sequence of
+   cards rather than as a stack of boxes. */
+.panel, .skillset, .entry.work, .plain-list, .contact-form {
+  border-left-width: 3px;
+  border-left-color: var(--accent-color);
+}
 
 /* =========================================================================
    PURPLE TEAM LOOP
@@ -1567,7 +1576,7 @@ body.palette-open { overflow: hidden; }
   margin: 0;
   padding: 14px 16px 16px;
   background-color: var(--background-color);
-  background-color: color-mix(in srgb, var(--accent-color) 4%, var(--background-color));
+  background-color: color-mix(in srgb, var(--accent-color) 9%, var(--background-color));
   border-left: 3px solid transparent;
   transition: border-left-color .2s ease, opacity .2s ease;
 }
@@ -1623,7 +1632,8 @@ body.palette-open { overflow: hidden; }
 .stack-grid li {
   margin: 0;
   padding: 13px 15px;
-  background: var(--background-color);
+  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--accent-color) 9%, var(--background-color));
   border-left: 3px solid transparent;
   transition: border-left-color .18s ease, background-color .18s ease;
 }
