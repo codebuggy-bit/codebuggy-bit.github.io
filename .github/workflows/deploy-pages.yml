@@ -1,0 +1,63 @@
+# Deploy the static site to Cloudflare Pages on every push to main.
+#
+# This exists instead of Cloudflare's own "Connect to Git" integration for two
+# reasons: the account's existing Pages project is a Direct Upload project and
+# Cloudflare does not allow converting one to Git integration, and this route
+# needs no GitHub App authorisation. It also keeps working when the repository
+# is private.
+#
+# The wrangler token lives in repository secrets, never in this file:
+#
+#   CLOUDFLARE_API_TOKEN   scoped to Account > Cloudflare Pages > Edit only
+#   CLOUDFLARE_ACCOUNT_ID  the account that owns the project
+#
+# Set them with:
+#   gh secret set CLOUDFLARE_API_TOKEN
+#   gh secret set CLOUDFLARE_ACCOUNT_ID
+
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Read the repo and nothing else. The deploy credential is a secret, not a
+# GITHUB_TOKEN permission.
+permissions:
+  contents: read
+
+# Never let two deploys race; the newest push wins.
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # wrangler uploads the directory it is given, so stage a clean copy.
+      # Without this the .git and .github directories would be published too.
+      - name: Stage the site
+        run: |
+          mkdir -p _site
+          rsync -a --exclude='.git' --exclude='.github' --exclude='_site' ./ _site/
+          echo "staged $(find _site -type f | wc -l) files"
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4 pages deploy _site \
+            --project-name=akashraj \
+            --branch=main \
+            --commit-dirty=true
