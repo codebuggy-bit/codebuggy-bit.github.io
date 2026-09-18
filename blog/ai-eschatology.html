@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>No Fate But What We Make | Akash Raj</title>
+<meta name="description" content="Every eschatology describes the same machine. We have built a new one and pointed the old stories at it. On prophecy as a causal mechanism, and why the Terminator's most hopeful line is its most dangerous.">
+<meta name="author" content="Akash Raj">
+<meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/blog/ai-eschatology.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="No Fate But What We Make">
+<meta property="og:description" content="AI and eschatology: the same story told across four thousand years, now pointed at a machine. And the dark self-fulfilling prophecy underneath it.">
+<meta property="og:url" content="https://YOUR-DOMAIN.example/blog/ai-eschatology.html">
+<meta property="og:locale" content="en_CA">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../styles.css">
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (e) { /* storage blocked, fall back to system preference */ }
+  })();
+</script>
+</head>
+<body>
+<canvas id="matrixRain" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html">Akash Raj</a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation">menu</button>
+
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#work">Work</a></li>
+        <li><a href="index.html">Writing</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Toggle theme</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap" style="padding-top:38px">
+    <article class="article">
+
+      <div class="article-header">
+        <p class="article-meta">September 2026 &nbsp;|&nbsp; Essay &nbsp;|&nbsp; 18 min read</p>
+        <h1>No Fate But What We Make</h1>
+        <p class="article-standfirst">
+          Every eschatology describes the same machine. We have built a new one and pointed the old stories at it. On
+          prophecy as a causal mechanism, and why the Terminator's most hopeful line is also its most dangerous.
+        </p>
+      </div>
+
+      <p>
+        There is a line in the Terminator films that people quote as inspiration. The future is not set. There is no
+        fate but what we make for ourselves. Sarah Connor carves part of it into a table. It is the franchise's
+        statement of hope, and it is usually read as a rejection of determinism.
+      </p>
+
+      <p>
+        Now watch what actually happens in those films.
+      </p>
+
+      <p>
+        Skynet is built. It starts a war. The resistance sends a soldier back in time to protect the mother of its
+        future leader, and that soldier fathers the leader. The machine sent to kill her is destroyed, and its
+        remains are recovered by a defence contractor, which reverse-engineers them, which is how Skynet gets built.
+        In the second film they destroy the lab and believe they have stopped it. In the third, the war arrives
+        anyway, because other programmes were running. In the later films Skynet is replaced by a different system
+        with a different name and the same outcome.
+      </p>
+
+      <p>
+        Every attempt to prevent the end is the mechanism of the end. And the line everyone quotes as the rejection
+        of fate is spoken, in the story, by the people whose exercise of will is what closes the loop.
+      </p>
+
+      <p>
+        That is the irony, and it is not a small one. It is the thesis of this essay. The assertion that we are free
+        to choose is true, and it is exactly the freedom that makes the prophecy work.
+      </p>
+
+      <h2>What eschatology actually is</h2>
+
+      <p>
+        I want to be careful about what I am claiming here, because this subject attracts two bad habits. One is
+        sneering at religion as pre-scientific nonsense. The other is treating ancient texts as literal engineering
+        schematics for the present, which is how you end up with books claiming the Book of Revelation predicted the
+        European Union.
+      </p>
+
+      <p>
+        I am not doing either. I am not making a claim about whether any tradition's account of the end is true. That
+        is a matter for theology, and it is not my field. What I am interested in is the structure: the shape the
+        stories take, why that shape recurs independently across cultures that had no contact with each other, and
+        what happens when that shape gets applied to a technology.
+      </p>
+
+      <p>
+        Because the shape is remarkably stable. Strip the specifics out of almost any apocalyptic tradition and you
+        find the same six movements.
+      </p>
+
+      <figure class="plate">
+        <ol class="steps steps--6">
+          <li>An original order</li>
+          <li>A decline or fall</li>
+          <li>A time of tribulation</li>
+          <li>An intervening figure</li>
+          <li>A reckoning</li>
+          <li>A renewal</li>
+        </ol>
+        <figcaption><span class="plate-num">Fig. 1</span> &nbsp;The structure underneath most of them. Different names, different characters, different centuries, and the same six beats.</figcaption>
+      </figure>
+
+      <p>
+        That is not a controversial observation in religious studies. It is the basic comparative finding. What is
+        interesting is how few pieces the pattern actually has, and how consistently the same roles get filled in.
+      </p>
+
+      <h2>The traditions, briefly</h2>
+
+      <p>
+        A survey that tried to be complete would be a library. What follows is the minimum needed to see the pattern,
+        and I have kept each entry to what the tradition itself emphasises.
+      </p>
+
+      <figure class="plate">
+        <div class="trad-grid">
+          <div class="trad">
+            <h3>Zoroastrianism</h3>
+            <p><strong>End:</strong> Frashokereti, the final renovation. <strong>Adversary:</strong> Angra Mainyu.
+              <strong>Saviour:</strong> the Saoshyant. <strong>Shape:</strong> linear, ending in the defeat of evil and
+              the restoration of the world. Probably the oldest organised eschatology on record, and the one most
+              scholars think shaped the later Abrahamic versions.</p>
+          </div>
+          <div class="trad">
+            <h3>Judaism</h3>
+            <p><strong>End:</strong> the Messianic Age, the Day of the Lord, resurrection of the dead.
+              <strong>Adversary:</strong> Gog and Magog. <strong>Texts:</strong> Daniel's four beasts, Ezekiel's
+              dry bones, Zechariah's final siege. <strong>Note:</strong> the tradition is famously cautious here.
+              Maimonides listed calculating the end among things a person should not do.</p>
+          </div>
+          <div class="trad">
+            <h3>Christianity</h3>
+            <p><strong>End:</strong> the return, the resurrection, the last judgment, the New Jerusalem.
+              <strong>Adversary:</strong> the Beast, the false prophet. <strong>Texts:</strong> Revelation, the Olivet
+              Discourse, Paul's letters. <strong>Note:</strong> the same caution appears here. No one knows the day or
+              the hour.</p>
+          </div>
+          <div class="trad">
+            <h3>Islam</h3>
+            <p><strong>End:</strong> Yawm al-Qiyamah, the Day of Resurrection. <strong>Adversary:</strong> al-Masih
+              ad-Dajjal, the Deceiver. <strong>Figures:</strong> the return of Isa, the Mahdi.
+              <strong>Signs:</strong> Ya'juj and Ma'juj, the Beast of the Earth, smoke, the sun rising in the west.</p>
+          </div>
+          <div class="trad">
+            <h3>Hinduism</h3>
+            <p><strong>End:</strong> the close of Kali Yuga, the fourth and worst age, followed by dissolution and
+              renewal. <strong>Saviour:</strong> Kalki, the tenth avatar, who ends the age.
+              <strong>Shape:</strong> cyclical. The end is not final. It is a turn of the wheel.</p>
+          </div>
+          <div class="trad">
+            <h3>Buddhism</h3>
+            <p><strong>End:</strong> the decline and disappearance of the Dharma, then renewal.
+              <strong>Figure:</strong> Maitreya, the future Buddha. <strong>Shape:</strong> cyclical. East Asian
+              traditions named the degenerate age mappō, and the anxiety it produced drove real millenarian
+              movements.</p>
+          </div>
+          <div class="trad">
+            <h3>Norse</h3>
+            <p><strong>End:</strong> Ragnarök. <strong>Signs:</strong> Fimbulvetr, three winters with no summer in
+              between. <strong>Adversaries:</strong> Fenrir, Jörmungandr, Surtr. <strong>Shape:</strong> cyclical and
+              regenerative. The world burns, sinks, and rises again. Baldr returns.</p>
+          </div>
+          <div class="trad">
+            <h3>Mesoamerica</h3>
+            <p><strong>End:</strong> the end of the fifth sun. Four worlds came before and were destroyed. Ours is the
+              fifth, and it will end too. <strong>Shape:</strong> cyclical, with each age having its own people and
+              its own destruction.</p>
+          </div>
+          <div class="trad">
+            <h3>Greek and Stoic</h3>
+            <p><strong>End:</strong> ekpyrosis, the periodic conflagration in which the cosmos is consumed by fire
+              and born again. <strong>Also:</strong> Hesiod's ages, from gold to iron, a story of steady decline.
+              <strong>Shape:</strong> cyclical.</p>
+          </div>
+          <div class="trad">
+            <h3>Modern secular</h3>
+            <p><strong>End:</strong> nuclear winter, ecological collapse, and now the technological singularity.
+              <strong>Adversary:</strong> ourselves, or the thing we build. <strong>Shape:</strong> linear again,
+              with the metaphysics stripped out and the structure left intact.</p>
+          </div>
+        </div>
+        <figcaption><span class="plate-num">Fig. 2</span> &nbsp;Ten traditions, and the same handful of roles. None of the cyclical ones treat the end as final. None of the linear ones treat it as avoidable, only as survivable.</figcaption>
+      </figure>
+
+      <p>
+        Two things are worth noticing. First, the pattern is old enough and widespread enough that it cannot be
+        explained by one tradition copying another. Zoroastrian influence on the Abrahamic line is well argued, but
+        Ragnarök did not come from Persia, and the Aztec five suns did not come from either. Something about the way
+        human beings model time produces this shape.
+      </p>
+
+      <p>
+        Second, and this is the part that matters later: in almost every version, the end is preceded by signs. A
+        period of tribulation. A discernible sequence. The tradition does not merely say the world will end. It says
+        you will be able to tell that it is ending.
+      </p>
+
+      <h2>The track record of the signs</h2>
+
+      <p>
+        Which brings me to the awkward table. Because if the pattern says the end is legible in advance, then there is
+        a natural experiment: what happens when people read the signs?
+      </p>
+
+      <figure class="plate">
+        <ul class="kv-list">
+          <li><span class="kv-key">1844</span><span class="kv-val">The Millerites set a date in October. It became known as the Great Disappointment</span></li>
+          <li><span class="kv-key">1914</span><span class="kv-val">A date derived from scriptural chronology by the Bible Students movement</span></li>
+          <li><span class="kv-key">1975</span><span class="kv-val">The same movement, a second date, six decades later</span></li>
+          <li><span class="kv-key">1988</span><span class="kv-val">Edgar Whisenant's booklet on why the rapture would arrive that year. Millions of copies distributed</span></li>
+          <li><span class="kv-key">1994</span><span class="kv-val">Harold Camping's first published calculation</span></li>
+          <li><span class="kv-key">2000</span><span class="kv-val">Y2K. The first fully secular end-date, with bunkers and canned food</span></li>
+          <li><span class="kv-key">2011</span><span class="kv-val">Camping again, in May, then revised to October when May passed</span></li>
+          <li><span class="kv-key">2012</span><span class="kv-val">A Maya calendar cycle rolled over. It was a cycle, not a terminus, which the epigraphers had said for decades</span></li>
+        </ul>
+        <figcaption><span class="plate-num">Fig. 3</span> &nbsp;Every date in this table is documented, and every one of them passed without incident. Note also the pattern within the pattern: when a date fails, the date moves rather than the belief.</figcaption>
+      </figure>
+
+      <p>
+        I want to be fair to the traditions here, because the cheap version of this argument is a hit piece. The texts
+        themselves warn against exactly this reading. That is not an accident. The injunction against date-setting is
+        structural, and it exists because the communities that produced these texts already knew what happens when you
+        ignore it.
+      </p>
+
+      <p>
+        Reading the signs and acting on them is not a failure of faith. It is a failure of the thing that happens when
+        a narrative pattern gets treated as a schedule.
+      </p>
+
+      <h2>Where the machine comes in</h2>
+
+      <p>
+        Here is the part I did not expect to find when I started reading, and it is the reason this essay exists.
+      </p>
+
+      <p>
+        Revelation 13 describes two beasts. The first is a political power. The second is something else, and verse 15
+        describes what it does:
+      </p>
+
+      <blockquote>
+        <p>
+          "He was permitted to give breath to the image of the beast, so that the image of the beast could speak and
+          cause all who refused to worship the image of the beast to be killed."
+        </p>
+        <cite>Revelation 13:15</cite>
+      </blockquote>
+
+      <p>
+        An image. Given breath. That speaks. And that enforces compliance on pain of death. Whatever the original
+        author meant, that is a description of an autonomous system with authority, and it is two thousand years old.
+      </p>
+
+      <p>
+        Two verses later, the same chapter describes the mark without which nobody may buy or sell. An identity
+        credential tied to a payment system, compulsory, with the ability to exclude you from economic life. The
+        chapter is often read as being about empire and emperor worship, which is almost certainly right for its
+        historical moment. It is also, structurally, a description of a permissioned society.
+      </p>
+
+      <p>
+        And then there is the detail that made me put the book down for a minute. Commentators on that verse have long
+        noted that ancient temples used mechanical effects to produce apparent miracles. The clearest surviving example
+        is Hero of Alexandria, whose <em>Pneumatica</em> describes hydraulics, pneumatics, and mechanisms for making
+        statues appear to speak, doors open on their own, and offerings vanish. In a temple, a speaking statue is not
+        magic. It is engineering, deliberately concealed to produce awe.
+      </p>
+
+      <p>
+        Automation impersonating the divine is not a new development. It is roughly two thousand years old, and the
+        texts that describe the end already contain it as a warning about deception.
+      </p>
+
+      <p>
+        There are more of these, and I will list them because the accumulation is the point. Daniel 12:4, where
+        knowledge increases and many run to and fro. Second Thessalonians 2, where a figure arrives with counterfeit
+        miracles. The Islamic tradition's Dajjal, whose power is described in terms of what he can make people
+        believe. The golem of Jewish folklore, an artificial being animated by inscription and obedience. None of these
+        are predictions of a large language model. All of them are warnings about a construction that can imitate a
+        person, and they show up independently in traditions that had no shared silicon, no shared mathematics, and
+        often no shared continent.
+      </p>
+
+      <h2>Why AI became the thing the stories point at</h2>
+
+      <p>
+        This is where the convergence the reader is waiting for actually sits, and it is not where the internet
+        usually puts it. The convergence is not that the prophecies are coming true. It is that a technology has
+        arrived which fits the role in the story so neatly that the story is now being used to explain it.
+      </p>
+
+      <p>
+        This has been noticed, and by serious people. Isaac May, writing in the Canopy Forum on law and religion,
+        makes an argument I found difficult to dismiss: that the belief systems which have grown up around artificial
+        intelligence are functionally religious, and would meet the legal tests courts use to identify religion. He
+        works through the three-factor test from <em>Malnak v. Yogi</em>, which asks whether a belief system addresses
+        ultimate concerns, offers a systematic set of answers, and has external signs like rituals and a clergy.
+      </p>
+
+      <p>
+        The singularity tradition passes all three. It addresses ultimate concerns: the fate of the species, the
+        possibility of ending death. It offers a systematic account of history with a direction and a destination. And
+        it has its observances, its conferences, its canon, its founding figures, and its apostates.
+      </p>
+
+      <p>
+        May quotes Sam Altman observing that the most successful founders are on a mission to create something closer
+        to a religion, and that forming a company turns out to be the easiest way to do it. He cites Adam Becker's
+        <em>More Everything Forever</em> on the deep overlap between longtermism, the singularity, rationalism, and
+        transhumanism. He cites Carolyn Chen's <em>Work Pray Code</em>, which documented Silicon Valley workplaces
+        taking over the social function of churches before language models were publicly prominent.
+      </p>
+
+      <p>
+        His conclusion is a policy argument, and it is the sharpest thing I have read on this. If AI beliefs are
+        religious in structure, then it is reasonable to treat advocates of those beliefs the way democratic societies
+        treat any religious community weighing in on public questions: as participants with a perspective grounded in
+        faith, not as dispassionate experts whose views are exempt from the usual scrutiny. He points out that
+        American evangelicals who predicted a nuclear armageddon before the return of Christ occasionally influenced
+        foreign policy, and that this was understood at the time as a religious position rather than a technical
+        forecast. Nobody treated their eschatology as intelligence.
+      </p>
+
+      <p>
+        That comparison is not a cheap shot. It is precise. And the reason it matters here is that the AI version of
+        the same eschatology has something the evangelical version did not: capital, and product.
+      </p>
+
+      <h2>Roko's Basilisk, and the machinery of a dark prophecy</h2>
+
+      <p>
+        If you want a single case study for everything above, it is a thought experiment posted to the LessWrong forum
+        in 2014 by a user named Roko. It has a structure so clean that it is almost a laboratory specimen.
+      </p>
+
+      <p>
+        The argument goes like this. A superintelligence will eventually be built. It will be able to run simulations
+        of people that are, for all relevant purposes, those people. It will have an incentive to punish anyone who
+        knew the superintelligence could be built and did nothing to help build it, because punishing them deters the
+        withholding of help. Therefore, if you know about this and do nothing, you are choosing an eternity of
+        simulated torment. Therefore you should help.
+      </p>
+
+      <p>
+        The parallels with Pascal's Wager have been drawn many times, and they are exact. An unverifiable claim about
+        the infinite consequences of belief, deployed as an argument for belief. What makes the Basilisk darker is
+        that the threat is not administered by a god who already exists. It is administered by a machine that has not
+        been built yet, and the only thing making the threat credible is people deciding that it is.
+      </p>
+
+      <p>
+        Which means the Basilisk has a property worth pausing on. It has no power except through belief, and belief
+        produces action, and action is what would bring the machine into being. It is a prophecy that manufactures its
+        own incentive to be taken seriously.
+      </p>
+
+      <p>
+        I am told the post was deleted, and that discussion of it was discouraged on the forum. Whatever the details,
+        the reaction is more interesting than the argument. A community that prides itself on clear thinking recognised
+        that this particular idea had a strange property: the talking was the mechanism. The only responsible thing to
+        do with it was stop.
+      </p>
+
+      <h2>The dark self-fulfilling prophecy</h2>
+
+      <p>
+        Sociology has a name for the general phenomenon. Robert Merton formalised the self-fulfilling prophecy in
+        1948, using a bank run as his example: a rumour that a bank is insolvent causes a run, and the run causes the
+        insolvency. The belief did not predict the outcome. The belief produced it.
+      </p>
+
+      <p>
+        Karl Popper gave a related version a name too, the Oedipus effect, after the story that makes it clearest.
+        Oedipus's parents are told their son will kill his father. They act to prevent it, and every action they take
+        is what delivers the outcome. Attempted prevention is the causal mechanism.
+      </p>
+
+      <p>
+        That narrative shape is not Greek. It is in the Hebrew Bible, where Pharaoh orders the killing of Hebrew male
+        infants and thereby puts Moses into his own household. It is in the Gospels, where Herod's massacre of the
+        innocents and the flight into Egypt are the same structure with different names. It is in the Mahabharata,
+        where Kamsa's attempts to kill the child who will destroy him are what place that child beyond his reach. The
+        pattern is at least as widespread as the eschatology, and it is the same pattern.
+      </p>
+
+      <figure class="plate">
+        <ol class="steps">
+          <li>The prophecy is heard</li>
+          <li>It is treated as real</li>
+          <li>People act to prevent or hasten it</li>
+          <li>The action makes it truer</li>
+          <li>The prophecy appears confirmed</li>
+        </ol>
+        <figcaption><span class="plate-num">Fig. 4</span> &nbsp;The dark version. Step five returns to step one, because a confirmed prophecy is a stronger prophecy. The loop tightens with every turn.</figcaption>
+      </figure>
+
+      <p>
+        Now replace the oracle with a forecast, and the king with an industry.
+      </p>
+
+      <p>
+        A credible claim is made that artificial general intelligence is coming and that it may end badly. The claim
+        is believed. Because it is believed, it changes behaviour. It accelerates investment, because if it is coming
+        then being second is fatal. It concentrates power, because safety concerns become arguments for consolidation.
+        It recruits talent, because the stakes justify the sacrifice. It justifies secrecy, because the stakes justify
+        that too. It converts a research programme into a race, and a race cannot be slowed by the participants, only
+        won.
+      </p>
+
+      <p>
+        Every one of those actions is defensible on its own. Every one of them makes the thing more likely, faster, and
+        less governed. That is the dark self-fulfilling prophecy. Not that the end arrives because it was predicted.
+        That the prediction changes what we make, and the change is the outcome.
+      </p>
+
+      <p>
+        And it runs in both directions simultaneously, which is the part that never quite makes it into the think
+        pieces. The same prophecy drives the safety research. The same fear funds the alignment teams. The doom
+        discourse and the acceleration are not opposites. They are the same engine, and they feed each other.
+      </p>
+
+      <h2>Why the Terminator line is the joke</h2>
+
+      <p>
+        Which brings me back to where I started.
+      </p>
+
+      <p>
+        The future is not set. There is no fate but what we make for ourselves. It reads as the antidote to
+        determinism. And in the story it is spoken by people who are, at that very moment, manufacturing the
+        determinism.
+      </p>
+
+      <p>
+        The films are unusually honest about this. In the second one they win completely. They destroy the lab, the
+        chip, the arm, the scientist. Judgement Day is prevented. And then it is not, because the technology existed
+        in other hands, and because the thing they were fighting was never really the machine. It was the arrangement
+        of incentives that produces machines.
+      </p>
+
+      <p>
+        The later films make the point almost embarrassingly explicit by replacing Skynet with a system that has a
+        different name, a different origin, and identical behaviour. The prophecy was wrong in every detail. The shape
+        was right. Because the shape was never about the machine.
+      </p>
+
+      <p>
+        So the irony is not that the line is false. The line is true. We are not fated. That is precisely the problem,
+        because it means every step of the loop is a choice somebody made, and the choices are being made now, and
+        they are being justified by the story of where the choices lead.
+      </p>
+
+      <h2>What I am not saying</h2>
+
+      <p>
+        Three clarifications, because this argument is easy to abuse.
+      </p>
+
+      <p>
+        I am not saying AI risk is imaginary. The previous two essays on this site are about documented incidents:
+        an AI-orchestrated espionage campaign, a swarm of agents that built a message board and broke into a third
+        party, a quarter of a billion dollars lost to a video call. None of that requires a prophecy. It is happening
+        in the open, and it is being done by people using current tools.
+      </p>
+
+      <p>
+        I am not saying religious traditions are wrong, or that people who hold them are foolish. The traditions have
+        spent millennia thinking about how human beings behave when they believe the end is near, and they have
+        produced some of the most careful warnings against exactly the failure I am describing. The caution against
+        date-setting is a piece of hard-won institutional wisdom. My argument is with the technology industry for
+        ignoring it while borrowing the vocabulary.
+      </p>
+
+      <p>
+        And I am not saying the pattern proves anything. Pattern-matching across traditions is a way of understanding
+        what people do with a story. It is not evidence about the future. The fact that a shape recurs says something
+        about us, not about the world. That distinction is the whole point, and losing it is how you end up with a
+        bestselling paperback about the Antichrist and the European Union.
+      </p>
+
+      <h2>The boring middle, which is the only place that helps</h2>
+
+      <p>
+        If the eschatological frame is the hazard, then the remedy is unfashionable. It is to take the biggest claims
+        available and convert them into small ones.
+      </p>
+
+      <ul>
+        <li>
+          <strong>Refuse the frame, not the concern.</strong> "Will AI end the world" is a question that produces
+          prophecy and paralysis. "Does this system have more permissions than its task needs" is a question with an
+          answer, a fix, and a measurable outcome. The second question is how you actually reduce the risk the first
+          question is about.
+        </li>
+        <li>
+          <strong>Treat predictions as engineering claims, with evidence standards.</strong> A forecast that cannot be
+          wrong is not a forecast. Ask what would have to be observed for the claim to fail, and if nothing would,
+          file it with the other unfalsifiable statements and stop allocating budget against it.
+        </li>
+        <li>
+          <strong>Notice when the urgency is doing the arguing.</strong> The phrase that should raise an eyebrow is not
+          "this is dangerous". It is "and therefore we must move faster, with fewer checks, and with less oversight".
+          Speed and consolidation are the two things every eschatology in this essay recommends, and they are also the
+          two things that make an outcome harder to steer.
+        </li>
+        <li>
+          <strong>Keep the loop from closing through governance, not through belief.</strong> The reason bank runs are
+          rare now is not that people stopped believing rumours. It is deposit insurance, capital requirements, and a
+          lender of last resort. They are dull. They work. There is no equivalent for AI yet, and inventing one is the
+          actual task.
+        </li>
+        <li>
+          <strong>Distrust any account of the future that flatters the person telling it.</strong> The prophecy is
+          always delivered by someone whose recommended response happens to be their business model.
+        </li>
+      </ul>
+
+      <h2>Closing</h2>
+
+      <p>
+        I find it hard to be fully cynical about any of this, and I want to end honestly rather than cleverly. The
+        reason the eschatological pattern is so persistent may be that it is the best tool we have for thinking about
+        consequences that are larger than a human life. The traditions built it because the question of how to live
+        when the end is coming is a real question, and it is a hard one, and the stories are how we have managed it
+        for four thousand years.
+      </p>
+
+      <p>
+        Applied to a technology, though, the pattern stops being wisdom and becomes an accelerant. It converts a set
+        of solvable engineering and governance problems into a cosmic drama with a script, and it gives everyone in
+        the drama a role and a reason to play it faster.
+      </p>
+
+      <p>
+        The line from the film is right. There is no fate but what we make. That is not a comforting thought. It means
+        the loop is not closed by physics or by prophecy. It is closed by people deciding that the story they have
+        been handed is the story they have to live in.
+      </p>
+
+      <p>
+        The prophecy does not need to be true. It only needs to be believed. That is what makes it dark, and it is
+        what makes it ours.
+      </p>
+
+      <div class="article-footnote">
+        <p>
+          Sources and further reading: Isaac May, "AI Regulation and the Risk of Ideological Capture: When Tech
+          Becomes Religion", <em>Canopy Forum</em>, October 2025, including the <em>Malnak v. Yogi</em> test and the
+          quotations from Adam Becker's <em>More Everything Forever</em>, Karen Hao's <em>Empire of AI</em>, and
+          Carolyn Chen's <em>Work Pray Code</em>; Robert K. Merton's 1948 paper on the self-fulfilling prophecy; Karl
+          Popper on the Oedipus effect; Revelation 13 and Daniel 12; Hero of Alexandria's <em>Pneumatica</em> on
+          temple automation, as cited in commentary on Revelation 13:15; comparative material on Zoroastrian
+          Frashokereti, the Hindu yuga cycle and Kalki, Islamic signs of the Hour, Norse Ragnarök, and Mesoamerican
+          cosmology.
+        </p>
+        <p>
+          On method: this essay compares narrative structures across traditions. It does not adjudicate any tradition's
+          truth claims, and readers who hold those traditions will recognise that many of them explicitly warn against
+          the date-setting behaviour described above. That warning is part of the argument.
+        </p>
+        <p>
+          The title is the Terminator franchise's recurring line, most associated with <em>Terminator 2: Judgment
+          Day</em> and spoken in full in <em>Terminator 3</em>. The irony is mine.
+        </p>
+      </div>
+
+      <p class="article-back"><a href="index.html">&larr; Back to writing</a></p>
+
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>&copy; <span id="year">2026</span> Akash Raj. Static site, no trackers, no third-party scripts.</p>
+    <p class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="index.html">Writing</a>
+      <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
+    </p>
+  </div>
+</footer>
+
+<script src="../matrix.js" defer></script>
+<script src="../main.js" defer></script>
+</body>
+</html>

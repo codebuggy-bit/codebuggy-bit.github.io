@@ -1,0 +1,11 @@
+{
+  "name": "Akash Raj - Senior SOC Analyst (Tier III)",
+  "short_name": "Akash Raj",
+  "description": "Incident response, threat hunting, and detection engineering across Microsoft Sentinel, Defender XDR, CrowdStrike Falcon, and Azure.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": []
+}

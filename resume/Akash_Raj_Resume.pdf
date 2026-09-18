@@ -1,0 +1,182 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [8 0 R 9 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 9495 >>
+stream
+BT 0.122 0.220 0.392 rg /F2 18.00 Tf 1 0 0 1 52.00 730.00 Tm (Akash Raj) Tj ET
+BT 0.200 0.200 0.200 rg /F2 9.90 Tf 1 0 0 1 52.00 716.50 Tm (Security Analyst II, Cyber Defense) Tj ET
+BT 0.300 0.300 0.300 rg /F1 9.00 Tf 1 0 0 1 52.00 705.70 Tm (Niagara Region, Ontario, Canada | raj.akash235@gmail.com | linkedin.com/in/akashraj235) Tj ET
+BT 0.122 0.220 0.392 rg /F2 10.20 Tf 1 0 0 1 52.00 690.70 Tm (SUMMARY) Tj ET
+0.122 0.220 0.392 RG 0.9 w 52.00 687.30 m 560.00 687.30 l S
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 52.00 674.00 Tm (Security analyst with about four years in security operations and five-plus in IT, currently the Tier III escalation point on) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 52.00 662.70 Tm (Intact's Cyber Defense team. I run investigations from detection through containment and remediation, then write the) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 52.00 651.40 Tm (post-incident review and fix what let the same case happen twice. Detection is the part I like most: I tune Microsoft) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 52.00 640.10 Tm (Sentinel rules down to the ones worth acting on, and I run monthly breach and attack simulations so we find control gaps) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 52.00 628.80 Tm (before an attacker does. Comfortable across the vulnerability management and identity side of the house as well. AZ-500,) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 52.00 617.50 Tm (AZ-104, and CySA+ certified. Credential IDs available on request.) Tj ET
+BT 0.122 0.220 0.392 rg /F2 10.20 Tf 1 0 0 1 52.00 602.50 Tm (SKILLS) Tj ET
+0.122 0.220 0.392 RG 0.9 w 52.00 599.10 m 560.00 599.10 l S
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 585.80 Tm (Incident Response and SOC:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 183.63 585.80 Tm (Tier III escalation and investigation, detection through containment and remediation,) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 574.50 Tm (post-incident review, root cause analysis, IR playbook and SOP authoring, 24/7 shift) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 563.20 Tm (operations and handover, MITRE ATT&CK aligned triage, tabletop exercise design and) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 551.90 Tm (facilitation) Tj ET
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 540.60 Tm (Threat Hunting and Detection Engineering:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 246.29 540.60 Tm (Cyber Threat Hunting \(CTH\), hypothesis-driven hunting, breach and attack) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 529.30 Tm (simulation \(Cymulate\), detection rule tuning, false positive reduction,) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 518.00 Tm (sandbox and malware triage \(any.run, Joe Sandbox, hybrid-analysis\),) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 506.70 Tm (threat intelligence enrichment \(VirusTotal, MISP, Recorded Future,) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 495.40 Tm (GreyNoise\)) Tj ET
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 484.10 Tm (Vulnerability Management:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 174.23 484.10 Tm (Vulnerability assessment, Qualys VMDR, Qualys Patch Management, patch automation,) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 472.80 Tm (emerging vulnerability triage, risk-based remediation) Tj ET
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 461.50 Tm (Identity and Access Management:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 206.09 461.50 Tm (Identity and Access Management \(IAM\), privileged access review, least privilege) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 450.20 Tm (enforcement, access control audits, user exemption handling) Tj ET
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 438.90 Tm (Platforms and Tooling:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 156.98 438.90 Tm (Microsoft Sentinel \(NGSIEM\), Microsoft Defender for Endpoint, Microsoft Defender XDR,) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 427.60 Tm (CrowdStrike Falcon, Rapid7, Jira, Confluence) Tj ET
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 416.30 Tm (Cloud and Infrastructure Security:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 207.13 416.30 Tm (Microsoft Azure \(AZ-500, AZ-104\), Azure security baselines, Microsoft Intune, Group) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 405.00 Tm (Policy \(GPO\), Windows and Linux endpoint management) Tj ET
+BT 0.122 0.220 0.392 rg /F2 9.40 Tf 1 0 0 1 52.00 393.70 Tm (Scripting and Automation:) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 172.64 393.70 Tm (PowerShell, Python, Shell and Bash for detection support, patch automation, and recurring) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 60.00 382.40 Tm (security tasks) Tj ET
+BT 0.122 0.220 0.392 rg /F2 10.20 Tf 1 0 0 1 52.00 367.40 Tm (PROFESSIONAL EXPERIENCE) Tj ET
+0.122 0.220 0.392 RG 0.9 w 52.00 364.00 m 560.00 364.00 l S
+BT 0.100 0.100 0.100 rg /F2 10.10 Tf 1 0 0 1 52.00 349.40 Tm (Security Analyst II, Cyber Defense) Tj ET
+BT 0.280 0.280 0.280 rg /F1 9.10 Tf 1 0 0 1 52.00 338.70 Tm (Intact | Mississauga, ON | January 2026 - Present) Tj ET
+BT 0.380 0.380 0.380 rg /F3 8.90 Tf 1 0 0 1 52.00 328.10 Tm (Promoted from Security Analyst after 10 months.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 315.60 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 315.60 Tm (Tier III escalation point for complex and ambiguous incidents, taking investigations from detection through) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 304.30 Tm (containment and remediation and writing the post-incident review.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 293.00 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 293.00 Tm (Retested 150+ penetration test findings and confirmed every high and critical issue was closed before it reached) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 281.70 Tm (production.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 270.40 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 270.40 Tm (Run monthly Cymulate breach and attack simulations across network and endpoint, surfacing 25% more control) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 259.10 Tm (gaps than alert-driven review.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 247.80 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 247.80 Tm (Tune Microsoft Sentinel \(NGSIEM\) detection rules, cutting false positive volume by 30% while raising fidelity on) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 236.50 Tm (critical attack vectors.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 225.20 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 225.20 Tm (Triage emerging vulnerabilities at public disclosure, delivering 40+ risk reassessments within 24 hours to prioritise) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 213.90 Tm (patching.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 202.60 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 202.60 Tm (Wrote and ran 5 cross-functional tabletop exercises across detection, containment, and remediation, cutting) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 191.30 Tm (simulated MTTR by 15%.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 180.00 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 180.00 Tm (Wrote 12 incident response playbooks and SOPs, cutting junior analyst onboarding time by 40%.) Tj ET
+BT 0.100 0.100 0.100 rg /F2 10.10 Tf 1 0 0 1 52.00 167.40 Tm (Security Analyst, Cyber Defense) Tj ET
+BT 0.280 0.280 0.280 rg /F1 9.10 Tf 1 0 0 1 52.00 156.70 Tm (Intact | Mississauga, ON | March 2025 - December 2025) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 144.20 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 144.20 Tm (Worked rotating 24/7 shifts on the SOC escalation ladder, triaging and containing incidents and escalating advanced) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 132.90 Tm (cases with evidence, timeline, and impact already documented.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 121.60 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 121.60 Tm (Rolled out Azure security baselines across 70+ affiliates, tightening compliance posture and reducing incident risk) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 110.30 Tm (across the organization.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 99.00 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 99.00 Tm (Built PowerShell and batch automation for recurring security operations work, saving 20+ hours a month.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 87.70 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 87.70 Tm (Managed the CrowdStrike Falcon endpoint inventory, improving visibility into stray and unmanaged assets and) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 76.40 Tm (holding protection coverage at 99%.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 65.10 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 65.10 Tm (Coordinated cross-functional incident response through Jira, cutting response times by 15%.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Length 5915 >>
+stream
+BT 0.100 0.100 0.100 rg /F2 10.10 Tf 1 0 0 1 52.00 733.40 Tm (Information Technology Security Analyst) Tj ET
+BT 0.280 0.280 0.280 rg /F1 9.10 Tf 1 0 0 1 52.00 722.70 Tm (Intact Public Entities | Cambridge, ON | June 2022 - February 2025) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 710.20 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 710.20 Tm (Rewrote security policies into guidance people could follow, cutting unauthorized access by 75% and saving about) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 698.90 Tm ($20K a year in breach costs.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 687.60 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 687.60 Tm (Engineered patch management scripts that cut patching time by 90% and hardened the endpoints they touched.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 676.30 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 676.30 Tm (Ran 200+ vulnerability tests through Qualys VMDR, reducing risk exposure by 30% and remediation times by 40%.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 665.00 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 665.00 Tm (Built and delivered the security training programme, raising compliance by 25% and halving phishing incidents.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 653.70 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 653.70 Tm (Investigated and resolved security incidents in Microsoft Sentinel, consistently meeting SLA targets.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 642.40 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 642.40 Tm (Ran quarterly audits of privileged access, special permissions, and control groups to enforce least privilege.) Tj ET
+BT 0.100 0.100 0.100 rg /F2 10.10 Tf 1 0 0 1 52.00 629.80 Tm (Technical Support Analyst L2) Tj ET
+BT 0.280 0.280 0.280 rg /F1 9.10 Tf 1 0 0 1 52.00 619.10 Tm (Cineplex Digital Media | Waterloo, ON | April 2021 - June 2022) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 606.60 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 606.60 Tm (Monitored the health of Linux-based digital signage networks and worked customer issues to resolution against SLA.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 595.30 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 595.30 Tm (Ran remote diagnostics and repairs over SSH and VNC.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 584.00 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 584.00 Tm (Built API integrations and scripts to automate the delivery process.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 572.70 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 572.70 Tm (Validated each deployment before handover to the Day 2 customer success team.) Tj ET
+BT 0.100 0.100 0.100 rg /F2 10.10 Tf 1 0 0 1 52.00 560.10 Tm (Flow Operations Clerk) Tj ET
+BT 0.280 0.280 0.280 rg /F1 9.10 Tf 1 0 0 1 52.00 549.40 Tm (Loblaw Companies Limited | Kitchener, ON | July 2019 - November 2020) Tj ET
+BT 0.380 0.380 0.380 rg /F3 8.90 Tf 1 0 0 1 52.00 538.80 Tm (Held while completing a post-graduate diploma at Conestoga College.) Tj ET
+BT 0.100 0.100 0.100 rg /F2 10.10 Tf 1 0 0 1 52.00 525.00 Tm (Web Developer) Tj ET
+BT 0.280 0.280 0.280 rg /F1 9.10 Tf 1 0 0 1 52.00 514.30 Tm (B-GHUD Academy of Information Technology | Mavelikkara, Kerala, India | July 2017 - March 2019) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 501.80 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 501.80 Tm (Built and maintained the institution's website and web applications in JavaScript, PHP, and SQL.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 490.50 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 490.50 Tm (Owned the security and privacy of the institution's site and data.) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 479.20 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 479.20 Tm (Managed the content management system and provided technical support and training to faculty and staff.) Tj ET
+BT 0.122 0.220 0.392 rg /F2 10.20 Tf 1 0 0 1 52.00 464.20 Tm (EDUCATION) Tj ET
+0.122 0.220 0.392 RG 0.9 w 52.00 460.80 m 560.00 460.80 l S
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 447.50 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 447.50 Tm (Post Graduate, Enterprise Content Management | Conestoga College, Kitchener, ON | 2019 - 2020) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 436.20 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 436.20 Tm (B.Tech, Computer Science | University of Kerala, Kerala, India | August 2012 to March 2016) Tj ET
+BT 0.122 0.220 0.392 rg /F2 10.20 Tf 1 0 0 1 52.00 421.20 Tm (CERTIFICATIONS) Tj ET
+0.122 0.220 0.392 RG 0.9 w 52.00 417.80 m 560.00 417.80 l S
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 404.50 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 404.50 Tm (Microsoft Certified: Azure Security Engineer Associate \(AZ-500\)) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 393.20 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 393.20 Tm (CompTIA CySA+ ce \(CS0-003\)) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 381.90 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 381.90 Tm (Microsoft Certified: Azure Administrator Associate \(AZ-104\)) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 63.00 370.60 Tm (\225) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 370.60 Tm (Qualys Vulnerability Detection and Response \(VMDR\), Qualys Patch Management, Qualys CyberSecurity Asset) Tj ET
+BT 0.100 0.100 0.100 rg /F1 9.40 Tf 1 0 0 1 73.00 359.30 Tm (Management \(CSAM\)) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 6 0 R >>
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000224 00000 n 
+0000000326 00000 n 
+0000000431 00000 n 
+0000009977 00000 n 
+0000015943 00000 n 
+0000016089 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R >>
+startxref
+16235
+%%EOF

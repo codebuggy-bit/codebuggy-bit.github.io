@@ -1,0 +1,11 @@
+# OS and editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Never commit the vault password or plaintext payload
+vault.blob.txt
+*.plaintext

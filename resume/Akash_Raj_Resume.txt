@@ -1,0 +1,72 @@
+Akash Raj
+Security Analyst II, Cyber Defense
+Niagara Region, Ontario, Canada | raj.akash235@gmail.com | linkedin.com/in/akashraj235
+
+SUMMARY
+Security analyst with about four years in security operations and five-plus in IT, currently the Tier III escalation point on Intact's Cyber Defense team. I run investigations from detection through containment and remediation, then write the post-incident review and fix what let the same case happen twice. Detection is the part I like most: I tune Microsoft Sentinel rules down to the ones worth acting on, and I run monthly breach and attack simulations so we find control gaps before an attacker does. Comfortable across the vulnerability management and identity side of the house as well. AZ-500, AZ-104, and CySA+ certified. Credential IDs available on request.
+
+SKILLS
+Incident Response and SOC: Tier III escalation and investigation, detection through containment and remediation, post-incident review, root cause analysis, IR playbook and SOP authoring, 24/7 shift operations and handover, MITRE ATT&CK aligned triage, tabletop exercise design and facilitation
+Threat Hunting and Detection Engineering: Cyber Threat Hunting (CTH), hypothesis-driven hunting, breach and attack simulation (Cymulate), detection rule tuning, false positive reduction, sandbox and malware triage (any.run, Joe Sandbox, hybrid-analysis), threat intelligence enrichment (VirusTotal, MISP, Recorded Future, GreyNoise)
+Vulnerability Management: Vulnerability assessment, Qualys VMDR, Qualys Patch Management, patch automation, emerging vulnerability triage, risk-based remediation
+Identity and Access Management: Identity and Access Management (IAM), privileged access review, least privilege enforcement, access control audits, user exemption handling
+Platforms and Tooling: Microsoft Sentinel (NGSIEM), Microsoft Defender for Endpoint, Microsoft Defender XDR, CrowdStrike Falcon, Rapid7, Jira, Confluence
+Cloud and Infrastructure Security: Microsoft Azure (AZ-500, AZ-104), Azure security baselines, Microsoft Intune, Group Policy (GPO), Windows and Linux endpoint management
+Scripting and Automation: PowerShell, Python, Shell and Bash for detection support, patch automation, and recurring security tasks
+
+PROFESSIONAL EXPERIENCE
+
+Security Analyst II, Cyber Defense
+Intact | Mississauga, ON | January 2026 - Present
+Promoted from Security Analyst after 10 months.
+- Tier III escalation point for complex and ambiguous incidents, taking investigations from detection through containment and remediation and writing the post-incident review.
+- Retested 150+ penetration test findings and confirmed every high and critical issue was closed before it reached production.
+- Run monthly Cymulate breach and attack simulations across network and endpoint, surfacing 25% more control gaps than alert-driven review.
+- Tune Microsoft Sentinel (NGSIEM) detection rules, cutting false positive volume by 30% while raising fidelity on critical attack vectors.
+- Triage emerging vulnerabilities at public disclosure, delivering 40+ risk reassessments within 24 hours to prioritise patching.
+- Wrote and ran 5 cross-functional tabletop exercises across detection, containment, and remediation, cutting simulated MTTR by 15%.
+- Wrote 12 incident response playbooks and SOPs, cutting junior analyst onboarding time by 40%.
+
+Security Analyst, Cyber Defense
+Intact | Mississauga, ON | March 2025 - December 2025
+- Worked rotating 24/7 shifts on the SOC escalation ladder, triaging and containing incidents and escalating advanced cases with evidence, timeline, and impact already documented.
+- Rolled out Azure security baselines across 70+ affiliates, tightening compliance posture and reducing incident risk across the organization.
+- Built PowerShell and batch automation for recurring security operations work, saving 20+ hours a month.
+- Managed the CrowdStrike Falcon endpoint inventory, improving visibility into stray and unmanaged assets and holding protection coverage at 99%.
+- Coordinated cross-functional incident response through Jira, cutting response times by 15%.
+
+Information Technology Security Analyst
+Intact Public Entities | Cambridge, ON | June 2022 - February 2025
+- Rewrote security policies into guidance people could follow, cutting unauthorized access by 75% and saving about $20K a year in breach costs.
+- Engineered patch management scripts that cut patching time by 90% and hardened the endpoints they touched.
+- Ran 200+ vulnerability tests through Qualys VMDR, reducing risk exposure by 30% and remediation times by 40%.
+- Built and delivered the security training programme, raising compliance by 25% and halving phishing incidents.
+- Investigated and resolved security incidents in Microsoft Sentinel, consistently meeting SLA targets.
+- Ran quarterly audits of privileged access, special permissions, and control groups to enforce least privilege.
+
+Technical Support Analyst L2
+Cineplex Digital Media | Waterloo, ON | April 2021 - June 2022
+- Monitored the health of Linux-based digital signage networks and worked customer issues to resolution against SLA.
+- Ran remote diagnostics and repairs over SSH and VNC.
+- Built API integrations and scripts to automate the delivery process.
+- Validated each deployment before handover to the Day 2 customer success team.
+
+Flow Operations Clerk
+Loblaw Companies Limited | Kitchener, ON | July 2019 - November 2020
+Held while completing a post-graduate diploma at Conestoga College.
+
+Web Developer
+B-GHUD Academy of Information Technology | Mavelikkara, Kerala, India | July 2017 - March 2019
+- Built and maintained the institution's website and web applications in JavaScript, PHP, and SQL.
+- Owned the security and privacy of the institution's site and data.
+- Managed the content management system and provided technical support and training to faculty and staff.
+
+EDUCATION
+- Post Graduate, Enterprise Content Management | Conestoga College, Kitchener, ON | 2019 - 2020
+- B.Tech, Computer Science | University of Kerala, Kerala, India | August 2012 to March 2016
+
+CERTIFICATIONS
+- Microsoft Certified: Azure Security Engineer Associate (AZ-500)
+- CompTIA CySA+ ce (CS0-003)
+- Microsoft Certified: Azure Administrator Associate (AZ-104)
+- Qualys Vulnerability Detection and Response (VMDR), Qualys Patch Management, Qualys CyberSecurity Asset Management (CSAM)

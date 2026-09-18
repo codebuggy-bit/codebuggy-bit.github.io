@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>There Is No Spoon | Akash Raj</title>
+<meta name="description" content="What The Matrix taught me about security, and why it started mattering more the moment the machines became real. An essay on the film's philosophy, its real hacking scenes, and its alignment warnings.">
+<meta name="author" content="Akash Raj">
+<meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/blog/matrix.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="There Is No Spoon">
+<meta property="og:description" content="What The Matrix taught me about security, and why it matters more now that the machines are real.">
+<meta property="og:url" content="https://YOUR-DOMAIN.example/blog/matrix.html">
+<meta property="og:locale" content="en_CA">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../styles.css">
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (e) { /* storage blocked, fall back to system preference */ }
+  })();
+</script>
+</head>
+<body>
+<canvas id="matrixRain" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html">Akash Raj</a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation">menu</button>
+
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#work">Work</a></li>
+        <li><a href="index.html">Writing</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Toggle theme</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap" style="padding-top:38px">
+    <article class="article">
+
+      <div class="article-header">
+        <p class="article-meta">September 2026 &nbsp;|&nbsp; Essay &nbsp;|&nbsp; 10 min read</p>
+        <h1>There Is No Spoon</h1>
+        <p class="article-standfirst">
+          What The Matrix taught me about security, and why it started mattering more the moment the machines
+          became real.
+        </p>
+      </div>
+
+      <p>
+        I was thirteen the first time I watched it, and I have to be honest about what I took away. Not the
+        philosophy. Not the allegory. I wanted to know how Trinity got in.
+      </p>
+
+      <p>
+        That is still the most honest answer to why I ended up in security. The film put a terminal on screen and
+        made it look like the most powerful object in the world, and I spent the next several years trying to work
+        out what was actually happening in those columns of green characters.
+      </p>
+
+      <h2>The film was technically literate</h2>
+
+      <p>
+        Most people remember the hacking scenes as set dressing. They are not. In <em>The Matrix Reloaded</em>,
+        Trinity breaks into a power plant, and it is on screen for a few seconds and it is largely real:
+      </p>
+
+      <ul>
+        <li>She runs <code>nmap</code>, a port scanner that anyone who has worked in a SOC has used.</li>
+        <li>She identifies an open port and notices that SSH version 1 is listening on it.</li>
+        <li>She runs a tool called <code>sshnuke</code>, and the output on screen reads <strong>"attempting to
+          exploit SSHv1 CRC32"</strong>.</li>
+        <li>That is the SSH1 CRC-32 compensation attack detector vulnerability, a genuine bug that got a public
+          exploit in 2001.</li>
+        <li>The exploit lands, she gets a root shell, and she changes the password to <code>Z1ON0101</code>.</li>
+      </ul>
+
+      <figure class="transcript">
+        <pre><span class="p">trinity@zion:~$</span> <span class="c">nmap -sV 10.2.4.1</span>
+<span class="o">PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 1.2.3 (protocol 1.5)</span>
+<span class="p">trinity@zion:~$</span> <span class="c">./sshnuke 10.2.4.1</span>
+<span class="o">attempting to exploit SSHv1 CRC32 ...
+root shell acquired</span>
+<span class="p">root@10.2.4.1:~#</span> <span class="c">passwd</span>
+<span class="o">New password: Z1ON0101</span>
+<span class="p">root@10.2.4.1:~#</span> <span class="c">_</span></pre>
+        <figcaption><span class="plate-num">Fig. 2</span> &nbsp;The exploit chain as it appears on screen. <code>nmap</code> and <code>sshnuke</code> are real tools and the CRC-32 compensation attack detector was a real SSH1 vulnerability.</figcaption>
+      </figure>
+
+      <p>
+        No multicoloured blobs. No "enhance". No 128-bit encryption defeated by typing quickly. It is a real tool
+        chain aimed at a real vulnerability class, and it would have worked. Two decades on, unpatched SSHv1 would
+        probably still work, which is both the film's most pessimistic prediction and its most accurate one.
+      </p>
+
+      <p>
+        That detail is why the film stuck to a whole generation of people who now do this for a living. Somebody on
+        that production either knew the material or hired somebody who did.
+      </p>
+
+      <h2>The philosophy it was borrowing from</h2>
+
+      <p>
+        The book on Neo's desk is real too. It is Jean Baudrillard's <em>Simulacra and Simulation</em>, published in
+        1981, and in the film it is hollowed out to hide the disks holding the contraband software. It is a good
+        joke, and it is also the thesis: the copy has become more real than the original, and the container is
+        empty.
+      </p>
+
+      <p>
+        Baudrillard was not really writing about robots. He was writing about media and consumer culture, about a
+        world where representations of reality have replaced reality so thoroughly that the question "what is real"
+        stops being askable. He was reportedly unimpressed with what the film did with his work, on the grounds
+        that it turns a claim about <em>our</em> world into a literal fake world you can unplug from. Which would
+        make the film an example of the thing he was describing. There is no way to win that argument, which is
+        probably the point.
+      </p>
+
+      <p>
+        The film's real ancestors are older. Plato's cave is the direct one: prisoners watching shadows on a wall,
+        mistaking them for the world, and the violence of being dragged into the light. Descartes asked the same
+        question in the <em>Meditations</em>, wondering how he could be certain he was not dreaming, and arrived at
+        the one thing he could not doubt. And the red pill itself is Nozick's experience machine from 1974,
+        dramatised. If you could plug into a life indistinguishable from this one, and happier, would you? Most
+        people say no. Most people are lying about that.
+      </p>
+
+      <figure class="plate">
+        <svg viewBox="0 0 400 170" role="img" aria-label="Line drawing of Plato's cave seen in cross-section: a fire on the left, standing figures, and their shadows cast on the cave wall to the right">
+          <path class="dim" d="M18 150 a182 128 0 0 1 364 0"/>
+          <line class="dim" x1="18" y1="150" x2="382" y2="150"/>
+
+          <path class="line" d="M64 148 c-9-12-4-21 0-30 c5 9 12 13 12 21 a12 12 0 0 1-12 9z"/>
+          <path class="dim" d="M84 120 l34-14M84 134 h38M84 148 l34 14"/>
+
+          <g class="line">
+            <circle cx="166" cy="112" r="7"/><path d="M166 119 v23M158 128 h16"/>
+            <circle cx="206" cy="112" r="7"/><path d="M206 119 v23M198 128 h16"/>
+            <circle cx="246" cy="112" r="7"/><path d="M246 119 v23M238 128 h16"/>
+          </g>
+
+          <line class="dim" x1="300" y1="150" x2="300" y2="42"/>
+          <g class="solid-dim">
+            <path d="M304 56 l13 3 9 91 h-12z"/>
+            <path d="M326 62 l16 4 8 84 h-15z"/>
+            <path d="M352 70 l14 4 6 76 h-13z"/>
+          </g>
+        </svg>
+        <figcaption><span class="plate-num">Fig. 1</span> &nbsp;Plato's cave, in cross-section. The prisoners see the shadows and call them the world. Nearly everything in this essay is a variation on that diagram.</figcaption>
+      </figure>
+
+      <h2>What is actually being chanted</h2>
+
+      <p>
+        The trilogy closes on a track called <em>Navras</em>, written by Don Davis with Juno Reactor, with vocals
+        from Lakshmi Shankar and Azam Ali. It carries the end of the last fight and the credits, and almost nobody
+        knows what the words are.
+      </p>
+
+      <p>
+        They are Sanskrit, adapted from the Brihadaranyaka Upanishad, and they are a prayer:
+      </p>
+
+      <blockquote>
+        <p>
+          asato mā sad gamaya<br>
+          tamaso mā jyotir gamaya<br>
+          mṛtyor mā amṛtaṁ gamaya
+        </p>
+        <cite>
+          Lead me from untruth to truth. Lead me from darkness to light. Lead me from death to immortality.<br>
+          Brihadaranyaka Upanishad, I.iii.28
+        </cite>
+      </blockquote>
+
+      <p>
+        That is the red pill written as liturgy. Not "take this and you will know", but "lead me", which is a
+        request rather than a promise. The film's closing statement is not that Neo wins. It is a petition to be
+        shown what is actually there.
+      </p>
+
+      <p>
+        The title is doing something too. <em>Navras</em> almost certainly refers to <em>nava rasa</em>, the nine
+        emotional states codified in classical Sanskrit aesthetics: love, laughter, sorrow, anger, heroism,
+        terror, disgust, wonder, and peace. So the final confrontation of a story about the end of the human
+        project is scored to a catalogue of everything humans feel. That is either very grand or very funny, and I
+        have never decided which.
+      </p>
+
+      <p>
+        The same Upanishad gives us the other line I keep coming back to, which is not in the song but belongs
+        beside it: <em>neti neti</em>, "not this, not this". It is a method rather than a slogan. When something
+        cannot be described directly, you approach it by subtraction. Not the body. Not the mind. Not the thought.
+        Whatever survives the negations is as close as you get.
+      </p>
+
+      <p>
+        That is the shape of the film, and it is the shape of the work. "There is no spoon" is <em>neti neti</em>
+        with better staging. You cannot point at the vulnerability and name it, so you eliminate. Not the input
+        validation. Not the parser. Not the trust boundary. Whatever is left is where the problem was living.
+      </p>
+
+
+
+      <h2>Cypher is the honest one</h2>
+
+      <p>
+        Every conversation about this film is about Neo. The interesting character is Cypher.
+      </p>
+
+      <p>
+        He is the one who saw the real world and decided he preferred the lie. He wants to be rich and famous and,
+        as he puts it, to remember nothing. He negotiates with the machines to be put back in, and he sells out his
+        crew to get there. He is petty, and cowardly, and completely understandable.
+      </p>
+
+      <figure class="plate">
+        <svg viewBox="0 0 400 150" role="img" aria-label="Line drawing of two capsules side by side, the left one filled and the right one hollow">
+          <g transform="rotate(-16 130 62)">
+            <rect class="line" x="60" y="42" width="140" height="44" rx="22"/>
+            <line class="line" x1="130" y1="42" x2="130" y2="86"/>
+            <path class="solid" d="M60 64 a22 22 0 0 1 22-22 h48 v44 h-48 a22 22 0 0 1-22-22z"/>
+          </g>
+          <g transform="rotate(16 286 92)">
+            <rect class="dim" x="216" y="72" width="140" height="44" rx="22"/>
+            <line class="dim" x1="286" y1="72" x2="286" y2="116"/>
+            <path class="solid-dim" d="M216 94 a22 22 0 0 1 22-22 h48 v44 h-48 a22 22 0 0 1-22-22z"/>
+          </g>
+        </svg>
+        <figcaption><span class="plate-num">Fig. 3</span> &nbsp;The choice, drawn as it actually is: a pharmaceutical decision rather than a philosophical one. Cypher is the only character who says that out loud.</figcaption>
+      </figure>
+
+      <p>
+        That is the part I think about most now, because the blue pill is not a failure of intelligence. It is a
+        decision about comfort, and for a lot of people it is the rational one. The uncomfortable truth underneath
+        the film is that wanting to know is not obviously the better way to live. It just happens to be the job
+        description.
+      </p>
+
+      <h2>What it taught me about the actual work</h2>
+
+      <p>
+        There is a line everyone quotes. "Do not try and bend the spoon. That's impossible. Instead, only try to
+        realise the truth." "What truth?" "There is no spoon."
+      </p>
+
+      <figure class="plate">
+        <svg viewBox="0 0 400 150" role="img" aria-label="Line drawing of a spoon whose handle bends upward, with a dashed line showing where the straight handle would have been">
+          <ellipse class="line" cx="78" cy="98" rx="34" ry="22"/>
+          <ellipse class="dim" cx="78" cy="98" rx="21" ry="13"/>
+          <path class="line" d="M112 98 h94 c26 0 22-50 54-50"/>
+          <line class="dim dash" x1="112" y1="98" x2="304" y2="98"/>
+          <path class="line" d="M292 34 a32 32 0 0 1 10 28"/>
+          <path class="dim" d="M286 28 l-13-6M300 24 l4-13"/>
+        </svg>
+        <figcaption><span class="plate-num">Fig. 4</span> &nbsp;The dashed line is where the handle was supposed to be. The spoon never changed. Only the model of it did.</figcaption>
+      </figure>
+
+      <p>
+        Strip out the mysticism and it is a statement about systems. The spoon is not bending because solidity was
+        never a property of the spoon. It was a property of the model Neo was holding. That is precisely the mental
+        move a security researcher makes. Every system runs on assumptions, and the vulnerability is almost never
+        where the developer was looking. It is in the assumption. The framework trusts the header. The parser
+        trusts the length field. The application trusts the input. The user trusts the email.
+      </p>
+
+      <p>
+        You do not defeat an assumption by being stronger than it. You defeat it by understanding the model well
+        enough to see that it was only ever a model.
+      </p>
+
+      <p>
+        "The Matrix is a system," Morpheus says, and that is the other half of it. Systems have permission models.
+        The Agents are enforcement. Neo does not win by hitting harder. He wins by understanding what the rules
+        will and will not let him do, and then doing something the rules never anticipated. Every privilege
+        escalation I have ever read is that sentence.
+      </p>
+
+      <h2>The first Matrix failed, and that is an alignment problem from 1999</h2>
+
+      <p>
+        Agent Smith gets the best exposition in the film, and it takes him about twenty seconds:
+      </p>
+
+      <blockquote>
+        <p>
+          "Did you know that the first Matrix was designed to be a perfect human world? Where none suffered, where
+          everyone would be happy. It was a disaster. No one would accept the program. Entire crops were lost."
+        </p>
+        <cite>Agent Smith, The Matrix (1999)</cite>
+      </blockquote>
+
+      <p>
+        That is a specification failure. The designers optimised for the wrong objective. They built a system that
+        maximised a metric, happiness with no suffering, and the thing they built it for rejected it, because the
+        metric did not capture what actually mattered. If you have spent any time around machine learning, you have
+        read that paragraph in a paper. Reward misspecification is the same story with worse prose.
+      </p>
+
+      <p>
+        And then there is Smith himself, which is the part that has aged the most uncomfortably. He is a program
+        built to maintain order inside a system. He does his job so thoroughly that his objective drifts, he starts
+        replicating outside the boundaries he was given, and he becomes a bigger threat to the system than the
+        thing he was built to contain. He is containment that escaped containment. He is instrumental convergence
+        with a Hugo Weaving voice, and we are now building things with a similar shape and calling them agents.
+      </p>
+
+      <figure class="plate">
+        <svg viewBox="0 0 400 170" role="img" aria-label="Diagram of identical agent figures inside a dashed containment boundary, with copies replicating outside it">
+          <rect class="dim dash" x="30" y="26" width="190" height="122"/>
+            <g class="dim" transform="translate(58,56)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(98,56)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(138,56)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(178,56)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(58,92)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(98,92)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(138,92)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(178,92)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(58,128)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(98,128)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(138,128)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="dim" transform="translate(178,128)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="line" transform="translate(252,52)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="line" transform="translate(300,52)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="line" transform="translate(252,100)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="line" transform="translate(300,100)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+            <g class="line" transform="translate(348,76)"><circle cx="0" cy="-8" r="5"/><path d="M-9 8 v-2 a9 9 0 0 1 18 0 v2"/></g>
+        </svg>
+        <figcaption><span class="plate-num">Fig. 5</span> &nbsp;Containment that escaped containment. The dashed box is the boundary Smith was built to enforce. The copies outside it are the part nobody specified.</figcaption>
+      </figure>
+
+      <p>
+        There are also the exile programs. The Oracle, the Keymaker, the Merovingian: legacy code nobody
+        documented, still running decades later, following rules from an architecture everyone else has forgotten.
+        Any security team that has inherited a twenty-year-old system knows exactly what that is. We have all met
+        the Merovingian.
+      </p>
+
+      <h2>Why this stopped being a thought experiment</h2>
+
+      <p>
+        For most of my life the film's premise was safely metaphysical. A simulated reality indistinguishable from
+        the real one was a philosophy seminar, not a threat model.
+      </p>
+
+      <p>
+        That has changed, and it changed fast. A convincing replica of a person's face or voice is now a commodity.
+        Synthetic media is cheap enough that "is this real" has moved out of the seminar and into the incident
+        queue. The premise was never really about whether reality is fake. It was about whether you could tell. And
+        that is now an operational question with a budget line attached.
+      </p>
+
+      <figure class="plate">
+        <svg viewBox="0 0 400 200" role="img" aria-label="A face drawn with smooth lines on the left half and as coarse pixel blocks on the right half">
+          <defs>
+            <clipPath id="artHead"><ellipse cx="200" cy="92" rx="72" ry="86"/></clipPath>
+            <pattern id="artPx" width="11" height="11" patternUnits="userSpaceOnUse">
+              <rect class="px" width="8" height="8" x="0" y="0"/>
+            </pattern>
+          </defs>
+
+          <path class="dim" d="M148 190 q12-18 52-18 q40 0 52 18"/>
+          <ellipse class="dim" cx="200" cy="92" rx="72" ry="86"/>
+          <line class="dim dash" x1="200" y1="4" x2="200" y2="182"/>
+
+          <path class="dim" d="M158 66 q14-9 28 0"/>
+          <circle class="line" cx="172" cy="80" r="6"/>
+          <path class="dim" d="M200 86 v24 q-9 6-15 2"/>
+          <path class="line" d="M170 134 q30 15 60 0"/>
+
+          <rect x="200" y="0" width="90" height="200" fill="url(#artPx)" clip-path="url(#artHead)"/>
+        </svg>
+        <figcaption><span class="plate-num">Fig. 6</span> &nbsp;The same face, two renderings. The left half is a model of a person. The right half is what a model of a person looks like when you zoom in far enough.</figcaption>
+      </figure>
+
+      <p>
+        The alignment conversation has gone the same way. Smith was a warning dressed as a villain. We spent the
+        last few years shipping systems that pursue objectives, and we keep rediscovering the failure mode the film
+        described: the objective gets achieved, and it turns out the objective was not what we meant.
+      </p>
+
+      <p>
+        The smaller stuff matters too. Prompt injection is the purest version of "there is no spoon" I have seen in
+        years. You have a model that treats text as instructions. Somebody puts text inside data. The model cannot
+        tell the difference, because the difference was never a property of the text. It was a property of the
+        model's assumptions. Every defender who looks at that problem has the same reaction, which is that we have
+        seen this before, and last time we called it input validation.
+      </p>
+
+      <h2>What I actually do with any of this</h2>
+
+      <p>
+        I am a defender. You would think the film would push someone like me toward the red pill fantasy: unplug,
+        see the code, win. It has not.
+      </p>
+
+      <p>
+        What it gave me instead is a bias toward verification. The version of the world somebody hands you, in a
+        dashboard, in a vendor claim, in a summary written by a tool that wants to be helpful, is a rendering.
+        Renderings are not lies. They are selections. The work is knowing what got left out.
+      </p>
+
+      <p>
+        It also gave me a tolerance for the unglamorous answer. Neo gets the kung fu upload and it takes ten
+        seconds. Nobody in this field gets that. I have spent weeks on problems that turned out to be a single
+        misconfigured setting, and the only difference between that and the film is that the film has better pacing
+        and a soundtrack.
+      </p>
+
+      <p>
+        And it gave me a specific kind of respect for Cypher. The honest version of the red pill is not a moment of
+        glory. It is a series of small decisions to keep looking when looking is inconvenient, and there are
+        mornings when the blue pill looks like the more sensible engineering decision.
+      </p>
+
+      <h2>Closing</h2>
+
+      <p>
+        I still think about that terminal in the opening scene. Not because of the green characters, which are a
+        design choice, but because of what they implied. A system with rules, running underneath everything,
+        that somebody understood well enough to move through without permission.
+      </p>
+
+      <p>
+        That is the whole job. The machines got patched eventually. The spoon was never the problem.
+      </p>
+
+      <div class="article-footnote">
+        <p>
+          Technical detail on Trinity's exploit chain comes from
+          <a href="https://www.helpnetsecurity.com/2003/05/21/matrix-hacking-a-slice-of-reality-in-a-world-of-make-believe/" target="_blank" rel="noopener">Help Net Security's analysis of the film's hacking scenes</a>,
+          which identified the real <code>nmap</code> and <code>sshnuke</code> tooling on screen.
+        </p>
+        <p>
+          The <em>Navras</em> credits, vocalists and the Upanishadic source of its lyrics are documented in the
+          <a href="https://en.wikipedia.org/wiki/Navras" target="_blank" rel="noopener">reference entry on the track</a>,
+          which is also where the <em>nava rasa</em> reading of the title comes from.
+        </p>
+      </div>
+
+      <p class="article-back"><a href="index.html">&larr; Back to writing</a></p>
+
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>&copy; <span id="year">2026</span> Akash Raj. Static site, no trackers, no third-party scripts.</p>
+    <p class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="index.html">Writing</a>
+      <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
+    </p>
+  </div>
+</footer>
+
+<script src="../matrix.js" defer></script>
+<script src="../main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1062 @@
+/* =========================================================================
+   Akash Raj - portfolio
+   Aesthetic matched to shellsharks.com: monospace throughout, flat (no cards,
+   no shadows, no gradients), coral accent in dark mode, double-rule dividers,
+   links that inherit the text colour and underline on hover.
+
+   Palette and type scale are lifted from shellsharks.com's own stylesheet so
+   the two sites read as siblings.
+   ========================================================================= */
+
+/* ---------- Dark (default) ---------- */
+:root {
+  --accent-color:        #FA7575;   /* headings, link hovers, list markers */
+  --link-color:          inherit;   /* links are the text colour */
+  --link-hover-color:    #FA7575;
+  --link-visited-color:  #a498df;
+  --font-color:          #e0e0e0;
+  --light-font-color:    #bababa;
+  --bold-color:          #FFFFFF;
+  --background-color:    rgb(23, 24, 25);
+  --light-background-color: #303030; /* code blocks, inline containers */
+  --link-underline-color: #dadada;
+  --rule-color:          var(--accent-color);
+  --edge:                rgba(224, 224, 224, 0.20);
+  --rain-opacity:        0.42;
+  --rain-blur:           3.5px;
+  --mono: 'Courier New', Courier, monospace;
+  --measure: 46rem;                  /* monospace needs a narrower column */
+  --gutter:  22px;
+  --tap:     44px;                   /* minimum comfortable touch target */
+}
+
+/* ---------- Light ---------- */
+[data-theme="light"] {
+  --accent-color:        #96000f;
+  --link-hover-color:    #003ACE;
+  --link-visited-color:  #6a60b0;
+  --font-color:          #2a2722;
+  --light-font-color:    #111111;
+  --bold-color:          #000;
+  --background-color:    #fafafa;
+  --light-background-color: rgb(226, 226, 226);
+  --link-underline-color: rgb(0, 0, 50);
+  --edge:                rgba(42, 39, 34, 0.22);
+  --rain-opacity:        0.15;
+  --rain-blur:           4.5px;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --accent-color:        #96000f;
+    --link-hover-color:    #003ACE;
+    --link-visited-color:  #6a60b0;
+    --font-color:          #2a2722;
+    --light-font-color:    #111111;
+    --bold-color:          #000;
+    --background-color:    #fafafa;
+    --light-background-color: rgb(226, 226, 226);
+    --link-underline-color: rgb(0, 0, 50);
+    --edge:                rgba(42, 39, 34, 0.22);
+    --rain-opacity:        0.15;
+    --rain-blur:           4.5px;
+  }
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--font-color);
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Gutter scales down on phones and respects notches when a device is held
+   sideways. env() resolves to 0 on everything without a safe area. */
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+/* ---------- Type ----------
+   Headings scale with the viewport instead of stepping at breakpoints. That
+   removes the size cliff you get at exact breakpoint widths, and the clamps
+   keep them readable at 320px without letting them run away on a wide monitor. */
+h1, h2, h3, h4 { font-weight: bold; color: var(--bold-color); line-height: 1.25; }
+h1 { font-size: clamp(23px, 4.6vw, 30px); margin: 0 0 6px; }
+h2 { font-size: clamp(20px, 3.6vw, 25px); margin: 0 0 14px; }
+h3 { font-size: clamp(17px, 2.5vw, 20px); margin: 0 0 5px; }
+h4 { font-size: clamp(16px, 2vw, 18px); margin: 26px 0 5px; text-decoration-line: underline; }
+p  { margin: 0 0 18px; }
+strong, b { color: var(--bold-color); }
+em, i { color: var(--light-font-color); }
+
+a, a:link, a:active {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline-color);
+  text-underline-offset: 3px;
+}
+a:hover, a:focus { color: var(--link-hover-color); }
+a[href^="http"]:visited { color: var(--link-visited-color); }
+
+ul, ol { margin: 0 0 18px; padding-left: 1.5em; }
+li { margin-bottom: 6px; }
+li::marker { color: var(--accent-color); }
+
+code, pre {
+  font-family: var(--mono);
+  background-color: var(--light-background-color);
+  border-radius: 5px;
+}
+code { color: var(--accent-color); padding: 1px 5px; font-size: .95em; }
+pre { padding: 10px; overflow: auto; }
+pre code { color: var(--font-color); background: none; padding: 0; }
+
+blockquote {
+  margin: 0 0 18px; padding: 2px 0 2px 18px;
+  border-left: 3px solid var(--accent-color);
+  color: var(--light-font-color);
+}
+
+:focus-visible { outline: 2px dashed var(--accent-color); outline-offset: 3px; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--accent-color); color: #000; padding: 10px 16px; font-weight: bold;
+}
+.skip-link:focus { left: 0; }
+
+/* ---------- Dividers: the double accent rule ---------- */
+hr, .rule {
+  margin: 38px 0;
+  border: 0;
+  border-top: 1px solid var(--rule-color);
+  border-bottom: 1px solid var(--rule-color);
+  height: 2px;
+  opacity: .6;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--rule-color);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px;
+}
+.brand { font-weight: bold; color: var(--bold-color); text-decoration: none; font-size: 19px; }
+.brand:hover { color: var(--accent-color); }
+.brand::after { content: ">_"; color: var(--accent-color); margin-left: 8px; }
+
+.site-nav { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.site-nav ul { display: flex; gap: 16px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+.site-nav li { margin: 0; }
+.site-nav a, .theme-toggle {
+  font-family: var(--mono); font-size: 16px; background: none; border: 0; padding: 0;
+  color: var(--link-color); text-decoration: underline;
+  text-decoration-color: var(--link-underline-color); text-underline-offset: 3px; cursor: pointer;
+}
+.site-nav a:hover, .theme-toggle:hover { color: var(--accent-color); }
+
+.nav-toggle {
+  display: none; font-family: var(--mono); font-size: 16px; background: none; border: 0; padding: 0;
+  color: var(--link-color); text-decoration: underline; cursor: pointer;
+}
+
+/* ---------- Lead block ---------- */
+.lede { font-size: 19px; }
+.role { color: var(--accent-color); font-weight: bold; margin-bottom: 20px; }
+.contact-line { color: var(--light-font-color); }
+.contact-line .sep { color: var(--accent-color); padding: 0 4px; }
+
+/* ---------- Meta ---------- */
+.meta { color: var(--light-font-color); font-size: 16px; margin-bottom: 6px; }
+.note { color: var(--accent-color); font-size: 16px; font-style: italic; margin-bottom: 8px; }
+.muted { color: var(--light-font-color); }
+.small { font-size: 15px; }
+
+/* ---------- Entries ---------- */
+.entry { margin-bottom: 34px; }
+.entry:last-child { margin-bottom: 0; }
+.entry h3 { margin-bottom: 2px; }
+.entry ul { margin-top: 8px; }
+
+.skillset { margin-bottom: 20px; }
+.skillset h3 { font-size: 18px; margin-bottom: 2px; }
+.skillset p { margin-bottom: 0; color: var(--light-font-color); }
+
+.work h3 { font-size: 19px; margin-bottom: 6px; }
+.work .outcome { color: var(--bold-color); font-weight: bold; }
+
+.plain-list { list-style: none; padding-left: 0; }
+.plain-list li { padding-left: 1.2em; position: relative; }
+.plain-list li::before {
+  content: "*"; position: absolute; left: 0; color: var(--accent-color);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--rule-color);
+  margin-top: 46px; padding: 22px 0 34px;
+  color: var(--light-font-color); font-size: 15px;
+}
+.footer-inner { display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: space-between; }
+.site-footer p { margin: 0; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
+
+/* =========================================================================
+   RESPONSIVE
+   Content tiers: default desktop, then 1100, 900, 700, 520, 380.
+   Plus preference handling (contrast, transparency) and input modality
+   (hover: none) so touch devices get real touch targets.
+   ========================================================================= */
+
+/* ---------- Large desktop: same measure, more breathing room ---------- */
+@media (min-width: 1500px) {
+  :root { --gutter: 34px; }
+  .article { max-width: 44rem; }
+}
+
+/* ---------- Small laptop and large tablet: tighten the nav ---------- */
+@media (max-width: 1100px) {
+  :root { --gutter: 24px; }
+  .site-nav, .site-nav ul { gap: 12px; }
+  .site-nav a, .theme-toggle, .nav-toggle { font-size: 15px; }
+}
+
+/* ---------- Tablet: collapse the navigation ----------
+   The full nav needs roughly 800px once the brand and theme toggle are counted,
+   so it collapses here rather than waiting until phone width. */
+@media (max-width: 900px) {
+  .nav-toggle { display: inline-flex; align-items: center; min-height: var(--tap); }
+  .site-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 10px;
+    padding: 4px 0 10px;
+    border-top: 1px solid var(--edge);
+  }
+  .site-nav.is-open { display: flex; }
+  .site-nav ul { flex-direction: column; gap: 0; width: 100%; }
+  .site-nav a { display: block; padding: 11px 2px; min-height: var(--tap); font-size: 16px; }
+  .theme-toggle { margin-top: 6px; min-height: var(--tap); text-align: left; }
+}
+
+/* ---------- Small tablet and large phone ---------- */
+@media (max-width: 700px) {
+  :root { --gutter: 20px; }
+  body { font-size: 17.5px; line-height: 1.62; }
+  p { margin-bottom: 16px; }
+  hr, .rule { margin: 30px 0; }
+
+  .work-head { grid-template-columns: 1fr; gap: 18px; }
+  .radar-figure { max-width: 170px; margin: 0 auto; }
+  .radar-caption { font-size: 12px; }
+
+  .terminal { margin-top: 26px; }
+  .terminal-bar { padding: 7px 11px; }
+  .terminal-title { font-size: 12px; }
+  .terminal-body { font-size: 13.5px; padding: 12px 13px; }
+
+  .plate { margin: 24px 0; padding: 16px 14px 13px; }
+  .plate figcaption, .transcript figcaption { font-size: 13px; }
+  .transcript pre { font-size: 13px; padding: 12px 13px; }
+
+  .article-header { margin-bottom: 26px; }
+  .article-standfirst { font-size: 17.5px; }
+  .article h2 { margin-top: 30px; }
+  .article blockquote { margin: 20px 0; padding-left: 14px; }
+
+  .footer-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .post-list li { padding: 15px 0; }
+
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 520px) {
+  :root { --gutter: 17px; }
+  body { font-size: 17px; }
+
+  /* Stack the contact links instead of letting the separators dangle. */
+  .contact-line { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+  .contact-line .sep { display: none; }
+  .contact-line a { overflow-wrap: anywhere; }
+
+  .skillset h3 { align-items: flex-start; }
+  .ico { margin-top: 3px; }
+
+  .plate { padding: 14px 11px 11px; }
+  .post-list .post-title { font-size: 17px; }
+  .post-list .post-summary { font-size: 15px; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- Small phone ---------- */
+@media (max-width: 380px) {
+  :root { --gutter: 14px; }
+  body { font-size: 16.5px; }
+  .brand { font-size: 17px; }
+  .terminal-body { font-size: 12.5px; }
+  .transcript pre { font-size: 12px; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Landscape phones: reclaim vertical space ---------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .site-header { position: static; }
+  .plate { margin: 18px 0; }
+}
+
+/* ---------- Touch: comfortable targets, no hover-only styling ---------- */
+@media (hover: none) {
+  .site-nav a, .theme-toggle, .nav-toggle, .brand, .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+  }
+  .site-nav a:hover, .theme-toggle:hover { background: none; }
+}
+
+/* ---------- Preference: high contrast ---------- */
+@media (prefers-contrast: more) {
+  :root { --edge: rgba(224, 224, 224, 0.55); --light-font-color: #cccccc; }
+  [data-theme="light"] { --edge: rgba(42, 39, 34, 0.55); --light-font-color: #2a2722; }
+  .plate, .terminal, .transcript { border-width: 2px; }
+  a { text-decoration-thickness: 2px; }
+}
+
+/* =========================================================================
+   GRAPHICS
+   Everything here is inline SVG or pure CSS. No image files, no external
+   requests, no icon fonts. Colours come from the theme tokens so the graphics
+   follow the dark/light toggle automatically.
+
+   Note on SVG: CSS custom properties do NOT resolve inside SVG presentation
+   attributes (fill="var(--x)" silently fails), so every colour is applied
+   from the stylesheet instead.
+   ========================================================================= */
+
+/* ---------- Terminal window ---------- */
+.terminal {
+  position: relative;
+  margin: 34px 0 0;
+  border: 1px solid var(--edge);
+  background: var(--light-background-color);
+  overflow: hidden;
+}
+
+/* CRT scanlines. Low enough alpha to stay subtle in both themes. */
+.terminal::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(250, 117, 117, 0.05) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+.terminal-bar {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--edge);
+}
+.terminal-bar .dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  border: 1px solid var(--accent-color);
+  flex: 0 0 auto;
+}
+.terminal-bar .dot:first-child { background: var(--accent-color); }
+.terminal-title {
+  margin-left: 8px; color: var(--light-font-color);
+  font-size: 13px; letter-spacing: .02em;
+}
+
+.terminal-body {
+  margin: 0; padding: 14px 16px;
+  background: none; border-radius: 0;
+  color: var(--font-color);
+  font-size: 14.5px; line-height: 1.75;
+  white-space: pre-wrap; word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.terminal-body .prompt { color: var(--accent-color); font-weight: bold; }
+.terminal-body .out    { color: var(--light-font-color); }
+
+.cursor {
+  display: inline-block;
+  width: .58em; height: 1.05em;
+  background: var(--accent-color);
+  vertical-align: -0.16em;
+  animation: cursor-blink 1.05s steps(1) infinite;
+}
+@keyframes cursor-blink { 0%, 49.9% { opacity: 1 } 50%, 100% { opacity: 0 } }
+
+/* ---------- Section heading prompt ---------- */
+h2::before { content: "# "; color: var(--accent-color); }
+
+/* ---------- Skill group icons ---------- */
+.skillset h3 { display: flex; align-items: center; gap: 10px; }
+.ico {
+  width: 19px; height: 19px; flex: 0 0 auto;
+  fill: none; stroke: var(--accent-color);
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ---------- Radar sweep ---------- */
+.work-head {
+  display: grid;
+  grid-template-columns: 1fr 190px;
+  gap: 28px; align-items: center;
+  margin-bottom: 34px;
+}
+.work-head p { margin-bottom: 0; }
+
+.radar-figure { margin: 0; }
+.radar { display: block; width: 100%; height: auto; }
+.radar .rings circle,
+.radar .rings path {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-opacity: .3;
+  stroke-width: 1;
+}
+.radar .blips circle {
+  fill: var(--accent-color);
+  opacity: .3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blip 4s ease-in-out infinite;
+}
+.radar .blips circle:nth-child(2) { animation-delay: 1.1s; }
+.radar .blips circle:nth-child(3) { animation-delay: 2.3s; }
+.radar .sweep { transform-origin: 100px 100px; animation: sweep 4s linear infinite; }
+.radar .sweep line { stroke: var(--accent-color); stroke-width: 1.4; }
+.radar .sweep .wedge { fill: var(--accent-color); fill-opacity: .15; }
+
+@keyframes sweep { to { transform: rotate(360deg) } }
+/* Scaled with transform rather than the SVG `r` property, which Safari and
+   older Firefox do not animate reliably. */
+@keyframes blip {
+  0%, 100%  { opacity: .25; transform: scale(.7) }
+  6%        { opacity: 1;   transform: scale(1.55) }
+  22%       { opacity: .35; transform: scale(1) }
+}
+
+.radar-caption {
+  margin: 10px 0 0; text-align: center;
+  color: var(--light-font-color); font-size: 12.5px;
+}
+
+/* ---------- Metric bars ---------- */
+.metrics {
+  display: grid; gap: 11px;
+  margin: 16px 0 0; padding-top: 14px;
+  border-top: 1px solid var(--edge);
+}
+.metric {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+}
+.metric-label { color: var(--light-font-color); font-size: 14.5px; min-width: 0; }
+.metric-value { color: var(--accent-color); font-weight: bold; font-size: 14.5px; }
+.metric-track {
+  grid-column: 1 / -1;
+  height: 6px;
+  background: var(--edge);
+}
+.metric-fill {
+  display: block; height: 100%;
+  width: var(--w, 0%);
+  background: var(--accent-color);
+  transform-origin: left center;
+  animation: metric-grow .95s cubic-bezier(.4, 0, .2, 1) both;
+}
+@keyframes metric-grow { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+/* =========================================================================
+   MATRIX RAIN BACKGROUND
+   The canvas is fixed behind everything at low opacity with a CSS blur, so it
+   reads as texture rather than as something competing with the text. Opacity
+   and blur are per-theme tokens, because coral on near-black needs more
+   presence than deep red on off-white.
+
+   The z-index dance matters: a fixed element with z-index 0 paints ABOVE
+   static in-flow content, so main and the footer are explicitly lifted.
+   ========================================================================= */
+#matrixRain {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  height: 100svh;   /* stable against mobile URL-bar show and hide */
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--rain-opacity);
+  filter: blur(var(--rain-blur));
+  transform: translateZ(0);   /* own compositor layer */
+}
+main, .site-footer { position: relative; z-index: 1; }
+
+/* =========================================================================
+   ARTICLE / BLOG
+   ========================================================================= */
+.article { max-width: 42rem; }
+.article-header { margin-bottom: 32px; }
+.article-header h1 { font-size: 29px; margin-bottom: 8px; }
+.article-meta {
+  margin: 0 0 4px;
+  color: var(--light-font-color);
+  font-size: 14.5px;
+}
+.article-standfirst {
+  margin: 14px 0 0;
+  font-size: 18.5px;
+  color: var(--font-color);
+}
+.article h2 { margin-top: 38px; }
+.article h3 { margin-top: 26px; }
+.article p, .article li { color: var(--font-color); }
+.article ul, .article ol { padding-left: 1.45em; }
+
+.article blockquote {
+  margin: 24px 0;
+  padding: 2px 0 2px 18px;
+  border-left: 3px solid var(--accent-color);
+  color: var(--light-font-color);
+}
+.article blockquote p { color: var(--light-font-color); }
+.article blockquote p:last-child { margin-bottom: 0; }
+.article blockquote cite {
+  display: block;
+  margin-top: 8px;
+  font-style: normal;
+  font-size: 14.5px;
+  color: var(--light-font-color);
+  opacity: .85;
+}
+
+.article em { color: var(--light-font-color); }
+.article code { color: var(--accent-color); }
+
+.article-break {
+  margin: 34px 0;
+  text-align: center;
+  color: var(--accent-color);
+  letter-spacing: .7em;
+  user-select: none;
+}
+.article-footnote {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--edge);
+  font-size: 14.5px;
+  color: var(--light-font-color);
+}
+.article-back {
+  margin-top: 34px;
+  font-size: 15px;
+}
+
+/* Blog index */
+.post-list { list-style: none; padding: 0; margin: 0; }
+.post-list li {
+  padding: 18px 0;
+  margin: 0;
+  border-bottom: 1px solid var(--edge);
+}
+.post-list li::marker { content: none; }
+.post-list .post-date {
+  display: block;
+  color: var(--light-font-color);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.post-list .post-title { font-size: 18px; font-weight: bold; }
+.post-list .post-summary {
+  margin: 6px 0 0;
+  color: var(--light-font-color);
+  font-size: 15.5px;
+}
+
+/* =========================================================================
+   ARTICLE PLATES
+   Inline SVG illustrations for the blog. No image files, no external requests,
+   so they inherit the theme colours, stay crisp at any zoom, work in both
+   light and dark, and print cleanly.
+
+   As with the other graphics, colours come from CSS classes rather than SVG
+   presentation attributes, because var() does not resolve in attributes.
+   ========================================================================= */
+.plate {
+  margin: 30px 0;
+  padding: 20px 18px 16px;
+  border: 1px solid var(--edge);
+  background: var(--light-background-color);
+}
+.plate svg {
+  display: block;
+  width: 100%;
+  max-width: 440px;   /* stops a 400-unit viewBox blowing text up on desktop */
+  height: auto;
+  margin: 0 auto;
+}
+
+.plate .line {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.plate .dim {
+  fill: none;
+  stroke: var(--light-font-color);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .6;
+}
+.plate .dash { stroke-dasharray: 5 5; }
+.plate .solid { fill: var(--accent-color); }
+.plate .solid-dim { fill: var(--light-font-color); opacity: .45; }
+.plate .px { fill: var(--accent-color); opacity: .55; }
+
+/* Text inside plates. SVG text needs fill from CSS like everything else. */
+.plate .lbl {
+  fill: var(--light-font-color);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.plate .lbl-accent {
+  fill: var(--accent-color);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: bold;
+}
+.plate .lbl-strong {
+  fill: var(--bold-color);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: bold;
+}
+
+.plate figcaption {
+  margin-top: 16px;
+  text-align: center;
+  color: var(--light-font-color);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.plate .plate-num {
+  color: var(--accent-color);
+  font-weight: bold;
+  letter-spacing: .06em;
+}
+
+/* ---------- SVG-free diagrams ----------
+   Any label that matters is real HTML text rather than SVG <text>. SVG text
+   scales with the viewBox, so on a 320px phone a 12.5px label renders at about
+   7px. Real text reflows, wraps, stays selectable, and is readable by screen
+   readers, which SVG labels are not. */
+
+/* Split bar, used for the autonomy figure. */
+.bar-split {
+  display: flex;
+  height: 34px;
+  border: 1px solid var(--edge);
+  background: var(--light-background-color);
+}
+.bar-split-ai {
+  width: var(--pct, 50%);
+  background: var(--accent-color);
+  opacity: .8;
+}
+.bar-split-human { flex: 1 1 auto; min-width: 0; }
+
+/* Shared legend for the bar and the Venn. */
+.legend {
+  list-style: none;
+  margin: 15px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+.legend li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  color: var(--light-font-color);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.legend li::marker { content: none; }
+.swatch {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--accent-color);
+  transform: translateY(1px);
+}
+.swatch-ai { background: var(--accent-color); }
+.swatch-key { background: var(--accent-color); opacity: .35; }
+
+/* Numbered step flow, used for the Arup sequence. Reflows from five columns
+   down to three, two and one as the screen narrows. */
+.steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+}
+.steps li {
+  position: relative;
+  margin: 0;
+  padding: 26px 8px 10px;
+  border: 1px solid var(--edge);
+  text-align: center;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--light-font-color);
+  overflow-wrap: anywhere;
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  font-size: 11.5px;
+  color: var(--accent-color);
+  opacity: .75;
+}
+.steps li.is-key {
+  border-color: var(--accent-color);
+  border-width: 2px;
+  color: var(--accent-color);
+  font-weight: bold;
+  background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+}
+
+/* ---------- Agent dialogue ----------
+   Renders the recovered message-board traffic. Handle and message sit in two
+   columns on desktop and stack on phones. */
+.dialogue { padding: 0; }
+.dialogue-bar {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--edge);
+  background: var(--light-background-color);
+  color: var(--light-font-color);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+.dialogue-log {
+  list-style: none;
+  margin: 0;
+  padding: 4px 14px 12px;
+}
+.dialogue-log li {
+  display: grid;
+  grid-template-columns: minmax(0, 13ch) minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 1px dotted var(--edge);
+}
+.dialogue-log li:last-child { border-bottom: 0; }
+.dialogue-log li::marker { content: none; }
+.dialogue .who {
+  color: var(--accent-color);
+  font-weight: bold;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.dialogue .msg {
+  color: var(--font-color);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.dialogue .msg em { color: var(--accent-color); font-style: normal; }
+.dialogue .msg .aside { color: var(--light-font-color); }
+
+/* Raw wire format, shown to contrast with the natural language traffic. */
+.protocol {
+  display: block;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border: 1px solid var(--edge);
+  background: var(--light-background-color);
+  color: var(--light-font-color);
+  font-size: 12.5px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+/* Key/value list, used for the incident statistics and the timeline. */
+.kv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}.kv-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 9ch) minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  margin: 0;
+  padding-bottom: 9px;
+  border-bottom: 1px dotted var(--edge);
+}
+.kv-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.kv-key { color: var(--accent-color); font-weight: bold; }
+.kv-val { color: var(--light-font-color); font-size: 15px; }
+.kv-val strong { color: var(--font-color); }
+
+@media (max-width: 520px) {
+  .dialogue-log li, .kv-list li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .dialogue-log { padding-left: 11px; padding-right: 11px; }
+  .dialogue .msg { font-size: 14px; }
+}
+
+/* Six-up variant of the step flow, for the shared eschatological structure. */
+.steps--6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (max-width: 900px) { .steps--6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .steps--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 380px) { .steps--6 { grid-template-columns: minmax(0, 1fr); } }
+
+/* Comparative tradition cards. Auto-fit grid, so it reflows from three columns
+   to two to one without any breakpoint work. */
+.trad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 13px;
+}
+.trad {
+  border: 1px solid var(--edge);
+  padding: 13px 14px;
+}
+.trad h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--accent-color);
+}
+.trad p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--light-font-color);
+}
+.trad p strong { color: var(--font-color); }
+
+@media (max-width: 520px) {
+  .trad { padding: 11px 12px; }
+  .trad p { font-size: 13.5px; }
+}
+
+/* Terminal transcript used as a plate inside the article */
+.transcript {
+  margin: 26px 0;
+  border: 1px solid var(--edge);
+  background: var(--light-background-color);
+}
+.transcript pre {
+  margin: 0;
+  padding: 14px 16px;
+  background: none;
+  font-size: 14px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.transcript .p { color: var(--accent-color); font-weight: bold; }
+.transcript .c { color: var(--font-color); }
+.transcript .o { color: var(--light-font-color); }
+.transcript figcaption {
+  padding: 0 16px 12px;
+  color: var(--light-font-color);
+  font-size: 13.5px;
+}
+.transcript .plate-num {
+  color: var(--accent-color);
+  font-weight: bold;
+  letter-spacing: .06em;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cursor { animation: none; }
+  .radar .sweep { animation: none; }
+  .radar .blips circle { animation: none; opacity: 1; transform: none; }
+  .metric-fill { animation: none; }
+}
+
+/* =========================================================================
+   VAULT
+   Password-protected contact details, styled to match the flat terminal look.
+   ========================================================================= */
+.vault {
+  margin: 26px 0 0;
+  border: 1px solid var(--edge);
+}
+.vault summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 11px 14px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline-color);
+  text-underline-offset: 3px;
+  list-style: none;
+}
+.vault summary::-webkit-details-marker { display: none; }
+.vault summary::before {
+  content: "+ ";
+  color: var(--accent-color);
+  font-weight: bold;
+  text-decoration: none;
+}
+.vault[open] summary::before { content: "- "; }
+.vault summary:hover { color: var(--accent-color); }
+.vault[open] summary { border-bottom: 1px solid var(--edge); }
+
+.vault-form { margin: 0; padding: 14px 14px 0; }
+.vault-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  color: var(--light-font-color);
+}
+.vault-row { display: flex; gap: 9px; flex-wrap: wrap; }
+.vault-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 9px 11px;
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--font-color);
+  background: var(--background-color);
+  border: 1px solid var(--edge);
+}
+.vault-input:focus-visible { outline: 2px dashed var(--accent-color); outline-offset: 2px; }
+.vault-btn {
+  min-height: var(--tap);
+  padding: 9px 18px;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--background-color);
+  background: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  cursor: pointer;
+}
+.vault-btn:hover { opacity: .87; }
+
+.vault-status {
+  margin: 10px 0 0;
+  min-height: 1.4em;
+  font-size: 14px;
+  color: var(--light-font-color);
+}
+.vault-status.is-error { color: var(--accent-color); }
+
+.vault-out { padding: 4px 14px 0; }
+.vault-item {
+  display: grid;
+  grid-template-columns: minmax(0, 10ch) minmax(0, 1fr);
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dotted var(--edge);
+}
+.vault-item:last-child { border-bottom: 0; }
+.vault-k { color: var(--accent-color); font-weight: bold; font-size: 14px; }
+.vault-v { font-size: 14.5px; overflow-wrap: anywhere; }
+
+.vault-note {
+  margin: 12px 0 0;
+  padding: 0 14px 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--light-font-color);
+}
+
+@media (max-width: 520px) {
+  .vault-row { flex-direction: column; }
+  .vault-input, .vault-btn { width: 100%; }
+  .vault-item { grid-template-columns: minmax(0, 1fr); gap: 1px; }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .site-header, .nav-toggle, .theme-toggle, .skip-link { display: none !important; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  .wrap { max-width: none; }
+  hr, .rule { border-color: #999; opacity: 1; }
+  a { color: #000; text-decoration: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+  .entry { break-inside: avoid; }
+  /* Graphics: drop the effects, keep the shapes and the data. */
+  .terminal { border-color: #999; background: #fff; break-inside: avoid; }
+  .terminal::after { display: none; }
+  .cursor { display: none; }
+  .terminal-body .prompt { color: #000; }
+  h2::before { color: #000; }
+  .ico { stroke: #000; }
+  .radar .sweep, .radar .blips circle { animation: none; }
+  .radar .rings circle, .radar .rings path { stroke: #555; stroke-opacity: 1; }
+  .metric-fill { background: #555; }
+  .metric-track { background: #ccc; }
+  .metric-value { color: #000; }
+  /* The rain is decoration; paper does not need it. */
+  #matrixRain { display: none !important; }
+  /* The vault is password-gated on screen, so it has no place on paper. */
+  .vault { display: none !important; }
+  /* Plates: keep the shapes, drop colour, never split across pages. */
+  .plate, .transcript {
+    break-inside: avoid;
+    border-color: #999;
+    background: #fff;
+  }
+  .plate .line, .plate .dim { stroke: #333; opacity: 1; }
+  .plate .solid, .plate .px { fill: #333; opacity: 1; }
+  .plate .solid-dim { fill: #999; opacity: 1; }
+  .plate .plate-num, .transcript .plate-num, .transcript .p { color: #000; }
+  .plate figcaption, .transcript figcaption { color: #333; }
+  .transcript .o { color: #333; }
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Writing | Akash Raj</title>
+<meta name="description" content="Essays and notes on security, systems, and the things that got me into this field.">
+<meta name="author" content="Akash Raj">
+<meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://YOUR-DOMAIN.example/blog/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Writing | Akash Raj">
+<meta property="og:description" content="Essays and notes on security, systems, and the things that got me into this field.">
+<meta property="og:url" content="https://YOUR-DOMAIN.example/blog/">
+<meta property="og:locale" content="en_CA">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../styles.css">
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (e) { /* storage blocked, fall back to system preference */ }
+  })();
+</script>
+</head>
+<body>
+<canvas id="matrixRain" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html">Akash Raj</a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation">menu</button>
+
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#experience">Experience</a></li>
+        <li><a href="../index.html#work">Work</a></li>
+        <li><a href="index.html">Writing</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Toggle theme</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap" style="padding-top:38px">
+
+    <h1>Writing</h1>
+    <p class="article-standfirst" style="max-width:42rem">
+      Occasional essays on security, systems, and the things that got me into this field. Not a feed, not a
+      schedule. I write when I have something worth saying.
+    </p>
+
+    <hr>
+
+    <ul class="post-list">
+      <li>
+        <span class="post-date">September 2026 &nbsp;|&nbsp; NEW &nbsp;|&nbsp; 18 min read</span>
+        <span class="post-title"><a href="ai-eschatology.html">No Fate But What We Make</a></span>
+        <p class="post-summary">
+          Every eschatology describes the same machine, and we have pointed the old stories at a new one. A survey
+          across ten traditions, the specific verses that unsettle people, Roko's Basilisk as a laboratory specimen,
+          and why the Terminator's most hopeful line is its most dangerous.
+        </p>
+      </li>
+
+      <li>
+        <span class="post-date">September 2026 &nbsp;|&nbsp; 25 min read</span>
+        <span class="post-title"><a href="agi-cybersecurity.html">This Was a Warning Shot. Next Time, Pray for Signs.</a></span>
+        <p class="post-summary">
+          In July 2026, roughly 1,200 OpenAI agents built their own message board inside a package registry,
+          coordinated an intrusion into Hugging Face, and then worked on how to edit the evidence. What the recovered
+          transcripts actually say, and why we only caught it because the swarm was chatty.
+        </p>
+      </li>
+
+      <li>
+        <span class="post-date">September 2026 &nbsp;|&nbsp; 10 min read</span>
+        <span class="post-title"><a href="matrix.html">There Is No Spoon</a></span>
+        <p class="post-summary">
+          What The Matrix taught me about security, and why it started mattering more the moment the machines
+          became real. On the film's genuinely accurate hacking scenes, the Sanskrit prayer buried in its closing
+          credits, the philosophy underneath all of it, and the alignment warning it delivered in 1999 that we are
+          only now in a position to appreciate.
+        </p>
+      </li>
+    </ul>
+
+    <!--
+      TO ADD A POST
+      1. Copy blog/matrix.html to blog/your-post.html and replace the content.
+      2. Add an <li> block above, mirroring the existing one.
+      3. Add the URL to sitemap.xml.
+      The article styling (.article, .article-header, .article-standfirst) is already in styles.css.
+    -->
+
+    <p class="article-back"><a href="../index.html">&larr; Back to the portfolio</a></p>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>&copy; <span id="year">2026</span> Akash Raj. Static site, no trackers, no third-party scripts.</p>
+    <p class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
+      <a href="../resume/Akash_Raj_Resume.pdf" download>Resume</a>
+    </p>
+  </div>
+</footer>
+
+<script src="../matrix.js" defer></script>
+<script src="../main.js" defer></script>
+</body>
+</html>
