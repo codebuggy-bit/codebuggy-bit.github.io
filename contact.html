@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact | Akash Raj</title>
+<meta name="description" content="Get in touch with Akash Raj about cyber defence, purple team, detection engineering or threat hunting roles.">
+<meta name="author" content="Akash Raj">
+<meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://akashraj.ca/contact">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact | Akash Raj">
+<meta property="og:description" content="Cyber defence, purple team, detection engineering and threat hunting.">
+<meta property="og:url" content="https://akashraj.ca/contact">
+<meta property="og:locale" content="en_CA">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css?v=7">
+
+<!-- Apply the saved colour theme before first paint so there is no flash.
+     The hash of this block is allowlisted in _headers; if you edit it, the
+     Content Security Policy will block it and the page will fall back to the
+     system theme. -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (e) { /* storage blocked, fall back to system preference */ }
+  })();
+</script>
+</head>
+<body>
+<canvas id="matrixRain" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">Akash Raj</a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation">menu</button>
+
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <ul>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#skills">Skills</a></li>
+        <li><a href="/#experience">Experience</a></li>
+        <li><a href="/#work">Work</a></li>
+        <li><a href="/blog/">Writing</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Toggle theme</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap pad-lead">
+
+    <h1>Contact</h1>
+    <p class="article-standfirst">
+      Hiring for a cyber defence, purple team, detection engineering or threat hunting role, or just want to argue
+      about detection tuning? Send a message below. I read everything that arrives through it.
+    </p>
+
+    <hr>
+
+    <!--
+      Progressive enhancement: this is a plain form POST, so it works with
+      JavaScript disabled. The function responds with a 303 back to this page
+      and the status is read from the query string.
+    -->
+    <div class="form-status" id="formStatus" role="status" aria-live="polite" hidden></div>
+
+    <form class="contact-form" id="contactForm" method="post" action="/api/contact">
+      <div class="field">
+        <label for="cf-name">Name</label>
+        <input id="cf-name" name="name" type="text" required maxlength="100"
+               autocomplete="name" spellcheck="false">
+      </div>
+
+      <div class="field">
+        <label for="cf-email">Email</label>
+        <input id="cf-email" name="email" type="email" required maxlength="254"
+               autocomplete="email" spellcheck="false">
+        <p class="field-hint">Used only to reply. Nothing is stored on this site.</p>
+      </div>
+
+      <div class="field">
+        <label for="cf-org">Company <span class="field-optional">optional</span></label>
+        <input id="cf-org" name="org" type="text" maxlength="100" autocomplete="organization" spellcheck="false">
+      </div>
+
+      <div class="field">
+        <label for="cf-reason">What is this about?</label>
+        <select id="cf-reason" name="reason">
+          <option value="role">A role or opportunity</option>
+          <option value="contract">Contract or consulting</option>
+          <option value="question">A technical question</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" rows="7" required maxlength="5000"
+                  aria-describedby="cf-message-hint"></textarea>
+        <p class="field-hint" id="cf-message-hint">
+          <span id="cf-count">0</span> / 5000 characters
+        </p>
+      </div>
+
+      <!--
+        Honeypot. Hidden from people with a stylesheet and from screen readers,
+        but a naive bot fills every input it finds. Anything here means the
+        submission is discarded. This is the whole spam defence: it costs the
+        reader nothing and needs no third-party CAPTCHA.
+      -->
+      <div class="hp" aria-hidden="true">
+        <label for="cf-website">Website</label>
+        <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button class="btn-primary" type="submit" id="cf-submit">Send message</button>
+
+      <p class="field-hint">
+        Or email <a data-user="contact" data-domain="akashraj.ca" href="#"><span class="email-label">contact</span></a>
+        directly. Messages sent through this form also arrive at that address.
+      </p>
+    </form>
+
+    <hr>
+
+    <h2>Other ways to reach me</h2>
+    <p class="contact-line">
+      <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
+      <span class="sep">|</span>
+      <a href="resume/Akash_Raj_Resume.pdf" download>Resume (PDF)</a>
+      <span class="sep">|</span>
+      <a href="/#contact">Private details</a>
+    </p>
+    <p>
+      LinkedIn is the fastest route if you need an answer today. The
+      <a href="/#contact">private details</a> section on the portfolio holds my phone number and certification
+      credential IDs behind a password.
+    </p>
+
+    <p class="article-back"><a href="/">&larr; Back to the portfolio</a></p>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>&copy; <span id="year">2026</span> Akash Raj. Static site, no trackers, no third-party scripts.</p>
+    <p class="footer-links">
+      <a href="/">Home</a>
+      <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
+      <a href="resume/Akash_Raj_Resume.pdf" download>Resume</a>
+    </p>
+  </div>
+</footer>
+
+<script src="matrix.js?v=7" defer></script>
+<script src="main.js?v=7" defer></script>
+<script src="ui.js?v=7" defer></script>
+<script src="contact.js?v=7" defer></script>
+</body>
+</html>
