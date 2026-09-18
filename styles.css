@@ -27,6 +27,9 @@
   --mono: 'Courier New', Courier, monospace;
   --measure: 46rem;                  /* prose measure, kept even in a wide column */
   --wide:    82rem;                  /* page container: rail + body */
+  --rail:    16.5rem;                /* section heading column; wide enough that
+                                        "Certifications and education" wraps at a
+                                        space rather than inside a word */
   --gutter:  22px;
   --tap:     44px;                   /* minimum comfortable touch target */
 }
@@ -132,15 +135,22 @@ body {
    ========================================================================= */
 .section {
   display: grid;
-  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, var(--rail)) minmax(0, 1fr);
   gap: 0 3.5rem;
   align-items: start;
 }
-.section > h2 {
+.section > h2,
+.section > h1 {
   margin: 0;
   padding-top: 2px;
   position: sticky;
   top: 5.5rem;          /* clears the sticky header */
+  /* body sets word-break: break-word so long URLs in prose cannot overflow.
+     A heading inherits it and then shatters mid-word - "Certifications and
+     education" was breaking inside "Certifications" and running to four lines.
+     Headings are short and use real spaces, so they wrap at spaces only. */
+  word-break: normal;
+  overflow-wrap: normal;
 }
 .section-body { min-width: 0; }
 
@@ -159,7 +169,8 @@ body {
 
 @media (max-width: 1000px) {
   .section { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .section > h2 { position: static; margin-bottom: 14px; }
+  .section > h2,
+  .section > h1 { position: static; margin-bottom: 14px; }
 }
 
 /* Two-column grids inside a section body, for the parts that are lists of
@@ -167,7 +178,7 @@ body {
    needing a breakpoint each. */
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(21rem, 100%), 1fr));
   gap: 14px;
   align-items: start;
 }
@@ -202,6 +213,16 @@ h1 { font-size: clamp(23px, 4.6vw, 30px); margin: 0 0 6px; }
 h2 { font-size: clamp(20px, 3.6vw, 25px); margin: 0 0 14px; }
 h3 { font-size: clamp(17px, 2.5vw, 20px); margin: 0 0 5px; }
 h4 { font-size: clamp(16px, 2vw, 18px); margin: 26px 0 5px; text-decoration-line: underline; }
+
+/* The two headings inside "Certifications and education". They were <h4>, which
+   skipped a level under an <h2> and gave assistive tech an outline with a hole
+   in it. They are <h3> now; the class keeps the smaller underlined look that
+   marked them as secondary. */
+.subhead {
+  font-size: clamp(16px, 2vw, 18px);
+  margin: 0 0 8px;
+  text-decoration-line: underline;
+}
 p  { margin: 0 0 18px; }
 strong, b { color: var(--bold-color); }
 em, i { color: var(--light-font-color); }
@@ -266,15 +287,15 @@ hr, .rule {
 .brand:hover { color: var(--accent-color); }
 .brand::after { content: ">_"; color: var(--accent-color); margin-left: 8px; }
 
-.site-nav { display: flex; align-items: center; gap: 16px; flex-wrap: nowrap; }
+.site-nav { display: flex; align-items: center; gap: 9px; flex-wrap: nowrap; }
 .site-nav ul { display: flex; gap: 16px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
 .site-nav li { margin: 0; }
-.site-nav a, .theme-toggle {
+.site-nav a {
   font-family: var(--mono); font-size: 16px; background: none; border: 0; padding: 0;
   color: var(--link-color); text-decoration: underline;
   text-decoration-color: var(--link-underline-color); text-underline-offset: 3px; cursor: pointer;
 }
-.site-nav a:hover, .theme-toggle:hover { color: var(--accent-color); }
+.site-nav a:hover { color: var(--accent-color); }
 
 .nav-toggle {
   display: none; font-family: var(--mono); font-size: 16px; background: none; border: 0; padding: 0;
@@ -305,10 +326,14 @@ hr, .rule {
    full width while the sections were indented, so the hero text began 264px to
    the left of every section body and the first place that showed was #about
    refusing to line up. The eyebrow rides in the rail so the column is not left
-   empty. */
+   empty.
+
+   The rail width is the --rail token rather than a number repeated here: when
+   the two were written out separately they drifted, and the hero prose sat 56px
+   left of the section prose. */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, var(--rail)) minmax(0, 1fr);
   gap: 0 3.5rem;
   align-items: start;
 }
@@ -332,7 +357,7 @@ hr, .rule {
    gaps read as dividers. Flat, and no shadows, matching the rest of the site. */
 .pillars {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
   gap: 1px;
   margin: 26px 0 0;
   padding: 0;
@@ -363,7 +388,7 @@ hr, .rule {
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   gap: 1px;
   margin: 22px 0 0;
   padding: 0;
@@ -505,17 +530,25 @@ hr, .rule {
    (hover: none) so touch devices get real touch targets.
    ========================================================================= */
 
-/* ---------- Large desktop: same measure, more breathing room ---------- */
+/* ---------- Large desktop ----------
+   Only above 1500px is the container allowed to grow. Widening it globally
+   would leave a 1440px screen with 22px of margin - the gutter and nothing
+   else - so the extra width is spent only where there is width to spare. The
+   prose measure is fixed at 46rem either way; it is the card grids that use
+   the room, and at 82rem the work cards were narrow enough to push a two-line
+   title onto a third. */
 @media (min-width: 1500px) {
-  :root { --gutter: 34px; }
+  :root { --gutter: 34px; --wide: 88rem; }
   .article { max-width: 44rem; }
 }
 
-/* ---------- Small laptop and large tablet: tighten the nav ---------- */
+/* ---------- Small laptop and large tablet ----------
+   The navigation has already collapsed by 1180px, so its gaps and font sizes
+   are set there and anything restated here would lose. That leaves the gutter
+   and the menu button, which is the only nav element still on screen. */
 @media (max-width: 1100px) {
   :root { --gutter: 24px; }
-  .site-nav, .site-nav ul { gap: 12px; }
-  .site-nav a, .theme-toggle, .nav-toggle, .search-btn { font-size: 15px; }
+  .nav-toggle { font-size: 15px; }
 }
 
 /* ---------- Tablet: collapse the navigation ----------
@@ -538,7 +571,11 @@ hr, .rule {
   .site-nav.is-open { display: flex; }
   .site-nav ul { flex-direction: column; gap: 0; width: 100%; }
   .site-nav a { display: block; padding: 11px 2px; min-height: var(--tap); font-size: 16px; }
-  .theme-toggle { margin-top: 6px; min-height: var(--tap); text-align: left; }
+  /* The two controls stack under the links. align-items: stretch on the parent
+     turns each chip into a full-width row, which is what a menu wants, so the
+     7px that grouped them in the header row has to come back off. */
+  .search-btn { margin-left: 0; margin-top: 10px; min-height: var(--tap); }
+  .theme-toggle { margin-top: 8px; min-height: var(--tap); }
 }
 
 /* ---------- Small tablet and large phone ---------- */
@@ -607,11 +644,21 @@ hr, .rule {
   .plate { margin: 18px 0; }
 }
 
-/* ---------- Touch: comfortable targets, no hover-only styling ---------- */
+/* ---------- Touch: comfortable targets, no hover-only styling ----------
+   Only sizing belongs in here. An earlier version also set display on these
+   elements, which quietly broke two things: .nav-toggle became visible next to
+   the full navigation on any device that reports no hover - touch laptops,
+   tablets in landscape, and every headless browser - and .site-nav a lost the
+   display:block that makes the whole row tappable in the collapsed menu.
+   Whether an element exists at a given width is the width breakpoint's
+   decision, so hover must not touch display or it will contradict it. */
 @media (hover: none) {
+  /* min-height does nothing on a link that is still display:inline, so the
+     footer links - the only ones not already laid out as flex items - have to
+     become inline-flex. Everything else in this list is a flex item already and
+     only needs the size. */
+  .footer-links a { display: inline-flex; align-items: center; }
   .site-nav a, .theme-toggle, .nav-toggle, .brand, .footer-links a {
-    display: inline-flex;
-    align-items: center;
     min-height: var(--tap);
   }
   .site-nav a:hover, .theme-toggle:hover { background: none; }
@@ -1158,7 +1205,7 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
    to two to one without any breakpoint work. */
 .trad-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 13px;
 }
 .trad {
@@ -1351,18 +1398,36 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
   text-decoration-thickness: 2px;
 }
 
-/* ---------- Search trigger ---------- */
-.search-btn {
+/* ---------- Search trigger and theme toggle ----------
+   These two are controls, not destinations, but they used to be styled exactly
+   like the navigation links and sat in the same run of text. The header read as
+   one long sentence: "About Skills Experience Work Writing Contact search
+   Ctrl K Toggle theme". They now drop the underline for a bordered chip and the
+   gap groups them together, so the eye separates navigation from controls. */
+.search-btn,
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 7px;
   font-family: var(--mono); font-size: 16px;
-  background: none; border: 0; padding: 0;
-  color: var(--link-color); text-decoration: underline;
-  text-decoration-color: var(--link-underline-color); text-underline-offset: 3px;
+  padding: 5px 11px; margin: 0;
+  background: none;
+  border: 1px solid var(--edge);
+  color: var(--light-font-color);
+  text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
 }
-.search-btn:hover { color: var(--accent-color); }
+.search-btn:hover,
+.theme-toggle:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+  background: none;
+}
+/* 7px on top of the nav's 9px gap restores the 16px the links use, so the
+   controls are set apart from the navigation but tight to each other. */
+.search-btn { margin-left: 7px; }
 .search-btn kbd {
   font-family: var(--mono); font-size: 12px;
-  border: 1px solid var(--edge); padding: 0 4px; margin-left: 4px;
+  border: 1px solid var(--edge); padding: 0 4px; margin-left: 0;
   color: var(--light-font-color);
 }
 
@@ -1500,20 +1565,28 @@ body.palette-open { overflow: hidden; }
   cursor: pointer; list-style: none;
 }
 .toc summary::-webkit-details-marker { display: none; }
-.toc summary::before { content: "+ "; color: var(--accent-color); font-weight: bold; }
-.toc[open] summary::before { content: "- "; }
+/* The space in content: "+ " did nothing: summary is a flex container, and a
+   whitespace-only text run between flex items is collapsed, so it rendered as
+   "-ON THIS PAGE". A margin cannot be collapsed away. */
+.toc summary::before { content: "+"; margin-right: 8px; color: var(--accent-color); font-weight: bold; }
+.toc[open] summary::before { content: "-"; }
 .toc summary:hover { color: var(--accent-color); }
 .toc[open] summary { border-bottom: 1px solid var(--edge); }
 
 .toc ol { margin: 0; padding: 8px 0; list-style: none; counter-reset: toc; }
 .toc li { margin: 0; counter-increment: toc; }
+/* Every entry keeps a visible left rail, accent-coloured on hover and on the
+   section being read. Without it the entries were indistinguishable from body
+   text on a touch screen, where there is no hover to reveal that they are
+   links. */
 .toc a {
   display: block; padding: 5px 14px;
   font-size: 14.5px; text-decoration: none;
-  border-left: 3px solid transparent;
+  border-left: 3px solid var(--edge);
+  transition: border-color .15s ease, color .15s ease;
 }
 .toc a::before { content: counter(toc) ". "; color: var(--accent-color); }
-.toc a:hover { color: var(--accent-color); }
+.toc a:hover { color: var(--accent-color); border-left-color: var(--accent-color); }
 .toc a.is-current {
   border-left-color: var(--accent-color);
   background: var(--light-background-color);
@@ -1534,7 +1607,14 @@ body.palette-open { overflow: hidden; }
 .heading-anchor:focus { opacity: 1; }
 
 /* ---------- Writing filter ---------- */
-.filter { margin: 0 0 26px; padding-top: 14px; border-top: 1px solid var(--edge); }
+/* Capped to the reading measure: a search field stretched across the whole body
+   column is 1000px of empty box on a desktop, and it lines up with the posts
+   underneath it instead. */
+.filter {
+  margin: 0 0 26px; padding-top: 14px;
+  max-width: var(--measure);
+  border-top: 1px solid var(--edge);
+}
 .filter-label {
   display: block; margin-bottom: 6px;
   font-size: 14.5px; color: var(--light-font-color);
@@ -1553,9 +1633,8 @@ body.palette-open { overflow: hidden; }
 }
 
 /* ---------- Interactive layer: responsive ---------- */
-@media (max-width: 1180px) {
-  .search-btn { text-align: left; min-height: var(--tap); margin-top: 4px; }
-}
+/* The search trigger is sized with the rest of the collapsed menu, up in the
+   header section, so that it and the theme toggle stay in step. */
 
 @media (max-width: 520px) {
   .palette-panel { margin-top: 5vh; max-height: 86vh; }
@@ -1612,8 +1691,13 @@ body.palette-open { overflow: hidden; }
   font-size: 16px;      /* 16px stops iOS zooming the page on focus */
   line-height: 1.5;
   color: var(--font-color);
-  background: var(--background-color);
+  /* Transparent, not --background-color. The form is a tinted panel, and an
+     opaque field punches a hole in that tint; with five fields the panel read
+     as a stack of alternating coloured bands, like a striped table. Letting the
+     tint through leaves the border to say where the field is. */
+  background: transparent;
   border: 1px solid var(--edge);
+  border-color: color-mix(in srgb, var(--accent-color) 34%, var(--edge));
 }
 .contact-form textarea { resize: vertical; min-height: 10rem; }
 .contact-form input:focus-visible,
@@ -1769,7 +1853,7 @@ body.palette-open { overflow: hidden; }
    ========================================================================= */
 .stack-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
   gap: 1px;
   margin: 22px 0 0;
   padding: 0;

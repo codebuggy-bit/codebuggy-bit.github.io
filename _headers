@@ -43,3 +43,10 @@
 # A response header cannot be merged wrongly.
 /resume/*
   X-Robots-Tag: noindex, nofollow, noarchive
+
+# The RSS feed. Pages would serve it as application/xml, which some readers
+# reject; RSS wants this exact type. It changes only when an article does, so it
+# is safe to cache for longer than the HTML.
+/blog/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+  Cache-Control: public, max-age=3600

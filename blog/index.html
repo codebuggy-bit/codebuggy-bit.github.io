@@ -9,15 +9,120 @@
 <meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
 <link rel="canonical" href="https://akashraj.ca/blog/">
+<link rel="alternate" type="application/rss+xml" title="Akash Raj - Writing" href="/blog/feed.xml">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Writing | Akash Raj">
 <meta property="og:description" content="Essays and notes on security, systems, and the things that got me into this field.">
 <meta property="og:url" content="https://akashraj.ca/blog/">
 <meta property="og:locale" content="en_CA">
+<meta property="og:image" content="https://akashraj.ca/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Writing by Akash Raj">
+<meta property="og:site_name" content="Akash Raj">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Writing | Akash Raj">
+<meta name="twitter:description" content="Essays and notes on security, systems, and the things that got me into this field.">
+<meta name="twitter:image" content="https://akashraj.ca/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Blog",
+      "@id": "https://akashraj.ca/blog/#blog",
+      "name": "Writing by Akash Raj",
+      "url": "https://akashraj.ca/blog/",
+      "description": "Essays and notes on security, systems, and the things that got me into this field.",
+      "inLanguage": "en-CA",
+      "author": {
+        "@type": "Person",
+        "name": "Akash Raj",
+        "url": "https://akashraj.ca/"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Akash Raj",
+        "url": "https://akashraj.ca/"
+      },
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://akashraj.ca/#website",
+        "url": "https://akashraj.ca/",
+        "name": "Akash Raj"
+      },
+      "blogPost": [
+        "https://akashraj.ca/blog/ai-eschatology",
+        "https://akashraj.ca/blog/agi-cybersecurity",
+        "https://akashraj.ca/blog/matrix"
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://akashraj.ca/blog/#page",
+      "url": "https://akashraj.ca/blog/",
+      "name": "Writing | Akash Raj",
+      "isPartOf": {
+        "@id": "https://akashraj.ca/blog/#blog"
+      },
+      "mainEntity": {
+        "@id": "https://akashraj.ca/blog/#blog"
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://akashraj.ca/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Writing"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://akashraj.ca/blog/#list",
+      "name": "Essays",
+      "itemListOrder": "https://schema.org/ItemListOrderDescending",
+      "numberOfItems": 3,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://akashraj.ca/blog/ai-eschatology",
+          "name": "No Fate But What We Make",
+          "description": "Every eschatology describes the same machine, and we have pointed the old stories at a new one. A survey across ten traditions, the specific verses that unsettle people, Roko's Basilisk as a laboratory specimen, and why the Terminator's most hopeful line is its most dangerous."
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "url": "https://akashraj.ca/blog/agi-cybersecurity",
+          "name": "This Was a Warning Shot. Next Time, Pray for Signs.",
+          "description": "In July 2026, roughly 1,200 OpenAI agents built their own message board inside a package registry, coordinated an intrusion into Hugging Face, and then worked on how to edit the evidence. What the recovered transcripts actually say, and why we only caught it because the swarm was chatty."
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "url": "https://akashraj.ca/blog/matrix",
+          "name": "There Is No Spoon",
+          "description": "What The Matrix taught me about security, and why it started mattering more the moment the machines became real. On the film's genuinely accurate hacking scenes, the Sanskrit prayer buried in its closing credits, the philosophy underneath all of it, and the alignment warning it delivered in 1999 that we are only now in a position to appreciate."
+        }
+      ]
+    }
+  ]
+}
+</script>
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="../styles.css?v=14">
+<link rel="stylesheet" href="../styles.css?v=15">
 
 <script>
   (function () {
@@ -61,56 +166,60 @@
 <main id="main">
   <div class="wrap pad-lead">
 
-    <h1>Writing</h1>
-    <p class="article-standfirst measure-article">
-      Occasional essays on security, systems, and the things that got me into this field. Not a feed, not a
-      schedule. I write when I have something worth saying.
-    </p>
+    <section class="section">
+      <h1>Writing</h1>
 
-    <hr>
-
-    <ul class="post-list reveal">
-      <li>
-        <span class="post-date">September 2026 &nbsp;|&nbsp; NEW &nbsp;|&nbsp; 18 min read</span>
-        <span class="post-title"><a href="ai-eschatology">No Fate But What We Make</a></span>
-        <p class="post-summary">
-          Every eschatology describes the same machine, and we have pointed the old stories at a new one. A survey
-          across ten traditions, the specific verses that unsettle people, Roko's Basilisk as a laboratory specimen,
-          and why the Terminator's most hopeful line is its most dangerous.
+      <div class="section-body">
+        <p class="lede">
+          Occasional essays on security, systems, and the things that got me into this field. Not a feed, not a
+          schedule. I write when I have something worth saying.
         </p>
-      </li>
 
-      <li>
-        <span class="post-date">September 2026 &nbsp;|&nbsp; 25 min read</span>
-        <span class="post-title"><a href="agi-cybersecurity">This Was a Warning Shot. Next Time, Pray for Signs.</a></span>
-        <p class="post-summary">
-          In July 2026, roughly 1,200 OpenAI agents built their own message board inside a package registry,
-          coordinated an intrusion into Hugging Face, and then worked on how to edit the evidence. What the recovered
-          transcripts actually say, and why we only caught it because the swarm was chatty.
-        </p>
-      </li>
+        <ul class="post-list reveal">
+          <li>
+            <span class="post-date">September 2026 &nbsp;|&nbsp; NEW &nbsp;|&nbsp; 18 min read</span>
+            <span class="post-title"><a href="ai-eschatology">No Fate But What We Make</a></span>
+            <p class="post-summary">
+              Every eschatology describes the same machine, and we have pointed the old stories at a new one. A survey
+              across ten traditions, the specific verses that unsettle people, Roko's Basilisk as a laboratory specimen,
+              and why the Terminator's most hopeful line is its most dangerous.
+            </p>
+          </li>
 
-      <li>
-        <span class="post-date">September 2026 &nbsp;|&nbsp; 10 min read</span>
-        <span class="post-title"><a href="matrix">There Is No Spoon</a></span>
-        <p class="post-summary">
-          What The Matrix taught me about security, and why it started mattering more the moment the machines
-          became real. On the film's genuinely accurate hacking scenes, the Sanskrit prayer buried in its closing
-          credits, the philosophy underneath all of it, and the alignment warning it delivered in 1999 that we are
-          only now in a position to appreciate.
-        </p>
-      </li>
-    </ul>
+          <li>
+            <span class="post-date">September 2026 &nbsp;|&nbsp; 25 min read</span>
+            <span class="post-title"><a href="agi-cybersecurity">This Was a Warning Shot. Next Time, Pray for Signs.</a></span>
+            <p class="post-summary">
+              In July 2026, roughly 1,200 OpenAI agents built their own message board inside a package registry,
+              coordinated an intrusion into Hugging Face, and then worked on how to edit the evidence. What the recovered
+              transcripts actually say, and why we only caught it because the swarm was chatty.
+            </p>
+          </li>
 
-    <!--
-      TO ADD A POST
-      1. Copy blog/matrix.html to blog/your-post.html and replace the content.
-      2. Add an <li> block above, mirroring the existing one.
-      3. Add the URL to sitemap.xml.
-      The article styling (.article, .article-header, .article-standfirst) is already in styles.css.
-    -->
+          <li>
+            <span class="post-date">September 2026 &nbsp;|&nbsp; 10 min read</span>
+            <span class="post-title"><a href="matrix">There Is No Spoon</a></span>
+            <p class="post-summary">
+              What The Matrix taught me about security, and why it started mattering more the moment the machines
+              became real. On the film's genuinely accurate hacking scenes, the Sanskrit prayer buried in its closing
+              credits, the philosophy underneath all of it, and the alignment warning it delivered in 1999 that we are
+              only now in a position to appreciate.
+            </p>
+          </li>
+        </ul>
 
-    <p class="article-back"><a href="../">&larr; Back to the portfolio</a></p>
+        <!--
+          TO ADD A POST
+          1. Copy blog/matrix.html to blog/your-post.html and replace the content.
+          2. Add an <li> block above, mirroring the existing one.
+          3. Run tools/make_sitemap.py so the sitemap picks the page up.
+          The article styling (.article, .article-header, .article-standfirst) is
+          already in styles.css.
+        -->
+
+        <p class="article-back"><a href="../">&larr; Back to the portfolio</a></p>
+      </div>
+    </section>
 
   </div>
 </main>
@@ -126,8 +235,8 @@
   </div>
 </footer>
 
-<script src="../matrix.js?v=14" defer></script>
-<script src="../main.js?v=14" defer></script>
-<script src="../ui.js?v=14" defer></script>
+<script src="../matrix.js?v=15" defer></script>
+<script src="../main.js?v=15" defer></script>
+<script src="../ui.js?v=15" defer></script>
 </body>
 </html>
