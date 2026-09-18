@@ -83,6 +83,15 @@
     var alreadyTyped = false;
     try { alreadyTyped = sessionStorage.getItem("typed") === "1"; } catch (e) { /* private mode */ }
 
+    /* Tell ui.js the intro is done so it can hand over to a real prompt.
+       It also sets an attribute, because when the typing is skipped this fires
+       while main.js is still executing and a listener would not be attached
+       yet. */
+    var signalReady = function () {
+      term.setAttribute("data-ready", "1");
+      term.dispatchEvent(new CustomEvent("terminalready"));
+    };
+
     if (!noMotion && !alreadyTyped) {
       var walker = document.createTreeWalker(term, NodeFilter.SHOW_TEXT, null, false);
       var nodes = [], node;
@@ -93,7 +102,7 @@
 
       var ni = 0, ci = 0;
       var type = function () {
-        if (ni >= nodes.length) return;
+        if (ni >= nodes.length) { signalReady(); return; }
         var cur = nodes[ni];
         ci++;
         cur.node.nodeValue = cur.text.slice(0, ci);
@@ -106,6 +115,8 @@
       };
       window.setTimeout(type, 320);
       try { sessionStorage.setItem("typed", "1"); } catch (e) { /* private mode */ }
+    } else {
+      signalReady();
     }
   }
 

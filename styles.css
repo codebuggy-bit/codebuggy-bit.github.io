@@ -239,13 +239,14 @@ hr, .rule {
 @media (max-width: 1100px) {
   :root { --gutter: 24px; }
   .site-nav, .site-nav ul { gap: 12px; }
-  .site-nav a, .theme-toggle, .nav-toggle { font-size: 15px; }
+  .site-nav a, .theme-toggle, .nav-toggle, .search-btn { font-size: 15px; }
 }
 
 /* ---------- Tablet: collapse the navigation ----------
-   The full nav needs roughly 800px once the brand and theme toggle are counted,
-   so it collapses here rather than waiting until phone width. */
-@media (max-width: 900px) {
+   The full nav needs roughly 840px once the brand, search trigger and theme
+   toggle are counted, so it collapses before that rather than overflowing.
+   The search trigger pushed this up from 900px. */
+@media (max-width: 1000px) {
   .nav-toggle { display: inline-flex; align-items: center; min-height: var(--tap); }
   .site-nav {
     display: none;
@@ -1022,6 +1023,252 @@ main, .site-footer { position: relative; z-index: 1; }
   .vault-item { grid-template-columns: minmax(0, 1fr); gap: 1px; }
 }
 
+/* =========================================================================
+   INTERACTIVE LAYER
+   Command palette, scroll progress, active nav state, terminal prompt,
+   article table of contents, writing filter, copy buttons and toasts.
+
+   Same flat vocabulary as the rest of the site: borders and background
+   changes, never drop shadows. Every element here is created by ui.js, so
+   none of it exists for a reader with JavaScript off.
+   ========================================================================= */
+
+/* ---------- Scroll progress ---------- */
+.progress {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: var(--accent-color);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  z-index: 60;                /* above the sticky header, which is 50 */
+  pointer-events: none;
+}
+
+/* ---------- Active navigation ----------
+   Colour and a solid underline only. Inserting a marker character would
+   change the link's width and shuffle the whole nav row while scrolling. */
+.site-nav a.is-current {
+  color: var(--accent-color);
+  text-decoration-style: solid;
+  text-decoration-color: var(--accent-color);
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Search trigger ---------- */
+.search-btn {
+  font-family: var(--mono); font-size: 16px;
+  background: none; border: 0; padding: 0;
+  color: var(--link-color); text-decoration: underline;
+  text-decoration-color: var(--link-underline-color); text-underline-offset: 3px;
+  cursor: pointer;
+}
+.search-btn:hover { color: var(--accent-color); }
+.search-btn kbd {
+  font-family: var(--mono); font-size: 12px;
+  border: 1px solid var(--edge); padding: 0 4px; margin-left: 4px;
+  color: var(--light-font-color);
+}
+
+/* ---------- Back to top ---------- */
+.to-top {
+  position: fixed;
+  right: max(var(--gutter), env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 55;
+  font-family: var(--mono); font-size: 14px;
+  padding: 8px 12px;
+  color: var(--font-color);
+  background: var(--background-color);
+  border: 1px solid var(--edge);
+  cursor: pointer;
+  opacity: 0; visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .16s ease, transform .16s ease, visibility .16s;
+}
+.to-top.is-on { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%; bottom: 74px;   /* clears the back-to-top button below it */
+  z-index: 95;
+  max-width: min(92vw, 30rem);
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--background-color);
+  background: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  opacity: 0; visibility: hidden;
+  transform: translate(-50%, 8px);
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+}
+.toast.is-on { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+
+/* ---------- Copy-to-clipboard ---------- */
+.copy-btn {
+  font-family: var(--mono); font-size: 12.5px;
+  background: none; border: 1px solid var(--edge);
+  color: var(--light-font-color);
+  padding: 2px 7px; margin-left: 7px;
+  cursor: pointer; vertical-align: middle;
+}
+.copy-btn:hover { color: var(--accent-color); border-color: var(--accent-color); }
+
+/* ---------- Command palette ---------- */
+body.palette-open { overflow: hidden; }
+
+.palette { position: fixed; inset: 0; z-index: 90; }
+.palette-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .58); }
+[data-theme="light"] .palette-backdrop { background: rgba(0, 0, 0, .34); }
+
+.palette-panel {
+  position: relative;
+  display: flex; flex-direction: column;
+  width: min(94vw, 44rem);
+  max-height: 70vh;
+  margin: 12vh auto 0;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
+}
+
+.palette-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: var(--mono); font-size: 17px;
+  color: var(--font-color); background: var(--background-color);
+  border: 0; border-bottom: 1px solid var(--edge);
+}
+.palette-input:focus { outline: none; }
+.palette-input::placeholder { color: var(--light-font-color); }
+
+.palette-list {
+  list-style: none; margin: 0; padding: 6px 0;
+  overflow-y: auto; overscroll-behavior: contain;
+}
+.palette-list li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 2px 12px; align-items: baseline;
+  margin: 0; padding: 9px 16px 9px 13px;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+.palette-list li[aria-selected="true"] {
+  background: var(--light-background-color);
+  border-left-color: var(--accent-color);
+}
+.palette-kind { font-size: 12.5px; color: var(--light-font-color); }
+.palette-title { font-size: 15.5px; }
+.palette-list li[aria-selected="true"] .palette-title { color: var(--accent-color); }
+.palette-sub { grid-column: 2; font-size: 13px; color: var(--light-font-color); }
+.palette-empty { padding: 14px 16px; font-size: 14px; color: var(--light-font-color); }
+
+.palette-hint {
+  margin: 0; padding: 9px 16px;
+  border-top: 1px solid var(--edge);
+  font-size: 12.5px; color: var(--light-font-color);
+}
+.palette-hint kbd {
+  font-family: var(--mono);
+  border: 1px solid var(--edge); padding: 0 4px;
+}
+
+/* ---------- Terminal prompt ---------- */
+.terminal-body[data-interactive="1"] { padding-bottom: 4px; }
+
+.term-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 0 16px 14px;
+}
+.term-input {
+  flex: 1 1 auto; min-width: 0;
+  padding: 2px 0;
+  font-family: var(--mono); font-size: 14.5px;
+  color: var(--font-color); background: none; border: 0;
+}
+.term-input:focus { outline: none; }
+.term-input::placeholder { color: var(--light-font-color); opacity: .75; }
+.term-input:disabled { opacity: .4; }
+.terminal-body .term-err { color: var(--accent-color); }
+
+/* ---------- Article table of contents ---------- */
+.toc { margin: 26px 0 30px; border: 1px solid var(--edge); }
+.toc summary {
+  display: flex; align-items: center;
+  min-height: var(--tap);
+  padding: 9px 14px;
+  font-size: 13.5px; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--light-font-color);
+  cursor: pointer; list-style: none;
+}
+.toc summary::-webkit-details-marker { display: none; }
+.toc summary::before { content: "+ "; color: var(--accent-color); font-weight: bold; }
+.toc[open] summary::before { content: "- "; }
+.toc summary:hover { color: var(--accent-color); }
+.toc[open] summary { border-bottom: 1px solid var(--edge); }
+
+.toc ol { margin: 0; padding: 8px 0; list-style: none; counter-reset: toc; }
+.toc li { margin: 0; counter-increment: toc; }
+.toc a {
+  display: block; padding: 5px 14px;
+  font-size: 14.5px; text-decoration: none;
+  border-left: 3px solid transparent;
+}
+.toc a::before { content: counter(toc) ". "; color: var(--accent-color); }
+.toc a:hover { color: var(--accent-color); }
+.toc a.is-current {
+  border-left-color: var(--accent-color);
+  background: var(--light-background-color);
+  color: var(--accent-color);
+}
+
+/* Heading anchors stay partly visible: on a touch screen there is no hover to
+   reveal them, so hiding them completely makes them unreachable. */
+.heading-anchor {
+  margin-left: 10px;
+  font-size: .78em;
+  color: var(--light-font-color);
+  text-decoration: none;
+  opacity: .35;
+  transition: opacity .15s ease;
+}
+.article h2:hover .heading-anchor { opacity: 1; color: var(--accent-color); }
+.heading-anchor:focus { opacity: 1; }
+
+/* ---------- Writing filter ---------- */
+.filter { margin: 0 0 26px; padding-top: 14px; border-top: 1px solid var(--edge); }
+.filter-label {
+  display: block; margin-bottom: 6px;
+  font-size: 13.5px; color: var(--light-font-color);
+}
+.filter-input {
+  width: 100%; min-height: var(--tap);
+  padding: 9px 11px;
+  font-family: var(--mono); font-size: 15px;
+  color: var(--font-color); background: var(--background-color);
+  border: 1px solid var(--edge);
+}
+.filter-input:focus-visible { outline: 2px dashed var(--accent-color); outline-offset: 2px; }
+.filter-count {
+  margin: 8px 0 0; min-height: 1.3em;
+  font-size: 13.5px; color: var(--light-font-color);
+}
+
+/* ---------- Interactive layer: responsive ---------- */
+@media (max-width: 1000px) {
+  .search-btn { text-align: left; min-height: var(--tap); margin-top: 4px; }
+}
+
+@media (max-width: 520px) {
+  .palette-panel { margin-top: 5vh; max-height: 86vh; }
+  /* One column on a phone: the kind sits above the title instead of beside. */
+  .palette-list li { grid-template-columns: minmax(0, 1fr); gap: 1px; }
+  .palette-kind, .palette-sub { grid-column: 1; }
+  .to-top { font-size: 13px; padding: 6px 10px; }
+  .term-input { font-size: 16px; }   /* keeps iOS from zooming on focus */
+}
+
 /* ---------- Print ---------- */
 @media print {
   .site-header, .nav-toggle, .theme-toggle, .skip-link { display: none !important; }
@@ -1047,6 +1294,11 @@ main, .site-footer { position: relative; z-index: 1; }
   #matrixRain { display: none !important; }
   /* The vault is password-gated on screen, so it has no place on paper. */
   .vault { display: none !important; }
+  /* Interactive chrome has no meaning on paper. */
+  .progress, .to-top, .toast, .palette, .copy-btn, .search-btn,
+  .filter, .toc, .heading-anchor, .term-row {
+    display: none !important;
+  }
   /* Plates: keep the shapes, drop colour, never split across pages. */
   .plate, .transcript {
     break-inside: avoid;

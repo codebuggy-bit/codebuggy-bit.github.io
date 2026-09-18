@@ -14,11 +14,47 @@ blog/               index plus three essays
 resume/             downloadable resume (PDF, DOCX, plain text)
 styles.css          all styling, dark and light themes
 main.js             theme toggle, mobile nav, terminal typing effect
+ui.js               command palette, scroll progress, live terminal, ToC, filter
 matrix.js           Matrix rain background (blog pages only)
 vault.js            client-side decryption for the private contact details
 robots.txt          keeps /resume/ out of search results
 sitemap.xml         for Search Console
 ```
+
+## Interactive layer
+
+`ui.js` adds the interactive behaviour. Everything in it is progressive
+enhancement: it creates its own markup, and with JavaScript off the pages render
+exactly as before.
+
+- **Command palette** on `Ctrl`/`Cmd`+`K`, or `/`, or the *search* button in the
+  nav. Fuzzy-matches sections, essays and actions (toggle theme, copy email,
+  download resume) and is driven entirely from the keyboard.
+- **Live terminal** in the hero. Once the intro finishes typing, the prompt
+  accepts real input: `help`, `whoami`, `stack`, `experience`, `certs`,
+  `contact`, `resume`, `blog`, `theme`, `clear`, plus `sudo` and `matrix`.
+  Arrow keys walk the command history.
+- **Scroll progress bar** and a **scroll spy** that marks the current section in
+  the nav, without reflowing it.
+- **Table of contents** on every essay, generated from the `h2` elements at
+  runtime, with heading anchors and the current section tracked as you read.
+- **Writing filter** on the blog index, matching title and summary.
+- **Copy-to-clipboard** for the email address, with a toast confirmation.
+- **Back to top** button, appearing once you are past the first screen.
+
+Reduced-motion is honoured (smooth scrolling is disabled, transitions are
+flattened) and all of it is hidden in print.
+
+## Testing
+
+`tools/smoke_ui.js` loads the real pages in jsdom and exercises the palette,
+terminal, filter and table of contents:
+
+```bash
+cd ../tools && node smoke_ui.js
+```
+
+It needs the local server running on port 8000.
 
 ## Local preview
 
