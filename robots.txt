@@ -1,5 +1,5 @@
 # Akash Raj - portfolio
-# Replace YOUR-DOMAIN.example with your real domain before deploying.
+# Update these URLs when the custom domain goes live (akashraj.ca).
 
 User-agent: *
 Allow: /
@@ -8,4 +8,4 @@ Allow: /
 # click through, not for scrapers building contact lists.
 Disallow: /resume/
 
-Sitemap: https://YOUR-DOMAIN.example/sitemap.xml
+Sitemap: https://codebuggy-bit.github.io/sitemap.xml
