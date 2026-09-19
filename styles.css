@@ -195,9 +195,11 @@ body {
    both themes: the shape is a mask and the colour is --accent-color. img-src
    permits data:, so the strict CSP is satisfied.
    ========================================================================= */
-.section { position: relative; }
+.section,
+.article { position: relative; }
 
-.section::after {
+.section::after,
+.article::after {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
@@ -274,7 +276,8 @@ body {
 @media (max-width: 1000px) {
   /* Rail has collapsed, so there is no line to hang a node on and the glyph
      moves inline with the heading. */
-  .section::after { display: none; }
+  .section::after,
+  .article::after { display: none; }
   .section > h2::before,
   .section > h1::before {
     display: inline-block;
@@ -876,7 +879,6 @@ hr, .rule {
    title onto a third. */
 @media (min-width: 1500px) {
   :root { --gutter: 34px; --wide: 88rem; }
-  .article { max-width: 44rem; }
 }
 
 /* ---------- Small laptop and large tablet ----------
@@ -1207,7 +1209,76 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
 /* =========================================================================
    ARTICLE / BLOG
    ========================================================================= */
-.article { max-width: 42rem; }
+/* =========================================================================
+   ARTICLE LAYOUT
+   Every other page sets its body in a column beside a 264px rail. Articles
+   did not: they started at the wrap's left edge on a 42rem measure, so opening
+   a post from the writing index threw the text 320px to the left and narrowed
+   it by 55px. Articles are on the rail grid now, at the site's reading measure
+   like everything else.
+
+   The contents list is what fills the rail. It stays a direct child of
+   <article>, right where ui.js puts it, because below 1001px the grid collapses
+   and the DOM order - header, contents, prose - is exactly what a phone wants.
+   Lifting it into a wrapper element would fix the desktop layout and break the
+   phone one.
+   ========================================================================= */
+/* A container in ch is fixed at the container's font size, so a 14.5px
+   footnote inside a 67ch-of-18px column still fits 83 characters. Capping the
+   text elements as well makes the measure follow their own size, at every
+   width - not only where the grid applies. */
+.article p,
+.article li,
+.article dd,
+.article blockquote { max-width: var(--measure); }
+
+.article { max-width: var(--measure); }
+
+@media (min-width: 1001px) {
+  .article {
+    display: grid;
+    grid-template-columns: minmax(0, var(--rail)) minmax(0, var(--measure));
+    column-gap: 3.5rem;
+    align-items: start;
+    max-width: none;
+  }
+  /* The rail marker every other page has. It sits inside the contents list
+     rather than beside it so the two travel together when the list sticks;
+     as a separate grid item it was stranded above a gap the height of the
+     article header. */
+  .article > .toc::before {
+    content: "";
+    display: block;
+    width: 26px;
+    height: 26px;
+    margin: 0 0 18px 14px;
+    background-color: var(--accent-color);
+    background-color: color-mix(in srgb, var(--accent-color) 82%, var(--font-color));
+    -webkit-mask-image: var(--glyph-writing);
+    mask-image: var(--glyph-writing);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: left center; mask-position: left center;
+    -webkit-mask-size: contain; mask-size: contain;
+  }
+  .article > * { grid-column: 2; }
+  .article > .toc {
+    grid-column: 1;
+    /* Spans every row the article creates, so the block this sticks within is
+       the whole piece rather than the first row of it. */
+    grid-row: 1 / span 999;
+    align-self: start;
+    position: sticky;
+    top: 5.5rem;
+    max-width: none;
+    margin: 0;
+    /* Nine to eleven entries at this width is around 450px; a short window, or
+       a long piece, would otherwise push the last entries out of reach. */
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .article > .toc a { padding: 4px 12px; font-size: 13px; }
+}
 .article-header { margin-bottom: 32px; }
 .article-header h1 { font-size: 29px; margin-bottom: 8px; }
 .article-meta {
@@ -1376,6 +1447,16 @@ body.rain-quiet { --rain-opacity: 0.26; --rain-blur: 7px; }
   font-size: 12.5px;
   font-weight: bold;
 }
+
+/* Capped at the reading measure. The caption inherits the figure's width, and
+   .dialogue sets padding: 0 so its title bar can run edge to edge - which left
+   the captions inside those figures 724px wide at 13.5px, or 87 characters a
+   line against the 67 the rest of the site holds to. */
+.plate figcaption,
+.transcript figcaption { max-width: var(--measure); }
+
+/* The padding .dialogue removed, back on the caption only. */
+.dialogue.plate figcaption { padding: 0 18px; }
 
 .plate figcaption {
   margin-top: 16px;
