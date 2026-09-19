@@ -2128,6 +2128,52 @@ body.palette-open { overflow: hidden; }
 :root {
   --panel-tint: 13%;
   --panel-edge-tint: 48%;
+
+  /* ---------- Liquid Glass ----------
+     One material, used everywhere: a translucent wash of the panel colour over
+     a blurred, saturated copy of whatever sits behind it, a bright rim along
+     the top edge where light would catch, and a soft drop shadow to lift it
+     off the page. The rain canvas is fixed behind everything, so there is
+     always something under the glass worth looking through.
+
+     --glass-alpha is the number worth tuning. Too low and body text loses
+     contrast against the rain moving underneath; too high and there is nothing
+     left to see through. 74% keeps text contrast where it was while still
+     showing movement behind a panel. */
+  --glass-alpha: 74%;
+  --glass-blur: 20px;
+  --glass-sat: 170%;
+  /* Lifts the blurred backdrop, so a pane reads as catching light and sitting
+     above the page rather than as a hole cut into it. */
+  --glass-bright: 1.2;
+  --glass-radius: 18px;
+  --glass-radius-sm: 11px;
+  --glass-pill: 999px;
+
+  /* A pane has four edges and they are all different. Light comes from above,
+     so the top rim is the brightest line on the surface, the sides catch a
+     little, and the bottom edge is shaded because the glass is thicker there.
+     Getting all four is what stops it looking like a rounded rectangle with a
+     border. */
+  --glass-rim: rgba(255, 255, 255, .26);
+  --glass-rim-soft: rgba(255, 255, 255, .07);
+  --glass-shade: rgba(0, 0, 0, .26);
+  /* The diagonal sheen. Painted as a background layer rather than a pseudo
+     element, because most of these surfaces already use ::before or ::after. */
+  --glass-roof: linear-gradient(158deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 46%);
+  --glass-drop: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 34px -16px rgba(0, 0, 0, .6);
+  /* A coloured bloom underneath, as if the accent were reflecting off the
+     surface below. */
+  --glass-bloom: 0 20px 46px -34px color-mix(in srgb, var(--accent-color) 75%, transparent);
+  /* The header is always on screen, so its translucency is on its own switch. */
+  --glass-header: 78%;
+  --glass-faces: inset 0 1px 0 var(--glass-rim),
+                 inset 0 0 0 1px var(--glass-rim-soft),
+                 inset 0 -1px 0 var(--glass-shade);
+
+  /* The opaque colour the glass is made from. Surfaces that sit on a lighter
+     base - the terminal - override --glass-base. */
+  --panel-color: color-mix(in srgb, var(--accent-color) var(--panel-tint), var(--background-color));
 }
 
 /* Section glyphs. Mask images, so both themes share one definition and the
@@ -2146,20 +2192,182 @@ body.palette-open { overflow: hidden; }
   --glyph-send: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23fff'%20stroke-width='1.9'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M3%2010.6l18-7.4-7.4%2018-2.6-8z'/%3E%3Cpath%20d='M11%2013.2L21%203.2'/%3E%3C/svg%3E");
   --glyph-default: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23fff'%20stroke-width='1.9'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M5.5%207.5L10%2012l-4.5%204.5'/%3E%3Cpath%20d='M12.5%2016.5h6'/%3E%3C/svg%3E");
 }
-[data-theme="light"] { --panel-tint: 9%; --panel-edge-tint: 34%; }
+[data-theme="light"] {
+  --panel-tint: 9%; --panel-edge-tint: 34%;
+  /* Over a pale page the rim is a bright white edge and the shadow is warm
+     rather than black. */
+  --glass-bright: 1.04;
+  --glass-rim: rgba(255, 255, 255, .95);
+  --glass-rim-soft: rgba(255, 255, 255, .5);
+  --glass-shade: rgba(42, 39, 34, .07);
+  --glass-roof: linear-gradient(158deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 48%);
+  --glass-drop: 0 1px 2px rgba(42, 39, 34, .06), 0 14px 32px -18px rgba(42, 39, 34, .34);
+  --glass-bloom: 0 20px 44px -34px color-mix(in srgb, var(--accent-color) 55%, transparent);
+}
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) { --panel-tint: 9%; --panel-edge-tint: 34%; }
+  :root:not([data-theme]) {
+    --panel-tint: 9%; --panel-edge-tint: 34%;
+    --glass-bright: 1.04;
+    --glass-rim: rgba(255, 255, 255, .95);
+    --glass-rim-soft: rgba(255, 255, 255, .5);
+    --glass-shade: rgba(42, 39, 34, .07);
+    --glass-roof: linear-gradient(158deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 48%);
+    --glass-drop: 0 1px 2px rgba(42, 39, 34, .06), 0 14px 32px -18px rgba(42, 39, 34, .34);
+    --glass-bloom: 0 20px 44px -34px color-mix(in srgb, var(--accent-color) 55%, transparent);
+  }
 }
 
+/* =========================================================================
+   LIQUID GLASS
+   Everything that was a flat tinted box is now a pane of it. The material is
+   declared once, against a list of surfaces, so a new panel becomes glass by
+   being added to that list rather than by repeating six declarations.
+
+   Order matters inside the rule. background-color is set twice: the opaque
+   value first for anything that cannot parse color-mix, then the translucent
+   one. The rim is an inset box-shadow rather than a border so it can be
+   brighter than the border on one edge only, which is what makes a flat
+   rectangle read as a raised pane.
+   ========================================================================= */
 .panel,
 .skillset,
 .entry.work,
 .plain-list,
-.contact-form {
-  background-color: var(--background-color);
-  background-color: color-mix(in srgb, var(--accent-color) var(--panel-tint), var(--background-color));
+.contact-form,
+.terminal,
+.stack-grid li,
+.toc,
+.vault,
+.plate,
+.trad,
+.steps li,
+.palette-panel {
+  border-radius: var(--glass-radius);
+  background-color: var(--glass-base, var(--panel-color));
+  background-color: color-mix(in srgb, var(--glass-base, var(--panel-color)) var(--glass-alpha), transparent);
+  background-image: var(--glass-roof);
   border: 1px solid var(--edge);
   border-color: color-mix(in srgb, var(--accent-color) var(--panel-edge-tint), var(--edge));
+  box-shadow: var(--glass-faces), var(--glass-drop), var(--glass-bloom);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+}
+
+/* The terminal sits on a lighter base than the panels do. */
+.terminal,
+.plate { --glass-base: var(--light-background-color); }
+.palette-panel { --glass-base: var(--background-color); }
+
+/* The loop is one pane, not four. A single backdrop-filter over the container
+   costs a quarter of what four would and blurs as one piece of glass, which is
+   what it is; the 1px grid gaps still show --edge through it. */
+.loop {
+  border-radius: var(--glass-radius);
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  box-shadow: var(--glass-faces), var(--glass-drop), var(--glass-bloom);
+}
+.loop-step {
+  background-color: color-mix(in srgb, var(--accent-color) 11%, transparent);
+}
+
+/* Small controls round all the way. Pills on the controls and 16px on the
+   panels is the ratio the material wants: the smaller the object, the more of
+   its edge is curve. */
+.search-btn,
+.theme-toggle,
+.to-top,
+.copy-btn {
+  border-radius: var(--glass-pill);
+  background-color: color-mix(in srgb, var(--glass-base, var(--panel-color)) var(--glass-alpha), transparent);
+  background-image: var(--glass-roof);
+  box-shadow: var(--glass-faces), var(--glass-drop), var(--glass-bloom);
+  -webkit-backdrop-filter: blur(12px) saturate(160%) brightness(var(--glass-bright));
+  backdrop-filter: blur(12px) saturate(160%) brightness(var(--glass-bright));
+}
+
+/* Filled controls. They have nothing to see through, so they take the curve
+   and the rim and keep their own fill - overriding their background here would
+   leave accent-coloured text colour sitting on a pale pane, which is what
+   happened to the send button the first time round. */
+.btn-primary,
+.vault-btn {
+  border-radius: var(--glass-pill);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4),
+              inset 0 -1px 0 rgba(0, 0, 0, .18),
+              var(--glass-drop);
+}
+
+/* Fields are recessed rather than raised: the rim runs along the bottom edge
+   and the shadow is inside, which is what makes a well read as a well. */
+.contact-form input,
+.contact-form select,
+.contact-form textarea,
+.filter-input,
+.vault-input,
+.term-input {
+  border-radius: var(--glass-radius-sm);
+  background-color: color-mix(in srgb, var(--glass-base, var(--panel-color)) 62%, transparent);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .22), inset 0 -1px 0 var(--glass-rim);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+}
+
+/* ---------- The header is the one piece of glass that is always on screen ---
+   Making it translucent is the whole effect: page content now scrolls under it
+   and goes soft, instead of disappearing behind an opaque bar. */
+.site-header {
+  background-color: color-mix(in srgb, var(--background-color) var(--glass-header), transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--rule-color) 45%, transparent);
+  box-shadow: inset 0 1px 0 var(--glass-rim), 0 12px 30px -24px rgba(0, 0, 0, .8);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+}
+/* =========================================================================
+   GLASS FALLBACKS
+   Blur is the expensive half of this and the half that can hurt readability
+   when the surface underneath is busy. Each of these removes it for a reason.
+   ========================================================================= */
+
+/* Below the tablet breakpoint the panels go back to near-opaque. The rain is
+   directly behind them at that size and a large blurred area is the most
+   expensive thing on a phone GPU. */
+@media (max-width: 699px) {
+  :root { --glass-alpha: 92%; --glass-header: 100%; }
+  .panel, .skillset, .entry.work, .plain-list, .contact-form, .terminal,
+  .stack-grid li, .toc, .vault, .plate, .palette-panel, .loop,
+  .search-btn, .theme-toggle, .to-top, .copy-btn, .btn-primary,
+  .contact-form input, .contact-form select, .contact-form textarea,
+  .filter-input, .vault-input, .term-input, .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Some people need the transparency off. The colour and the rim stay; only the
+   see-through part goes. */
+@media (prefers-reduced-transparency: reduce) {
+  :root { --glass-alpha: 100%; --glass-roof: none; --glass-header: 100%; }
+  .panel, .skillset, .entry.work, .plain-list, .contact-form, .terminal,
+  .stack-grid li, .toc, .vault, .plate, .palette-panel, .loop,
+  .search-btn, .theme-toggle, .to-top, .copy-btn, .btn-primary,
+  .contact-form input, .contact-form select, .contact-form textarea,
+  .filter-input, .vault-input, .term-input, .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Anything that cannot blur at all gets the solid colour back, or the panels
+   would be translucent over the rain with no blur to settle it down. */
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  :root { --glass-alpha: 92%; --glass-roof: none; --glass-header: 100%; }
+}
+
+/* High contrast mode wants opaque surfaces and hard edges. */
+@media (prefers-contrast: more) {
+  :root { --glass-alpha: 100%; --glass-roof: none; --glass-rim: transparent; --glass-header: 100%; }
 }
 
 .skillset { padding: 15px 17px; margin-bottom: 14px; }
