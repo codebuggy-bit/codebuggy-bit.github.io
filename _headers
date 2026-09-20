@@ -7,8 +7,9 @@
 # Syntax: a path pattern on its own line, then indented Name: value pairs.
 
 /*
-  # Everything this site loads is same-origin; nothing is fetched at runtime,
-  # framed, or posted anywhere.
+  # Everything this site loads and fetches is same-origin: no third-party
+  # script, style, font or image is ever requested by the browser, and no
+  # request leaves for anywhere but here.
   #
   # 'unsafe-inline' is deliberately absent from BOTH script-src and style-src:
   #   - the one inline script (the pre-paint theme bootstrap, identical on every
@@ -20,13 +21,19 @@
   #     can stay strict. Keep it that way; adding one inline style will silently
   #     drop the style for that element.
   #
-  # connect-src 'none' is safe because the site makes no network requests. The
-  # Cloudflare NEL/report-to endpoint is a browser reporting channel, not a
-  # fetch(), so it is unaffected.
+  # connect-src is 'self', not 'none'. The threat radar and the connection
+  # panel fetch /api/threats and /api/whoami, both Pages Functions on this
+  # origin. Those functions do all of the third-party fetching server-side, so
+  # the browser still contacts nothing but akashraj.ca - which is why this is
+  # 'self' rather than a list of upstream hosts. Adding a host here would undo
+  # the thing the footer promises.
+  #
+  # The Cloudflare NEL/report-to endpoint is a browser reporting channel, not a
+  # fetch(), so it was never affected.
   # form-action is 'self' rather than 'none' because the contact page posts to
   # /api/contact. The vault form on the portfolio is still handled in JavaScript
   # and never navigates.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-JlyJcGl08urTuz0UqGs7qnLl4aOXjzswZJbY4ksubT0='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-JlyJcGl08urTuz0UqGs7qnLl4aOXjzswZJbY4ksubT0='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin

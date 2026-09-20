@@ -511,6 +511,282 @@ body {
   color: var(--light-font-color);
 }
 
+/* =========================================================================
+   THREAT RADAR
+
+   Centred on the reader. Bearing is the angle and exact; distance is the
+   radius, square-root scaled so the near field is readable, with the rings
+   marking real distances at their scaled radii. A dot's position is therefore
+   a fact about where the thing is, not a category someone assigned it to.
+
+   Everything below is a first-party subscriber to /api/threats. The sweep is
+   CSS, the blips are SVG created by radar.js, and the two are synchronised by
+   a negative animation-delay per blip so each one lights as the sweep crosses
+   its bearing.
+   ========================================================================= */
+.radar-live {
+  display: grid;
+  grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+  margin: 26px 0 0;
+}
+
+.scope { margin: 0; }
+.scope-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--accent-color);
+  overflow: visible;
+}
+
+.scope-grid circle,
+.scope-grid path {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: .22;
+  stroke-width: 1;
+}
+.scope-grid path { stroke-opacity: .1; stroke-dasharray: 3 5; }
+
+.scope-range text,
+.scope-card text {
+  fill: var(--light-font-color);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .08em;
+}
+.scope-range text { fill-opacity: .4; }
+.scope-card text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 11px;
+  fill-opacity: .8;
+}
+
+.scope-sweep {
+  transform-origin: 200px 200px;
+  animation: scope-sweep 6s linear infinite;
+}
+.scope-sweep line { stroke: currentColor; stroke-width: 1.2; stroke-opacity: .55; }
+@keyframes scope-sweep { to { transform: rotate(360deg) } }
+
+/* Blips. --phase is set per blip by radar.js so the ping lands exactly as the
+   sweep line passes over it. */
+.scope-blips circle {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.scope-blips .blip-c2 { color: var(--bold-color); }
+.scope-blips .blip-ransomware { color: var(--accent-color); }
+@media (prefers-reduced-motion: no-preference) {
+  .scope-blips circle {
+    animation: blip-ping 6s linear infinite;
+    animation-delay: var(--phase, 0s);
+  }
+}
+@keyframes blip-ping {
+  0%   { opacity: .18; transform: scale(1) }
+  4%   { opacity: 1;   transform: scale(2.1) }
+  18%  { opacity: .62; transform: scale(1.25) }
+  100% { opacity: .18; transform: scale(1) }
+}
+.scope-blips circle:hover,
+.scope-blips circle:focus-visible {
+  opacity: 1;
+  transform: scale(2.6);
+  outline: none;
+}
+
+.scope-you circle { fill: var(--bold-color); }
+.scope-you .scope-you-ring {
+  fill: none;
+  stroke: var(--bold-color);
+  stroke-opacity: .5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scope-you .scope-you-ring { animation: you-pulse 3s ease-out infinite; }
+}
+@keyframes you-pulse {
+  0%   { transform: scale(1);   stroke-opacity: .5 }
+  70%  { transform: scale(4.5); stroke-opacity: 0 }
+  100% { transform: scale(4.5); stroke-opacity: 0 }
+}
+
+.scope-caption {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--light-font-color);
+  max-width: var(--measure);
+}
+
+/* ---------- The panel beside the scope ---------- */
+.scope-side { min-width: 0; }
+
+.scope-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0 0 22px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: var(--glass-radius);
+  overflow: hidden;
+}
+.scope-stat {
+  margin: 0;
+  padding: 12px 14px;
+  background-color: color-mix(in srgb, var(--accent-color) 9%, transparent);
+  background-image: var(--glass-roof);
+}
+.scope-stat dt {
+  display: block;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 21px;
+  font-weight: bold;
+  color: var(--accent-color);
+  line-height: 1.2;
+}
+.scope-stat dd {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--light-font-color);
+}
+
+/* ---------- Live feed ---------- */
+.feed { border-top: 1px solid var(--edge); padding-top: 14px; }
+.feed-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--light-font-color);
+}
+.feed-count { margin-left: auto; letter-spacing: 0; text-transform: none; color: var(--accent-color); }
+.feed-dot {
+  width: 7px; height: 7px; flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .feed-dot { animation: feed-live 2.4s ease-in-out infinite; }
+}
+@keyframes feed-live { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
+
+.feed-list { list-style: none; margin: 0; padding: 0; }
+.feed-row {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--edge) 45%, transparent);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.feed-row:last-child { border-bottom: 0; }
+.feed-when { color: var(--light-font-color); opacity: .75; }
+.feed-what { min-width: 0; color: var(--font-color); overflow-wrap: anywhere; }
+.feed-threat {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+}
+.feed-tags { display: block; color: var(--light-font-color); opacity: .8; font-size: 11.5px; }
+
+.scope-sources {
+  margin: 20px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--light-font-color);
+  max-width: var(--measure);
+}
+.scope-sources a { color: inherit; }
+
+@media (max-width: 1000px) {
+  .radar-live { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .scope { max-width: 26rem; }
+}
+
+/* =========================================================================
+   YOUR CONNECTION
+   The readout of what the edge already knows about the request. Same material
+   as the terminal above it, so the hero reads as one instrument stack.
+   ========================================================================= */
+.conn {
+  margin: 22px 0 0;
+  border-radius: var(--glass-radius);
+  border: 1px solid var(--edge);
+  border-color: color-mix(in srgb, var(--accent-color) var(--panel-edge-tint), var(--edge));
+  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--panel-color) var(--glass-alpha), transparent);
+  background-image: var(--glass-roof);
+  box-shadow: var(--glass-faces), var(--glass-drop);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(var(--glass-bright));
+  overflow: hidden;
+}
+.conn-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--edge);
+  background: color-mix(in srgb, var(--light-background-color) 55%, transparent);
+  font-size: 12.5px;
+  color: var(--light-font-color);
+}
+.conn-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent-color);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .conn-dot { animation: feed-live 2.4s ease-in-out infinite; }
+}
+.conn-title { letter-spacing: .06em; }
+
+.conn-rows { margin: 0; padding: 12px 14px 13px; }
+.conn-row {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  gap: 10px;
+  padding: 3px 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.conn-row dt {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--light-font-color);
+  padding-top: 2px;
+}
+.conn-row dd {
+  margin: 0;
+  color: var(--bold-color);
+  overflow-wrap: anywhere;
+}
+.conn-note {
+  margin: 0;
+  padding: 9px 14px 11px;
+  border-top: 1px solid var(--edge);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--light-font-color);
+}
+
 /* Two-column grids inside a section body, for the parts that are lists of
    comparable things rather than prose. auto-fit means these reflow without
    needing a breakpoint each. */

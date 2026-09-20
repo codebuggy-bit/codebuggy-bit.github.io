@@ -212,6 +212,9 @@
     { title: "Skills",                   kind: "Section", href: "#skills",      kw: "tools stack sentinel defender falcon purple team adversary emulation detection engineering cymulate" },
     { title: "Experience",               kind: "Section", href: "#experience",  kw: "jobs work history intact" },
     { title: "Selected work",            kind: "Section", href: "#work",        kw: "projects outcomes metrics bas pentest retest validation" },
+    { title: "Threat radar",             kind: "Section", href: "#radar",
+      kw: "live feed ransomware c2 urlhaus abuse.ch open source map"
+      , hint: "Live open-source threat data" },
     { title: "Certifications and education", kind: "Section", href: "#credentials", kw: "az-500 cysa az-104 qualys conestoga" },
     { title: "Contact",                  kind: "Section", href: "#contact",     kw: "email reach hire" },
     { title: "Writing",                  kind: "Page",    href: "blog/",        kw: "blog essays posts index" },

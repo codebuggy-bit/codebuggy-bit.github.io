@@ -9,3 +9,8 @@ Thumbs.db
 # Never commit the vault password or plaintext payload
 vault.blob.txt
 *.plaintext
+
+# Local Cloudflare dev artifacts. `wrangler pages dev` writes a build cache and
+# several SQLite files here; none of it belongs in the repository, and none of
+# it belongs on the live site either - see the rsync excludes in the workflow.
+.wrangler/

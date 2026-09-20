@@ -47,7 +47,9 @@ jobs:
       # wrangler uploads the directory it is given, so stage a clean copy.
       # Without this the .git and .github directories would be published too,
       # and so would README.md and serve.py, which document the deployment and
-      # have no business being served from the live site.
+      # have no business being served from the live site. .wrangler is the
+      # local dev build cache: several megabytes of SQLite that `wrangler pages
+      # dev` leaves behind and that has no business anywhere near a deploy.
       - name: Stage the site
         run: |
           mkdir -p _site
@@ -55,6 +57,7 @@ jobs:
             --exclude='.git' \
             --exclude='.github' \
             --exclude='_site' \
+            --exclude='.wrangler' \
             --exclude='README.md' \
             --exclude='serve.py' \
             ./ _site/
