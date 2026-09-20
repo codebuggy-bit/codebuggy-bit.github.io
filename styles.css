@@ -714,9 +714,28 @@ body {
 }
 .scope-sources a { color: inherit; }
 
+/* Three tiers, not two. The full 26rem scope needs 416 + 34 + 330 before the
+   panel beside it stops being readable, which is a 1200px window. Between
+   there and the 1000px where the rail collapses there is still room for both
+   columns, just not for a scope that size, so the scope gives up width rather
+   than the layout giving up a column. Stacking here would leave 300px of dead
+   space beside a small scope and push the panel a screen further down. */
+/* Stacked, which is also where the rail collapses. The four stats get one row
+   instead of a cramped two. */
 @media (max-width: 1000px) {
   .radar-live { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .scope { max-width: 26rem; }
+  .scope-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+/* Still two columns above 1000, but a smaller scope: the panel beside it needs
+   about 330px to stay readable, and 416 + 34 + 330 does not fit in the window
+   between here and 1200. This has to come after the block above, which would
+   otherwise win on source order at these widths. */
+@media (min-width: 1001px) and (max-width: 1199px) {
+  .radar-live { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: 26px; }
+}
+@media (max-width: 620px) {
+  .scope-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* =========================================================================
@@ -973,13 +992,23 @@ hr, .rule {
    gaps read as dividers. Flat, and no shadows, matching the rest of the site. */
 .pillars {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+  /* Four across, two, then one. Not auto-fit: there are exactly four pillars,
+     so auto-fit's "as many as happen to fit" gives three columns at tablet
+     widths and leaves the fourth alone on a row that is two-thirds empty.
+     Fixed counts always fill the row they are on. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   margin: 26px 0 0;
   padding: 0;
   list-style: none;
   background: var(--edge);
   border: 1px solid var(--edge);
+}
+@media (max-width: 1199px) {
+  .pillars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .pillars { grid-template-columns: minmax(0, 1fr); }
 }
 .pillars li {
   margin: 0;
