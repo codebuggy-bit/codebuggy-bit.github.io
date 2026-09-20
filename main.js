@@ -44,8 +44,9 @@
       for (var i = 0; i < metas.length; i++) metas[i].setAttribute("content", bg);
     }
 
+    /* The visible name is drawn by CSS from data-theme. This only supplies the
+       accessible label and the tooltip, so the two can never disagree. */
     function describe(name) {
-      toggle.textContent = name;
       toggle.setAttribute("aria-label", "Colour theme: " + name + ". Activate for " + after(name) + ".");
       toggle.setAttribute("title", "Switch to " + after(name));
     }

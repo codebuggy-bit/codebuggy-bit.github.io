@@ -314,11 +314,16 @@ body {
   content: "";
   position: absolute;
   top: 12px;
-  right: -4.5px;
-  width: 8px;
-  height: 8px;
+  right: -4px;
+  width: 9px;
+  height: 9px;
+  /* A square, not a circle. The career axis below uses filled and hollow
+     circles for "now" against "past", and this marker used the same filled and
+     hollow circles for a completely unrelated thing - where the reader is
+     scrolled to. Two meanings, one shape. The scroll marker is a square now,
+     and the ruler beside it lights up when the section is current. */
   border: 1px solid var(--accent-color);
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--background-color);
   transition: background-color .25s ease, box-shadow .25s ease;
 }
@@ -329,6 +334,11 @@ body {
   background: var(--accent-color);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color) 18%, transparent);
 }
+/* The second half of the scroll indicator: the current section's stretch of
+   ruler goes to full strength, so "where am I" reads as a lit segment of a
+   scale rather than as another dot. */
+.section.is-current::after { opacity: 1; }
+.section::after { opacity: .55; transition: opacity .25s ease; }
 
 /* Which glyph goes where. Set on the section and inherited by the heading, so
    adding a section is one line here rather than new markup. Every section gets
@@ -502,13 +512,31 @@ body {
   background: var(--accent-color);
   transform-origin: left center;
 }
-/* The current role is the only one still growing, so its bar is hatched
-   rather than solid: a full-length bar would claim it had already run as long
-   as the longest role on the list. */
-.tenure-bar.now i {
-  background-image: repeating-linear-gradient(115deg,
-      var(--accent-color) 0 3px, transparent 3px 6px);
-  background-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+/* The current role has no end date, so a bar for it is a length that does not
+   exist yet. Drawn against the completed roles it always came out shortest,
+   which read as "least" rather than "unfinished". It gets a badge instead. */
+.tenure-now {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  padding: 2px 9px 2px 7px;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  border: 1px solid color-mix(in srgb, var(--accent-color) 45%, transparent);
+  border-radius: var(--glass-pill);
+}
+.tenure-now::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tenure-now::before { animation: feed-live 2.4s ease-in-out infinite; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .tenure-bar i { transform: scaleX(0); transition: transform .7s cubic-bezier(.2,.7,.3,1); }
@@ -879,6 +907,24 @@ body {
   font-size: 11.5px;
   line-height: 1.5;
   color: var(--light-font-color);
+}
+
+/* The theme control names the palette it is on. Drawn here rather than written
+   by main.js so it is correct at first paint: the inline bootstrap in <head>
+   sets data-theme before anything is laid out, but the button is not parsed
+   until later, so a script-set label flashes the authored text first. With
+   scripting off entirely it is still right.
+   ::after rather than the element's own text because .theme-toggle is a flex
+   container and a bare text node cannot be given the quieter weight the name
+   wants. The button carries an aria-label for the accessible name. */
+.theme-name::after { content: "dark"; }
+[data-theme="dark"]      .theme-name::after { content: "dark"; }
+[data-theme="light"]     .theme-name::after { content: "light"; }
+[data-theme="matrix"]    .theme-name::after { content: "matrix"; }
+[data-theme="cyberpunk"] .theme-name::after { content: "cyberpunk"; }
+[data-theme="umbrella"]  .theme-name::after { content: "umbrella"; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .theme-name::after { content: "light"; }
 }
 
 /* Two-column grids inside a section body, for the parts that are lists of
@@ -2836,6 +2882,31 @@ body.palette-open { overflow: hidden; }
 }
 
 .skillset { padding: 15px 17px; margin-bottom: 14px; }
+/* Outcome bullets, matching the experience entries. The card bodies used to be
+   one dense sentence each, which is the slowest thing on the page to read and
+   was listing the same tools as the grid underneath. */
+.skillset ul {
+  margin: 0;
+  padding-left: 1.15em;
+  list-style: none;
+}
+.skillset li {
+  position: relative;
+  margin: 0 0 5px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--light-font-color);
+}
+.skillset li:last-child { margin-bottom: 0; }
+.skillset li::before {
+  content: "";
+  position: absolute;
+  left: -1.05em;
+  top: .62em;
+  width: 5px;
+  height: 5px;
+  background: var(--accent-color);
+}
 .entry.work { padding: 18px 20px; }
 .plain-list { padding: 14px 18px; }
 
@@ -2912,12 +2983,17 @@ body.palette-open { overflow: hidden; }
 .stack-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
-  gap: 1px;
+  /* The hairlines came from painting --edge on the container and letting 1px
+     gaps show it. With nine tiles in a four- or five-column grid that also
+     painted the three leftover cells as flat grey boxes. The tiles are glass
+     cards with their own edges now, so the container paints nothing and a
+     short final row simply ends. */
+  gap: 10px;
   margin: 22px 0 0;
   padding: 0;
   list-style: none;
-  background: var(--edge);
-  border: 1px solid var(--edge);
+  background: none;
+  border: 0;
 }
 .stack-grid li {
   margin: 0;

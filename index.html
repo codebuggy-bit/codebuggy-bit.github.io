@@ -28,7 +28,7 @@
 <meta name="twitter:image" content="https://akashraj.ca/og.png">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=23">
+<link rel="stylesheet" href="styles.css?v=24">
 
 <!-- Apply the saved colour theme before first paint so there is no flash. -->
 <script>
@@ -171,10 +171,10 @@
         <li><a href="#skills">Skills</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#work">Work</a></li>
-        <li><a href="blog/">Writing</a></li>
+        <li><a href="/blog/">Writing</a></li>
         <li><a href="/contact">Contact</a></li>
       </ul>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Toggle theme</button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme"><span class="theme-name" aria-hidden="true"></span></button>
     </nav>
   </div>
 </header>
@@ -205,7 +205,7 @@
           </p>
 
           <p class="contact-line">
-            <a href="resume/Akash_Raj_Resume.pdf?v=23" download>Resume (PDF)</a>
+            <a href="resume/Akash_Raj_Resume.pdf?v=24" download>Resume (PDF)</a>
             <span class="sep">|</span>
             <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
             <span class="sep">|</span>
@@ -253,8 +253,8 @@
 <span class="out">purple teaming | threat hunting | adversary emulation | detection engineering</span>
 <span class="prompt">$</span> <span class="cmd">cat purple.txt</span>
 <span class="out">emulate the attack, measure the detection, close the gap</span>
-<span class="prompt">$</span> <span class="cmd">ls ~/stack</span>
-<span class="out">sentinel  defender-xdr  crowdstrike-falcon  azure  cymulate</span>
+<span class="prompt">$</span> <span class="cmd">cat stack.txt</span>
+<span class="out">moved: the full breakdown is under "What I work with"</span>
 <span class="prompt">$</span> <span class="cursor"></span></code></pre>
           </figure>
 
@@ -288,7 +288,7 @@
         </li>
         <li>
           <span class="pillar-name">Detection engineering</span>
-          <span class="pillar-desc">Sentinel rules tuned down to the ones worth waking someone up for</span>
+          <span class="pillar-desc">Detection rules tuned down to the ones worth waking someone up for</span>
         </li>
         <li>
           <span class="pillar-name">Incident response</span>
@@ -460,53 +460,70 @@
       <div class="grid-2">
 <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>Purple team and adversary emulation</h3>
-        <p>Breach and attack simulation (Cymulate) across network and endpoint, detection coverage testing against
-          MITRE ATT&amp;CK, adversarial validation of existing detections, control gap analysis, penetration test
-          finding validation and retesting, tabletop exercise design and facilitation.</p>
+        <ul>
+            <li>Run the attack myself, then watch what the detections did about it</li>
+            <li>Test coverage against real technique rather than assumed coverage</li>
+            <li>Retest every finding instead of trusting the remediation ticket</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg>Threat hunting and detection engineering</h3>
-        <p>Cyber Threat Hunting (CTH), hypothesis-driven hunting, detection rule tuning, false positive reduction,
-          sandbox and malware triage (any.run, Joe Sandbox, hybrid-analysis), threat intelligence enrichment
-          (VirusTotal, MISP, Recorded Future, GreyNoise).</p>
+        <ul>
+            <li>Start from a hypothesis, not from whatever the queue happens to hold</li>
+            <li>Tune rules down to the ones worth waking somebody up for</li>
+            <li>Enrich and triage what the rules surface, so the next hunt starts warmer</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.2-2.9 7.7-7 9-4.1-1.3-7-4.8-7-9V6z"/></svg>Incident response and investigation</h3>
-        <p>Tier III escalation and investigation, detection through containment and remediation, post-incident
-          review, root cause analysis, IR playbook and SOP authoring, 24/7 shift operations and handover,
-          MITRE ATT&amp;CK aligned triage.</p>
+        <ul>
+            <li>Take the Tier III escalations nobody else wants to call</li>
+            <li>Contain first, then work back to the root cause</li>
+            <li>Write it up so it does not arrive the same way twice</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="9" width="8" height="10" rx="4"/><path d="M8 12H4M20 12h-4M8.5 16H5M19 16h-3.5M9.5 7.5L11 9.5M14.5 7.5L13 9.5"/></svg>Vulnerability management</h3>
-        <p>Vulnerability assessment, Qualys VMDR, Qualys Patch Management, patch automation, emerging vulnerability
-          triage, risk-based remediation.</p>
+        <ul>
+            <li>Prioritise by what is actually being exploited, not by score alone</li>
+            <li>Get patching to the point where it mostly runs itself</li>
+            <li>Reassess inside a day when a public disclosure lands</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="4"/><path d="M11 11l9 9M17 17l2-2M14.5 14.5l2-2"/></svg>Identity and access management</h3>
-        <p>Identity and Access Management (IAM), privileged access review, least privilege enforcement, access
-          control audits, user exemption handling.</p>
+        <ul>
+            <li>Review privileged access and enforce least privilege</li>
+            <li>Audit access control and handle exemptions properly rather than quietly</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9.5l3 2.5-3 2.5M13 15h4"/></svg>Platforms and tooling</h3>
-        <p>Microsoft Sentinel (NGSIEM), Microsoft Defender for Endpoint, Defender XDR, CrowdStrike Falcon, Rapid7,
-          Jira, Confluence.</p>
+        <ul>
+            <li>Keep the path from raw telemetry to a rule that fires working end to end</li>
+            <li>Own the detection platform, not only the content sitting in it</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 7.2 9.1 3.9 3.9 0 0 0 7 18z"/></svg>Cloud and infrastructure</h3>
-        <p>Microsoft Azure (AZ-500, AZ-104), Azure security baselines, Intune and Group Policy, Windows and Linux
-          endpoint management.</p>
+        <ul>
+            <li>Harden cloud and endpoint baselines, then prove they hold</li>
+            <li>Work across the security and infrastructure teams instead of throwing tickets over the wall</li>
+          </ul>
       </div>
 
       <div class="skillset">
         <h3><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5L4.5 12 9 16.5M15 7.5L19.5 12 15 16.5"/></svg>Scripting and automation</h3>
-        <p>PowerShell, Python, Shell and Bash, mostly for detection support, patch automation, and taking the
-          boring parts out of recurring security work.</p>
+        <ul>
+            <li>Automate recurring work until it stops needing a person</li>
+            <li>Mostly in service of detection and patching, which is where the hours go</li>
+          </ul>
       </div>
       </div>
 
@@ -647,8 +664,8 @@
         <figure class="tenure reveal">
           <figcaption class="tenure-title">Time in role</figcaption>
           <ul class="tenure-list">
-            <li><span class="tenure-role">Analyst II</span><span class="tenure-for">ongoing</span>
-                <span class="tenure-bar w25 now"><i></i></span></li>
+            <li><span class="tenure-role">Analyst II</span><span class="tenure-for">now</span>
+                <span class="tenure-now">current role</span></li>
             <li><span class="tenure-role">Security Analyst</span><span class="tenure-for">10 mo</span>
                 <span class="tenure-bar w30"><i></i></span></li>
             <li><span class="tenure-role">IT Security</span><span class="tenure-for">33 mo</span>
@@ -878,7 +895,7 @@
         <span class="sep">|</span>
         <a id="emailLinkFooter" href="#" data-user="raj.akash235" data-domain="gmail.com" rel="nofollow"><span class="email-label">Email me</span></a>
         <span class="sep">|</span>
-        <a href="resume/Akash_Raj_Resume.pdf?v=23" download>Resume (PDF)</a>
+        <a href="resume/Akash_Raj_Resume.pdf?v=24" download>Resume (PDF)</a>
       </p>
 
       <!-- Private details. The ciphertext below is AES-256-GCM; the password is
@@ -922,7 +939,7 @@
     <p class="footer-links">
       <a href="#top">Back to top</a>
       <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
-      <a href="resume/Akash_Raj_Resume.pdf?v=23" download>Resume</a>
+      <a href="resume/Akash_Raj_Resume.pdf?v=24" download>Resume</a>
     </p>
   </div>
 </footer>
@@ -930,10 +947,10 @@
 <!-- The rain runs site-wide now, but the portfolio gets a quieter setting than
      the essays: this page is dense with text, so it is tuned to read as texture
      rather than as something moving behind the paragraphs. See .rain-quiet. -->
-<script src="matrix.js?v=23" defer></script>
-<script src="vault.js?v=23" defer></script>
-<script src="main.js?v=23" defer></script>
-<script src="ui.js?v=23" defer></script>
-<script src="radar.js?v=23" defer></script>
+<script src="matrix.js?v=24" defer></script>
+<script src="vault.js?v=24" defer></script>
+<script src="main.js?v=24" defer></script>
+<script src="ui.js?v=24" defer></script>
+<script src="radar.js?v=24" defer></script>
 </body>
 </html>
