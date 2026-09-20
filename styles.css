@@ -64,6 +64,76 @@
   --rain-opacity:        0.26;
   --rain-blur:           4.5px;
 }
+
+/* ---------- High-contrast themes ----------
+   Three more palettes the toggle cycles through, each named for what it looks
+   like rather than for a light/dark axis, because they are not on one.
+
+   They override colour only. Everything structural - the glass rim, the sheen,
+   the drop shadow - is inherited: matrix and cyberpunk take the dark set from
+   :root and umbrella takes the light set from the [data-theme="light"] rule
+   further down. That is why these blocks are short and why adding a fourth
+   would be too.
+
+   The rain canvas reads --accent-color, --bold-color and --background-color
+   off the document, so it re-themes itself. The matrix palette leans on that
+   and turns the rain up, since green falling glyphs are the whole reference. */
+
+/* Green on black. */
+[data-theme="matrix"] {
+  --accent-color:        #33ff8c;
+  --link-hover-color:    #8dffc2;
+  --link-visited-color:  #5ecf93;
+  --font-color:          #c2f5d8;
+  --light-font-color:    #82c3a0;
+  --bold-color:          #eafff3;
+  --background-color:    #04090b;
+  --light-background-color: #0d1c15;
+  --link-underline-color: #3f8f68;
+  --edge:                rgba(51, 255, 140, 0.24);
+  --rain-opacity:        0.55;
+  --rain-blur:           5px;
+  --panel-tint:          15%;
+  --panel-edge-tint:     46%;
+}
+
+/* Yellow on black, with cyan and magenta left in for the neon. */
+[data-theme="cyberpunk"] {
+  --accent-color:        #f7e017;
+  --link-hover-color:    #00e0ff;
+  --link-visited-color:  #ff4fd8;
+  --font-color:          #efe6c2;
+  --light-font-color:    #b8ad7d;
+  --bold-color:          #fffdf0;
+  --background-color:    #07070c;
+  --light-background-color: #16150c;
+  --link-underline-color: #9a8f00;
+  --edge:                rgba(247, 224, 23, 0.24);
+  --rain-opacity:        0.32;
+  --rain-blur:           6px;
+  --panel-tint:          14%;
+  --panel-edge-tint:     48%;
+}
+
+/* White and red. A light theme rather than a third dark one, and a harder
+   light theme than the default: pure white, pure black text, and an accent
+   dark enough to hold its contrast on white rather than glowing off it. */
+[data-theme="umbrella"] {
+  --accent-color:        #c8102e;
+  --link-hover-color:    #000000;
+  --link-visited-color:  #7a0f22;
+  --font-color:          #121212;
+  --light-font-color:    #4d4d4d;
+  --bold-color:          #000000;
+  --background-color:    #ffffff;
+  --light-background-color: #ededed;
+  --link-underline-color: #8a0a1e;
+  --edge:                rgba(18, 18, 18, 0.26);
+  --rain-opacity:        0.2;
+  --rain-blur:           5px;
+  --panel-tint:          6%;
+  --panel-edge-tint:     40%;
+}
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     --accent-color:        #96000f;
@@ -744,7 +814,7 @@ body {
    as the terminal above it, so the hero reads as one instrument stack.
    ========================================================================= */
 .conn {
-  margin: 22px 0 0;
+  margin: 26px 0 0;
   border-radius: var(--glass-radius);
   border: 1px solid var(--edge);
   border-color: color-mix(in srgb, var(--accent-color) var(--panel-edge-tint), var(--edge));
@@ -775,25 +845,30 @@ body {
 }
 .conn-title { letter-spacing: .06em; }
 
-.conn-rows { margin: 0; padding: 12px 14px 13px; }
-.conn-row {
+.conn-rows {
   display: grid;
-  grid-template-columns: 6.2rem minmax(0, 1fr);
-  gap: 10px;
-  padding: 3px 0;
-  font-size: 13px;
-  line-height: 1.45;
-}
-.conn-row dt {
+  /* Three, two, then one. Six rows divide evenly into all three, and fixed
+     counts fill every row - auto-fit would leave a short final row. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 24px;
   margin: 0;
-  font-size: 11px;
-  letter-spacing: .07em;
+  padding: 14px 16px 15px;
+}
+@media (max-width: 900px) { .conn-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .conn-rows { grid-template-columns: minmax(0, 1fr); } }
+
+.conn-row { display: block; padding: 0; min-width: 0; }
+.conn-row dt {
+  margin: 0 0 2px;
+  font-size: 10.5px;
+  letter-spacing: .09em;
   text-transform: uppercase;
   color: var(--light-font-color);
-  padding-top: 2px;
 }
 .conn-row dd {
   margin: 0;
+  font-size: 13.5px;
+  line-height: 1.4;
   color: var(--bold-color);
   overflow-wrap: anywhere;
 }
@@ -1220,6 +1295,10 @@ hr, .rule {
      7px that grouped them in the header row has to come back off. */
   .search-btn { margin-left: 0; margin-top: 10px; min-height: var(--tap); }
   .theme-toggle { margin-top: 8px; min-height: var(--tap); }
+  /* In the header the button is a pill sitting among controls, where a bare
+     theme name reads fine. Dropped into the menu as a row of its own it would
+     just say "matrix", so it names itself. */
+  .theme-toggle::before { content: "theme \00b7 "; color: var(--light-font-color); }
 }
 
 /* ---------- Small tablet and large phone ---------- */
@@ -2578,8 +2657,8 @@ body.palette-open { overflow: hidden; }
   --glyph-send: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23fff'%20stroke-width='1.9'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M3%2010.6l18-7.4-7.4%2018-2.6-8z'/%3E%3Cpath%20d='M11%2013.2L21%203.2'/%3E%3C/svg%3E");
   --glyph-default: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23fff'%20stroke-width='1.9'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M5.5%207.5L10%2012l-4.5%204.5'/%3E%3Cpath%20d='M12.5%2016.5h6'/%3E%3C/svg%3E");
 }
-[data-theme="light"] {
-  --panel-tint: 9%; --panel-edge-tint: 34%;
+[data-theme="light"],
+[data-theme="umbrella"] {
   /* Over a pale page the rim is a bright white edge and the shadow is warm
      rather than black. */
   --glass-bright: 1.04;

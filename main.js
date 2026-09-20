@@ -11,18 +11,51 @@
   var root = document.documentElement;
 
   /* ---------- Theme toggle ------------------------------------------------
-     The initial theme is applied by a tiny inline script in <head> so there is
-     no flash of the wrong colours. This only wires up the button. */
+     Five palettes, cycled in order. The first one is applied by the inline
+     script in <head> so there is no flash of the wrong colours; this wires up
+     the button and keeps it labelled with the theme in use, because a control
+     that only says "toggle theme" makes you press it to find out where you
+     are. */
+  var THEMES = ["dark", "light", "matrix", "cyberpunk", "umbrella"];
   var toggle = document.getElementById("themeToggle");
   if (toggle) {
     var animTimer = 0;
-    toggle.addEventListener("click", function () {
-      var isLight = root.getAttribute("data-theme") === "light";
-      var next = isLight ? "dark" : "light";
 
-      /* Turn colour transitions on only for the moment of the switch. Leaving
-         them on permanently would make every hover and focus change feel
-         sluggish, and the rain canvas needs the same treatment as the text. */
+    /* data-theme is only set once a choice has been made. Until then the
+       effective theme is whatever the system prefers, and the cycle has to
+       start from there rather than from "dark". */
+    function current() {
+      var set = root.getAttribute("data-theme");
+      if (set) return set;
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light" : "dark";
+    }
+    function after(name) {
+      var i = THEMES.indexOf(name);
+      return THEMES[(i < 0 ? 0 : i + 1) % THEMES.length];
+    }
+    /* The browser's own chrome - the address bar on a phone - is coloured from
+       <meta name="theme-color">, which is a static tag in the head. With five
+       palettes it has to be told, or a green theme gets a charcoal status bar. */
+    function syncChrome() {
+      var bg = getComputedStyle(root).getPropertyValue("--background-color").trim();
+      if (!bg) return;
+      var metas = document.querySelectorAll('meta[name="theme-color"]');
+      for (var i = 0; i < metas.length; i++) metas[i].setAttribute("content", bg);
+    }
+
+    function describe(name) {
+      toggle.textContent = name;
+      toggle.setAttribute("aria-label", "Colour theme: " + name + ". Activate for " + after(name) + ".");
+      toggle.setAttribute("title", "Switch to " + after(name));
+    }
+
+    toggle.addEventListener("click", function () {
+      var next = after(current());
+
+      /* Colour transitions on only for the moment of the switch. Leaving them
+         on permanently would make every hover and focus change feel sluggish,
+         and the rain canvas needs the same treatment as the text. */
       root.classList.add("theme-anim");
       window.clearTimeout(animTimer);
       animTimer = window.setTimeout(function () {
@@ -31,8 +64,12 @@
 
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("theme", next); } catch (e) { /* private mode */ }
-      toggle.setAttribute("aria-label", "Switch to " + (next === "light" ? "dark" : "light") + " theme");
+      describe(next);
+      syncChrome();
     });
+
+    describe(current());
+    syncChrome();
   }
 
   /* ---------- Mobile navigation ------------------------------------------ */

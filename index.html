@@ -28,7 +28,7 @@
 <meta name="twitter:image" content="https://akashraj.ca/og.png">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=22">
+<link rel="stylesheet" href="styles.css?v=23">
 
 <!-- Apply the saved colour theme before first paint so there is no flash. -->
 <script>
@@ -39,7 +39,7 @@
     document.documentElement.className += " js";
     try {
       var saved = localStorage.getItem("theme");
-      if (saved === "light" || saved === "dark") {
+      if (/^(dark|light|matrix|cyberpunk|umbrella)$/.test(saved || "")) {
         document.documentElement.setAttribute("data-theme", saved);
       }
     } catch (e) { /* storage blocked, fall back to system preference */ }
@@ -166,11 +166,11 @@
 
     <nav class="site-nav" id="siteNav" aria-label="Main">
       <ul>
+        <li><a href="#radar">Radar</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#work">Work</a></li>
-        <li><a href="#radar">Radar</a></li>
         <li><a href="blog/">Writing</a></li>
         <li><a href="/contact">Contact</a></li>
       </ul>
@@ -205,7 +205,7 @@
           </p>
 
           <p class="contact-line">
-            <a href="resume/Akash_Raj_Resume.pdf?v=22" download>Resume (PDF)</a>
+            <a href="resume/Akash_Raj_Resume.pdf?v=23" download>Resume (PDF)</a>
             <span class="sep">|</span>
             <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
             <span class="sep">|</span>
@@ -258,21 +258,22 @@
 <span class="prompt">$</span> <span class="cursor"></span></code></pre>
           </figure>
 
-          <!-- What the edge can already see about this request. Not a
-               geolocation API: Cloudflare terminates the connection, so it
-               knows all of this without anyone being asked. -->
-          <figure class="conn" id="connPanel" hidden>
-            <div class="conn-bar">
-              <span class="conn-dot"></span>
-              <span class="conn-title">your connection</span>
-            </div>
-            <dl class="conn-rows" id="connRows"></dl>
-            <p class="conn-note" id="connNote">
-              Read from the edge on this request. Not logged, not stored, not shared.
-            </p>
-          </figure>
         </div>
       </div>
+
+      <!-- What the edge can already see about this request. Not a
+           geolocation API: Cloudflare terminates the connection, so it
+           knows all of this without anyone being asked. -->
+      <figure class="conn" id="connPanel" hidden>
+        <div class="conn-bar">
+          <span class="conn-dot"></span>
+          <span class="conn-title">your connection</span>
+        </div>
+        <dl class="conn-rows" id="connRows"></dl>
+        <p class="conn-note" id="connNote">
+          Read from the edge on this request. Not logged, not stored, not shared.
+        </p>
+      </figure>
 
       <!-- The four things this page is actually about, one line each, so a
            reader who stops here still knows what they are looking at. -->
@@ -302,6 +303,91 @@
         <div class="stat"><dt data-count="25" data-prefix="+" data-suffix="%">+25%</dt><dd>more control gaps surfaced</dd></div>
         <div class="stat"><dt data-count="30" data-prefix="-" data-suffix="%">-30%</dt><dd>false positive alert volume</dd></div>
       </dl>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ================= THREAT RADAR =================
+         Every dot is a real record from an open feed, plotted at its true
+         bearing and distance from whoever is reading the page. The data is
+         fetched by a Pages Function, never by this page, so the browser still
+         talks only to akashraj.ca. -->
+    <section id="radar" class="section">
+      <h2>Threat radar</h2>
+
+      <div class="section-body">
+        <p class="lede">
+          Live from open feeds. Each dot is a threat recorded in the last few days, drawn where it happened and
+          at its true bearing and distance from you. Nothing here is fetched by your browser.
+        </p>
+
+        <div class="radar-live">
+          <figure class="scope">
+            <svg class="scope-svg" viewBox="0 0 400 400" role="img" aria-labelledby="scopeTitle">
+              <title id="scopeTitle">Threat radar: threats plotted by bearing and distance from your location</title>
+              <defs>
+                <linearGradient id="sweepFade" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+                  <stop offset="1" stop-color="currentColor" stop-opacity=".34"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Ring radii are sqrt-scaled, not linear: see radar.js. -->
+              <g class="scope-grid" aria-hidden="true">
+                <circle cx="200" cy="200" r="90.0"/>
+                <circle cx="200" cy="200" r="127.3"/>
+                <circle cx="200" cy="200" r="155.9"/>
+                <circle cx="200" cy="200" r="180"/>
+                <path d="M200 20V380M20 200H380M72.7 72.7l254.6 254.6M327.3 72.7L72.7 327.3"/>
+              </g>
+
+              <g class="scope-range" aria-hidden="true">
+                <text x="206" y="114.0">5,000 km</text>
+                <text x="206" y="76.7">10,000 km</text>
+                <text x="206" y="48.1">15,000 km</text>
+              </g>
+
+              <g class="scope-card" aria-hidden="true">
+                <text x="200" y="14">N</text>
+                <text x="390" y="204">E</text>
+                <text x="200" y="397">S</text>
+                <text x="10" y="204">W</text>
+              </g>
+
+              <g class="scope-sweep" aria-hidden="true">
+                <path d="M200 200 L200 20 A180 180 0 0 1 316 114 Z" fill="url(#sweepFade)"/>
+                <line x1="200" y1="200" x2="200" y2="20"/>
+              </g>
+
+              <g class="scope-blips" id="scopeBlips"></g>
+
+              <g class="scope-you" aria-hidden="true">
+                <circle cx="200" cy="200" r="3.5"/>
+                <circle class="scope-you-ring" cx="200" cy="200" r="3.5"/>
+              </g>
+            </svg>
+
+            <figcaption class="scope-caption" id="scopeCaption">Reading the feeds…</figcaption>
+          </figure>
+
+          <div class="scope-side">
+            <dl class="scope-stats" id="scopeStats"></dl>
+
+            <div class="feed">
+              <p class="feed-head">
+                <span class="feed-dot" aria-hidden="true"></span>
+                Newest malicious URLs
+                <span class="feed-count" id="feedCount"></span>
+              </p>
+              <ul class="feed-list" id="feedList"></ul>
+            </div>
+          </div>
+        </div>
+
+        <p class="scope-sources" id="scopeSources">
+          Loading sources…
+        </p>
       </div>
     </section>
 
@@ -744,90 +830,6 @@
     </section>
 
 
-    <hr>
-
-    <!-- ================= THREAT RADAR =================
-         Every dot is a real record from an open feed, plotted at its true
-         bearing and distance from whoever is reading the page. The data is
-         fetched by a Pages Function, never by this page, so the browser still
-         talks only to akashraj.ca. -->
-    <section id="radar" class="section">
-      <h2>Threat radar</h2>
-
-      <div class="section-body">
-        <p class="lede">
-          Live from open feeds. Each dot is a threat recorded in the last few days, drawn where it happened and
-          at its true bearing and distance from you. Nothing here is fetched by your browser.
-        </p>
-
-        <div class="radar-live">
-          <figure class="scope">
-            <svg class="scope-svg" viewBox="0 0 400 400" role="img" aria-labelledby="scopeTitle">
-              <title id="scopeTitle">Threat radar: threats plotted by bearing and distance from your location</title>
-              <defs>
-                <linearGradient id="sweepFade" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
-                  <stop offset="1" stop-color="currentColor" stop-opacity=".34"/>
-                </linearGradient>
-              </defs>
-
-              <!-- Ring radii are sqrt-scaled, not linear: see radar.js. -->
-              <g class="scope-grid" aria-hidden="true">
-                <circle cx="200" cy="200" r="90.0"/>
-                <circle cx="200" cy="200" r="127.3"/>
-                <circle cx="200" cy="200" r="155.9"/>
-                <circle cx="200" cy="200" r="180"/>
-                <path d="M200 20V380M20 200H380M72.7 72.7l254.6 254.6M327.3 72.7L72.7 327.3"/>
-              </g>
-
-              <g class="scope-range" aria-hidden="true">
-                <text x="206" y="114.0">5,000 km</text>
-                <text x="206" y="76.7">10,000 km</text>
-                <text x="206" y="48.1">15,000 km</text>
-              </g>
-
-              <g class="scope-card" aria-hidden="true">
-                <text x="200" y="14">N</text>
-                <text x="390" y="204">E</text>
-                <text x="200" y="397">S</text>
-                <text x="10" y="204">W</text>
-              </g>
-
-              <g class="scope-sweep" aria-hidden="true">
-                <path d="M200 200 L200 20 A180 180 0 0 1 316 114 Z" fill="url(#sweepFade)"/>
-                <line x1="200" y1="200" x2="200" y2="20"/>
-              </g>
-
-              <g class="scope-blips" id="scopeBlips"></g>
-
-              <g class="scope-you" aria-hidden="true">
-                <circle cx="200" cy="200" r="3.5"/>
-                <circle class="scope-you-ring" cx="200" cy="200" r="3.5"/>
-              </g>
-            </svg>
-
-            <figcaption class="scope-caption" id="scopeCaption">Reading the feeds…</figcaption>
-          </figure>
-
-          <div class="scope-side">
-            <dl class="scope-stats" id="scopeStats"></dl>
-
-            <div class="feed">
-              <p class="feed-head">
-                <span class="feed-dot" aria-hidden="true"></span>
-                Newest malicious URLs
-                <span class="feed-count" id="feedCount"></span>
-              </p>
-              <ul class="feed-list" id="feedList"></ul>
-            </div>
-          </div>
-        </div>
-
-        <p class="scope-sources" id="scopeSources">
-          Loading sources…
-        </p>
-      </div>
-    </section>
 
     <!-- ================= CREDENTIALS ================= -->
     <section id="credentials" class="section">
@@ -876,7 +878,7 @@
         <span class="sep">|</span>
         <a id="emailLinkFooter" href="#" data-user="raj.akash235" data-domain="gmail.com" rel="nofollow"><span class="email-label">Email me</span></a>
         <span class="sep">|</span>
-        <a href="resume/Akash_Raj_Resume.pdf?v=22" download>Resume (PDF)</a>
+        <a href="resume/Akash_Raj_Resume.pdf?v=23" download>Resume (PDF)</a>
       </p>
 
       <!-- Private details. The ciphertext below is AES-256-GCM; the password is
@@ -920,7 +922,7 @@
     <p class="footer-links">
       <a href="#top">Back to top</a>
       <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
-      <a href="resume/Akash_Raj_Resume.pdf?v=22" download>Resume</a>
+      <a href="resume/Akash_Raj_Resume.pdf?v=23" download>Resume</a>
     </p>
   </div>
 </footer>
@@ -928,10 +930,10 @@
 <!-- The rain runs site-wide now, but the portfolio gets a quieter setting than
      the essays: this page is dense with text, so it is tuned to read as texture
      rather than as something moving behind the paragraphs. See .rain-quiet. -->
-<script src="matrix.js?v=22" defer></script>
-<script src="vault.js?v=22" defer></script>
-<script src="main.js?v=22" defer></script>
-<script src="ui.js?v=22" defer></script>
-<script src="radar.js?v=22" defer></script>
+<script src="matrix.js?v=23" defer></script>
+<script src="vault.js?v=23" defer></script>
+<script src="main.js?v=23" defer></script>
+<script src="ui.js?v=23" defer></script>
+<script src="radar.js?v=23" defer></script>
 </body>
 </html>
