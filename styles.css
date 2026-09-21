@@ -385,6 +385,11 @@ body {
 @media (min-width: 1300px) {
   .section-body.split {
     display: grid;
+    /* No floor here. Measured: the prose inside the first column renders at 18px,
+       so 67ch really is 726px and the column is exactly right. Taking width
+       from it wraps every entry onto another line. The sticky side column is
+       narrow because the container is, which is what the wider --wide above
+       1650 is for. */
     grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
     gap: 0 2.5rem;
     align-items: start;
@@ -625,9 +630,9 @@ body {
 .radar-live {
   display: grid;
   grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
-  gap: 34px;
+  gap: 30px;
   align-items: start;
-  margin: 26px 0 0;
+  margin: 20px 0 0;
 }
 
 /* The ticker runs the full width under both columns, and its rows go two
@@ -635,17 +640,31 @@ body {
    left column bottomed out halfway down the panel and the rest was empty. */
 /* Three items in a two-column grid auto-place the third into column one, which
    is what happened here: the ticker came out 416px wide, under the scope. */
-.radar-feed { grid-column: 1 / -1; margin: 30px 0 0; }
+.radar-feed { grid-column: 1 / -1; margin: 22px 0 0; }
 .radar-feed .feed-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 30px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 28px;
   align-content: start;
 }
-.radar-feed .feed-row:nth-last-child(-n+2) { border-bottom: 0; }
+/* The last row of each column keeps its rule only if something follows it in
+   the same column, which a fixed nth-child cannot know. Dropping it on the
+   final three is the closest honest approximation with nine rows. */
+/* The vulnerability name wraps to two lines and each row grew to about 84px
+   for it, which made the KEV column taller than the scope beside it. One line,
+   with the whole name in the title. */
+.feed-kev .feed-tags { -webkit-line-clamp: 1; line-clamp: 1; }
+
+.radar-feed .feed-row:nth-last-child(-n+3) { border-bottom: 0; }
+@media (max-width: 1100px) {
+  .radar-feed .feed-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .radar-feed .feed-row:nth-last-child(-n+3) { border-bottom: 1px solid color-mix(in srgb, var(--edge) 45%, transparent); }
+  .radar-feed .feed-row:nth-last-child(-n+2) { border-bottom: 0; }
+}
 @media (max-width: 820px) {
   .radar-feed .feed-list { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .radar-feed .feed-row:nth-last-child(2) { border-bottom: 1px solid color-mix(in srgb, var(--edge) 45%, transparent); }
+  .radar-feed .feed-row:nth-last-child(-n+2) { border-bottom: 1px solid color-mix(in srgb, var(--edge) 45%, transparent); }
+  .radar-feed .feed-row:last-child { border-bottom: 0; }
 }
 
 .scope { margin: 0; }
@@ -734,7 +753,7 @@ body {
 }
 
 .scope-caption {
-  margin: 14px 0 0;
+  margin: 10px 0 0;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--light-font-color);
@@ -861,7 +880,7 @@ body {
 .feed-tags { display: block; color: var(--light-font-color); opacity: .8; font-size: 11.5px; }
 
 .scope-sources {
-  margin: 20px 0 0;
+  margin: 16px 0 0;
   font-size: 12.5px;
   line-height: 1.6;
   color: var(--light-font-color);
@@ -1362,6 +1381,12 @@ hr, .rule {
    title onto a third. */
 @media (min-width: 1500px) {
   :root { --gutter: 34px; --wide: 88rem; }
+}
+/* Above 1650 there is room for the container to grow again. The prose measure
+   is fixed at 67ch either way, so what this buys is wider card grids and a
+   third column in the radar ticker - not longer lines. */
+@media (min-width: 1650px) {
+  :root { --wide: 96rem; }
 }
 
 /* ---------- Small laptop and large tablet ----------

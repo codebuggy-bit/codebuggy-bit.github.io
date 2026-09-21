@@ -198,7 +198,7 @@
     var rows = threats.iocs || [];
     if (count) count.textContent = rows.length ? rows.length + " shown" : "";
 
-    rows.slice(0, 10).forEach(function (ioc) {
+    rows.slice(0, 9).forEach(function (ioc) {
       var row = {
         stamp: clock(ioc.when),
         threat: (ioc.threat || "unknown").replace(/_/g, " "),
@@ -234,7 +234,7 @@
     var rows = threats.kev || [];
     if (count) count.textContent = rows.length ? rows.length + " in ten days" : "";
 
-    rows.slice(0, 5).forEach(function (k) {
+    rows.slice(0, 4).forEach(function (k) {
       var li = el("li", "feed-row feed-row-kev");
       li.appendChild(el("span", "feed-when", String(k.when).slice(5)));
 
