@@ -47,11 +47,12 @@
 
 import { centroid } from "../_lib/centroids.js";
 
-/* Two minutes. The page polls every 60s, so a ten-minute cache would hand back
-   byte-identical data for nine of every ten polls and the "live" indicator
-   would be describing nothing. Two minutes still means upstream sees at most
-   one request per two minutes per colo. */
-const CACHE_SECONDS = 120;
+/* Thirty seconds, against a 20s client poll. Every upstream call is a single
+   GET per cache miss, so the worst case is two rounds of four requests a
+   minute per Cloudflare colo no matter how many people are reading. abuse.ch
+   publish no limit and ask only to be reasonable; CISA KEV is a static file on
+   a CDN. Nothing here is close to a threshold. */
+const CACHE_SECONDS = 30;
 
 /* The edge cache outlives a deploy, so a response stored by the previous
    version of this function keeps being served after the new one ships - the
@@ -59,7 +60,7 @@ const CACHE_SECONDS = 120;
    KEV fields at all. The key carries a version, and bumping it on any change
    to the payload shape retires the old entries instead of waiting out their
    TTL. */
-const CACHE_VERSION = 3;
+const CACHE_VERSION = 4;
 const UPSTREAM_TIMEOUT_MS = 9000;
 
 const FEEDS = {

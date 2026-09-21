@@ -30,11 +30,10 @@
   var MAX_KM = 20000;         // antipode, so the whole world fits
   var RING_PX = 180;          // outer radius in the 400x400 viewBox
   var CENTRE = 200;
-  // The edge cache is two minutes and the page polls every 60s, so roughly
-  // every other poll returns genuinely new data. Polling faster would not: the
-  // function would hand back the same bytes and the "live" dot would be
-  // describing nothing.
-  var REFRESH_MS = 60 * 1000;
+  // 20s against a 30s edge cache: most polls return new data, and the ones
+  // that do not come back from the edge in milliseconds. Polling faster than
+  // the cache is refreshed would only re-render identical bytes.
+  var REFRESH_MS = 20 * 1000;
 
   // Used when the edge has no coordinates for a visitor, so the radar still
   // draws and the caption says plainly what it is centred on instead.
@@ -186,6 +185,11 @@
   /* One ticker, two feeds. KEV additions and URLhaus submissions are both
      "something new appeared", so they interleave by time rather than sitting
      in two lists the reader has to compare. */
+  /* Ids seen on the previous render. Rows that were not there get a brief
+     highlight, which is the only way an update is visible when the new entry
+     looks much like the old ones. */
+  var seenRows = Object.create(null);
+
   function renderFeed(threats) {
     var list = doc.getElementById("feedList");
     var count = doc.getElementById("feedCount");
@@ -246,6 +250,8 @@
       sub.setAttribute("title", k.name || "");
       what.appendChild(sub);
       li.appendChild(what);
+      if (!seenRows[k.cve]) li.classList.add("is-new");
+      seenRows[k.cve] = true;
       list.appendChild(li);
     });
   }
@@ -270,8 +276,13 @@
       }
     });
     box.appendChild(doc.createTextNode(
-      ". Fetched server-side and cached for two minutes; your browser only ever talks to this site. " +
-      "Read " + ago(generated) + "."));
+      ". Fetched server-side and cached for thirty seconds; your browser only ever talks to this site. "));
+    var agoEl = el("span", "scope-ago");
+    agoEl.id = "scopeAgo";
+    box.appendChild(doc.createTextNode("Feed built "));
+    box.appendChild(agoEl);
+    box.appendChild(doc.createTextNode("."));
+    lastGenerated = generated;
   }
 
   function caption(origin, plotted, isYou) {
@@ -294,6 +305,16 @@
      which are very different things to a reader deciding whether to trust it. */
   var lastGood = null;
   var lastGoodAt = null;
+  var lastGenerated = null;
+
+  /* "updated 4s ago", rewritten once a second. The data only changes every 20,
+     but a timestamp that sits still for 20 seconds reads as a stalled page -
+     the one thing a "live" panel must not look like. */
+  function tickAgo() {
+    var box = doc.getElementById("scopeAgo");
+    if (!box) return;
+    box.textContent = lastGenerated ? ago(lastGenerated) : "";
+  }
 
   function staleNote(text) {
     var box = doc.getElementById("scopeStale");
@@ -357,6 +378,7 @@
       renderStats(threats.counts || {}, threats.topGroups || [], threats.generated);
       renderKev(threats);
       renderFeed(threats);
+      tickAgo();
       renderSources(threats.sources || [], threats.generated);
       caption(origin, plotted, isYou);
     });
@@ -373,6 +395,12 @@
   }
 
   load();
+  setInterval(tickAgo, 1000);
+
+  // Coming back to the tab should not mean waiting out the next interval.
+  doc.addEventListener("visibilitychange", function () {
+    if (!doc.hidden) load();
+  });
 
   // Refresh while the tab is visible; a background tab should not be polling.
   setInterval(function () {
