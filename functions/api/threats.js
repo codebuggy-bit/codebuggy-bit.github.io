@@ -52,6 +52,14 @@ import { centroid } from "../_lib/centroids.js";
    would be describing nothing. Two minutes still means upstream sees at most
    one request per two minutes per colo. */
 const CACHE_SECONDS = 120;
+
+/* The edge cache outlives a deploy, so a response stored by the previous
+   version of this function keeps being served after the new one ships - the
+   first production call after adding CISA KEV came back from cache without the
+   KEV fields at all. The key carries a version, and bumping it on any change
+   to the payload shape retires the old entries instead of waiting out their
+   TTL. */
+const CACHE_VERSION = 3;
 const UPSTREAM_TIMEOUT_MS = 9000;
 
 const FEEDS = {
@@ -278,7 +286,8 @@ async function build() {
 
 export async function onRequestGet(context) {
   const cache = caches.default;
-  const key = new Request(new URL("/api/threats", context.request.url), { method: "GET" });
+  const key = new Request(
+    new URL(`/api/threats?v=${CACHE_VERSION}`, context.request.url), { method: "GET" });
 
   const hit = await cache.match(key);
   if (hit) {
