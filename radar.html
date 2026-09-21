@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Threat Radar | Akash Raj</title>
+<meta name="description" content="Live open-source threat intelligence: newly exploited CVEs from CISA KEV, recent malicious URLs and ransomware victims, plotted by bearing and distance from you.">
+<meta name="author" content="Akash Raj">
+<meta name="theme-color" content="#171819" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://akashraj.ca/radar">
+<link rel="alternate" type="application/rss+xml" title="Akash Raj - Writing" href="/blog/feed.xml">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Threat Radar | Akash Raj">
+<meta property="og:description" content="Live open-source threat intelligence, refreshed every minute.">
+<meta property="og:url" content="https://akashraj.ca/radar">
+<meta property="og:locale" content="en_CA">
+<meta property="og:image" content="https://akashraj.ca/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Contact Akash Raj">
+<meta property="og:site_name" content="Akash Raj">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Threat Radar | Akash Raj">
+<meta name="twitter:description" content="Live open-source threat intelligence, refreshed every minute.">
+<meta name="twitter:image" content="https://akashraj.ca/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://akashraj.ca/radar#page",
+      "url": "https://akashraj.ca/radar",
+      "name": "Threat Radar | Akash Raj",
+      "description": "Live open-source threat intelligence, refreshed every minute.",
+      "inLanguage": "en-CA",
+      "isPartOf": { "@type": "WebSite", "@id": "https://akashraj.ca/#website", "url": "https://akashraj.ca/", "name": "Akash Raj" },
+      "about": { "@type": "Person", "@id": "https://akashraj.ca/#person", "name": "Akash Raj", "url": "https://akashraj.ca/" },
+      "author": { "@type": "Person", "@id": "https://akashraj.ca/#person", "name": "Akash Raj", "url": "https://akashraj.ca/" },
+      "breadcrumb": { "@id": "https://akashraj.ca/radar#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://akashraj.ca/radar#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://akashraj.ca/" },
+        { "@type": "ListItem", "position": 2, "name": "Threat radar" }
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css?v=25">
+
+<!-- Apply the saved colour theme before first paint so there is no flash.
+     The hash of this block is allowlisted in _headers; if you edit it, the
+     Content Security Policy will block it and the page will fall back to the
+     system theme. -->
+<script>
+  (function () {
+    /* Marks that scripting is available, before first paint. The scroll-reveal
+       styles are scoped to html.js so that a script failure cannot leave the
+       page invisible. */
+    document.documentElement.className += " js";
+    try {
+      var saved = localStorage.getItem("theme");
+      if (/^(dark|light|matrix|cyberpunk|umbrella)$/.test(saved || "")) {
+        document.documentElement.setAttribute("data-theme", saved);
+      }
+    } catch (e) { /* storage blocked, fall back to system preference */ }
+  })();
+</script>
+</head>
+<body>
+<canvas id="matrixRain" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">Akash Raj</a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open navigation">menu</button>
+
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <ul>
+        <li><a href="/#radar">Radar</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#skills">Skills</a></li>
+        <li><a href="/#experience">Experience</a></li>
+        <li><a href="/#work">Work</a></li>
+        <li><a href="/blog/">Writing</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme"><span class="theme-name" aria-hidden="true"></span></button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap pad-lead">
+
+<!-- ================= THREAT RADAR =================
+       Every dot is a real record from an open feed, plotted at its true
+       bearing and distance from whoever is reading the page. The data is
+       fetched by a Pages Function, never by this page, so the browser still
+       talks only to akashraj.ca. -->
+  <section id="radar" class="section">
+    <h1>Threat radar</h1>
+
+    <div class="section-body">
+      <p class="lede">
+        Live from open feeds. Each dot is a threat recorded in the last few days, drawn where it happened and
+        at its true bearing and distance from you. Nothing here is fetched by your browser.
+      </p>
+
+      <div class="radar-live">
+        <figure class="scope">
+          <svg class="scope-svg" viewBox="0 0 400 400" role="img" aria-labelledby="scopeTitle">
+            <title id="scopeTitle">Threat radar: threats plotted by bearing and distance from your location</title>
+            <defs>
+              <linearGradient id="sweepFade" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="currentColor" stop-opacity="0"/>
+                <stop offset="1" stop-color="currentColor" stop-opacity=".34"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Ring radii are sqrt-scaled, not linear: see radar.js. -->
+            <g class="scope-grid" aria-hidden="true">
+              <circle cx="200" cy="200" r="90.0"/>
+              <circle cx="200" cy="200" r="127.3"/>
+              <circle cx="200" cy="200" r="155.9"/>
+              <circle cx="200" cy="200" r="180"/>
+              <path d="M200 20V380M20 200H380M72.7 72.7l254.6 254.6M327.3 72.7L72.7 327.3"/>
+            </g>
+
+            <g class="scope-range" aria-hidden="true">
+              <text x="206" y="114.0">5,000 km</text>
+              <text x="206" y="76.7">10,000 km</text>
+              <text x="206" y="48.1">15,000 km</text>
+            </g>
+
+            <g class="scope-card" aria-hidden="true">
+              <text x="200" y="14">N</text>
+              <text x="390" y="204">E</text>
+              <text x="200" y="397">S</text>
+              <text x="10" y="204">W</text>
+            </g>
+
+            <g class="scope-sweep" aria-hidden="true">
+              <path d="M200 200 L200 20 A180 180 0 0 1 316 114 Z" fill="url(#sweepFade)"/>
+              <line x1="200" y1="200" x2="200" y2="20"/>
+            </g>
+
+            <g class="scope-blips" id="scopeBlips"></g>
+
+            <g class="scope-you" aria-hidden="true">
+              <circle cx="200" cy="200" r="3.5"/>
+              <circle class="scope-you-ring" cx="200" cy="200" r="3.5"/>
+            </g>
+          </svg>
+
+          <figcaption class="scope-caption" id="scopeCaption">Reading the feeds…</figcaption>
+        </figure>
+
+        <div class="scope-side">
+          <dl class="scope-stats" id="scopeStats" aria-live="polite" aria-atomic="false"></dl>
+
+            <!-- CISA KEV gets its own block rather than a place in the ticker.
+                 Every entry in it is older than the newest URLhaus rows, so in
+                 a single time-ordered list it never surfaced - and a newly
+                 exploited CVE is the most actionable thing on this page. -->
+            <div class="feed feed-kev">
+              <p class="feed-head">
+                <span class="feed-dot" aria-hidden="true"></span>
+                Newly exploited
+                <span class="feed-count" id="kevCount"></span>
+              </p>
+              <ul class="feed-list" id="kevList" aria-live="polite"></ul>
+            </div>
+          <div class="feed">
+            <p class="feed-head">
+              <span class="feed-dot" aria-hidden="true"></span>
+              Newest malicious URLs
+              <span class="feed-count" id="feedCount"></span>
+            </p>
+            <p class="scope-stale" id="scopeStale" role="status" hidden></p>
+            <ul class="feed-list" id="feedList" aria-live="polite" aria-relevant="additions text"></ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="scope-sources" id="scopeSources">
+        Loading sources…
+      </p>
+    </div>
+  </section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>&copy; <span id="year">2026</span> Akash Raj. No trackers, no third-party scripts, no cookies.</p>
+    <p class="footer-links">
+      <a href="/">Home</a>
+      <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
+      <a href="resume/Akash_Raj_Resume.pdf?v=25" download>Resume</a>
+    </p>
+  </div>
+</footer>
+
+<script src="matrix.js?v=25" defer></script>
+<script src="main.js?v=25" defer></script>
+<script src="ui.js?v=25" defer></script>
+<script src="radar.js?v=25" defer></script>
+</body>
+</html>

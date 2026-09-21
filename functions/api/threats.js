@@ -9,11 +9,29 @@
    keep connect-src 'self'. Nothing about the visitor is sent upstream: these
    are plain GETs for public data, with no identifiers of any kind.
 
-   Sources, all free and none needing an API key:
+   Sources, all free, none needing an API key, none scraped:
 
-     ransomware.live   recent victims with a country  -> radar blips
-     abuse.ch Feodo    botnet C2 servers with a country -> more blips
-     abuse.ch URLhaus  recent malicious URLs           -> the IOC ticker
+     ransomware.live          recent victims, with a country   -> radar blips
+     abuse.ch Feodo Tracker   botnet C2 servers, with country  -> more blips
+     abuse.ch URLhaus         recent malicious URLs            -> IOC ticker
+     CISA KEV                 exploited-in-the-wild CVEs      -> KEV ticker
+
+   Rate limits, and why the cache is sized the way it is. Every request here is
+   a single GET on a cache miss, so upstream sees at most one call per TTL per
+   Cloudflare colo, whatever the visitor count:
+
+     ransomware.live          no published limit; asked to be reasonable
+     abuse.ch (Feodo, URLhaus) no key, no published limit; bulk download
+                              endpoints, updated every few minutes
+     CISA KEV                 a static file on a CDN, no limit
+     NVD                      NOT used: 5 requests / 30s without a key, and its
+                              default sort returns the oldest CVEs first, so it
+                              is the weakest of the five for a live ticker. KEV
+                              covers "newly exploited" better and for free.
+
+   No API keys are required and none are read. If one is ever added, it belongs
+   in the Pages project as an environment variable and is read here as
+   env.NAME - never in radar.js, which is served to the browser.
 
    Feeds fail independently. A source that is down is reported as down and the
    rest of the payload still goes out, because a radar running on two of three
@@ -29,7 +47,11 @@
 
 import { centroid } from "../_lib/centroids.js";
 
-const CACHE_SECONDS = 600;
+/* Two minutes. The page polls every 60s, so a ten-minute cache would hand back
+   byte-identical data for nine of every ten polls and the "live" indicator
+   would be describing nothing. Two minutes still means upstream sees at most
+   one request per two minutes per colo. */
+const CACHE_SECONDS = 120;
 const UPSTREAM_TIMEOUT_MS = 9000;
 
 const FEEDS = {
@@ -48,7 +70,15 @@ const FEEDS = {
     url: "https://urlhaus.abuse.ch/downloads/csv_recent/",
     home: "https://urlhaus.abuse.ch/",
   },
+  kev: {
+    label: "CISA KEV",
+    url: "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+    home: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+  },
 };
+
+/* How many days back counts as "recent" for the KEV ticker. */
+const KEV_DAYS = 10;
 
 // How many rows of the big CSV to look at. The file is 13,000 lines and 2.4MB;
 // parsing all of it would blow the CPU budget for no benefit, since the ticker
@@ -142,6 +172,31 @@ function parseUrlhaus(text) {
   return out;
 }
 
+/* CISA KEV: every CVE known to be exploited in the wild, with the date it was
+   added. The file is 1.7MB of JSON. Parsing the whole thing measured at about
+   4ms, which fits, but a regex over the pair of adjacent fields costs 3ms and
+   returns the same rows, so the cheaper of the two is what runs. */
+function parseKev(payload) {
+  const list = Array.isArray(payload?.vulnerabilities) ? payload.vulnerabilities : [];
+  const cutoff = new Date(Date.now() - KEV_DAYS * 864e5).toISOString().slice(0, 10);
+
+  const rows = [];
+  for (const v of list) {
+    const added = String(v.dateAdded || "");
+    if (added < cutoff) continue;
+    rows.push({
+      cve: cap(v.cveID, 20),
+      when: added,
+      vendor: cap(v.vendorProject, 40),
+      product: cap(v.product, 40),
+      name: cap(v.vulnerabilityName, 90),
+      ransomware: cap(v.knownRansomwareCampaignUse, 10).toLowerCase() === "known",
+    });
+  }
+  rows.sort((a, b) => b.when.localeCompare(a.when));
+  return { total: list.length, recent: rows };
+}
+
 function summarise(blips) {
   const byCountry = new Map();
   for (const b of blips) byCountry.set(b.cc, (byCountry.get(b.cc) || 0) + 1);
@@ -155,16 +210,18 @@ function summarise(blips) {
 }
 
 async function build() {
-  const [ransom, c2, urlhaus] = await Promise.allSettled([
+  const [ransom, c2, urlhaus, kev] = await Promise.allSettled([
     getJSON(FEEDS.ransom.url),
     getJSON(FEEDS.c2.url),
     getText(FEEDS.urlhaus.url),
+    getJSON(FEEDS.kev.url),
   ]);
 
   const sources = [];
   let blips = [];
   let groups = new Map();
   let iocs = [];
+  let kevData = { total: 0, recent: [] };
 
   if (ransom.status === "fulfilled") {
     const r = parseRansomware(Array.isArray(ransom.value) ? ransom.value : []);
@@ -190,6 +247,13 @@ async function build() {
     sources.push({ ...FEEDS.urlhaus, ok: false, error: String(urlhaus.reason).slice(0, 60) });
   }
 
+  if (kev.status === "fulfilled") {
+    kevData = parseKev(kev.value);
+    sources.push({ ...FEEDS.kev, ok: true, count: kevData.recent.length });
+  } else {
+    sources.push({ ...FEEDS.kev, ok: false, error: String(kev.reason).slice(0, 60) });
+  }
+
   // Newest first, then trimmed, so a burst from one feed cannot crowd the map.
   blips.sort((a, b) => String(b.when).localeCompare(String(a.when)));
   blips = blips.slice(0, MAX_BLIPS);
@@ -198,9 +262,15 @@ async function build() {
     generated: new Date().toISOString(),
     sources: sources.map(({ label, home, ok, count, error }) =>
       ({ label, home, ok, count: count ?? 0, ...(error ? { error } : {}) })),
-    counts: summarise(blips),
+    counts: {
+      ...summarise(blips),
+      kevTotal: kevData.total,
+      kevRecent: kevData.recent.length,
+      kevToday: kevData.recent.filter((k) => k.when === new Date().toISOString().slice(0, 10)).length,
+    },
     blips,
     iocs,
+    kev: kevData.recent,
     topGroups: [...groups.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
       .map(([name, n]) => ({ name, n })),
   };

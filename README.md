@@ -235,3 +235,60 @@ public, the strength of that section is the strength of the password.
 
 Text and writing: all rights reserved. The site code may be referenced for
 learning, but please do not republish the written content as your own.
+
+## The threat radar (`/radar`)
+
+Live open-source threat intelligence, also embedded as a section on the home
+page. Both render from `radar.js` and fetch from a single Pages Function.
+
+### Sources
+
+| Source | What it gives | Key | Rate limit |
+|---|---|---|---|
+| [CISA KEV](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) | CVEs known to be exploited in the wild, with the date added | none | none — static file on a CDN |
+| [abuse.ch URLhaus](https://urlhaus.abuse.ch/) | Recent malicious URL submissions | none | none published; bulk download, updated every few minutes |
+| [abuse.ch Feodo Tracker](https://feodotracker.abuse.ch/) | Botnet C2 servers, with country and malware family | none | none published |
+| [ransomware.live](https://www.ransomware.live/) | Recent ransomware victims, with country and sector | none | none published; asked to be reasonable |
+
+**No API key is required and none is read.** If one is ever needed, set it on
+the Pages project as an environment variable and read it as `env.NAME` inside
+`functions/api/threats.js`. Never in `radar.js` — that file is served to the
+browser.
+
+NVD was evaluated and rejected: the keyless tier allows 5 requests per 30s, and
+its default ordering returns the oldest CVEs first, so it needs date-window
+parameters to be useful at all. KEV covers "newly exploited" better and for
+free.
+
+### How it stays inside the limits
+
+Every upstream call happens server-side in `functions/api/threats.js`, once per
+cache miss, and the response is held at the edge for **two minutes**. So
+upstream sees at most one request per two minutes per Cloudflare colo
+regardless of visitor count — the number of visitors is irrelevant.
+
+The page polls every **60 seconds**, which is why the cache is two minutes and
+not ten: a longer cache would hand back byte-identical data for most polls and
+the pulsing "live" indicator would be describing nothing. Polling pauses
+entirely while the tab is hidden (`Page Visibility API`).
+
+Feeds fail independently (`Promise.allSettled`). A source that is down is
+reported as down and the rest of the payload still ships. If the client's own
+fetch fails it keeps the last data it received and says when that was, rather
+than blanking the panel.
+
+### Nothing about the visitor leaves this site
+
+The browser only ever calls `/api/threats` and `/api/whoami` on this origin, so
+the Content Security Policy keeps `connect-src 'self'` and there is no
+third-party request to audit. `/api/whoami` reads the visitor's own network
+details out of Cloudflare's `request.cf` — it is deliberately not an IP
+geolocation API. Nothing is logged and nothing is stored.
+
+### Accessibility
+
+- The stats row and both feed lists are `aria-live="polite"`.
+- Reduced-motion turns off the sweep, the blip pings, the live dot and the
+  "current role" pulse, leaving a static list that still refreshes.
+- The ticker clamps to two lines with an ellipsis; the full entry is in the
+  `title`, because a truncated CVE id is not worth reading.

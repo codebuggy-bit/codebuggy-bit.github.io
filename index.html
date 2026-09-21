@@ -28,7 +28,7 @@
 <meta name="twitter:image" content="https://akashraj.ca/og.png">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171819'/%3E%3Ctext x='32' y='42' font-family='Courier New,monospace' font-size='26' font-weight='bold' fill='%23FA7575' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=24">
+<link rel="stylesheet" href="styles.css?v=25">
 
 <!-- Apply the saved colour theme before first paint so there is no flash. -->
 <script>
@@ -205,7 +205,7 @@
           </p>
 
           <p class="contact-line">
-            <a href="resume/Akash_Raj_Resume.pdf?v=24" download>Resume (PDF)</a>
+            <a href="resume/Akash_Raj_Resume.pdf?v=25" download>Resume (PDF)</a>
             <span class="sep">|</span>
             <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
             <span class="sep">|</span>
@@ -372,15 +372,28 @@
           </figure>
 
           <div class="scope-side">
-            <dl class="scope-stats" id="scopeStats"></dl>
+            <dl class="scope-stats" id="scopeStats" aria-live="polite" aria-atomic="false"></dl>
 
+            <!-- CISA KEV gets its own block rather than a place in the ticker.
+                 Every entry in it is older than the newest URLhaus rows, so in
+                 a single time-ordered list it never surfaced - and a newly
+                 exploited CVE is the most actionable thing on this page. -->
+            <div class="feed feed-kev">
+              <p class="feed-head">
+                <span class="feed-dot" aria-hidden="true"></span>
+                Newly exploited
+                <span class="feed-count" id="kevCount"></span>
+              </p>
+              <ul class="feed-list" id="kevList" aria-live="polite"></ul>
+            </div>
             <div class="feed">
               <p class="feed-head">
                 <span class="feed-dot" aria-hidden="true"></span>
                 Newest malicious URLs
                 <span class="feed-count" id="feedCount"></span>
               </p>
-              <ul class="feed-list" id="feedList"></ul>
+              <p class="scope-stale" id="scopeStale" role="status" hidden></p>
+              <ul class="feed-list" id="feedList" aria-live="polite" aria-relevant="additions text"></ul>
             </div>
           </div>
         </div>
@@ -895,7 +908,7 @@
         <span class="sep">|</span>
         <a id="emailLinkFooter" href="#" data-user="raj.akash235" data-domain="gmail.com" rel="nofollow"><span class="email-label">Email me</span></a>
         <span class="sep">|</span>
-        <a href="resume/Akash_Raj_Resume.pdf?v=24" download>Resume (PDF)</a>
+        <a href="resume/Akash_Raj_Resume.pdf?v=25" download>Resume (PDF)</a>
       </p>
 
       <!-- Private details. The ciphertext below is AES-256-GCM; the password is
@@ -939,7 +952,7 @@
     <p class="footer-links">
       <a href="#top">Back to top</a>
       <a href="https://www.linkedin.com/in/akashraj235" target="_blank" rel="noopener me">LinkedIn</a>
-      <a href="resume/Akash_Raj_Resume.pdf?v=24" download>Resume</a>
+      <a href="resume/Akash_Raj_Resume.pdf?v=25" download>Resume</a>
     </p>
   </div>
 </footer>
@@ -947,10 +960,10 @@
 <!-- The rain runs site-wide now, but the portfolio gets a quieter setting than
      the essays: this page is dense with text, so it is tuned to read as texture
      rather than as something moving behind the paragraphs. See .rain-quiet. -->
-<script src="matrix.js?v=24" defer></script>
-<script src="vault.js?v=24" defer></script>
-<script src="main.js?v=24" defer></script>
-<script src="ui.js?v=24" defer></script>
-<script src="radar.js?v=24" defer></script>
+<script src="matrix.js?v=25" defer></script>
+<script src="vault.js?v=25" defer></script>
+<script src="main.js?v=25" defer></script>
+<script src="ui.js?v=25" defer></script>
+<script src="radar.js?v=25" defer></script>
 </body>
 </html>

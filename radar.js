@@ -30,7 +30,11 @@
   var MAX_KM = 20000;         // antipode, so the whole world fits
   var RING_PX = 180;          // outer radius in the 400x400 viewBox
   var CENTRE = 200;
-  var REFRESH_MS = 5 * 60 * 1000;
+  // The edge cache is two minutes and the page polls every 60s, so roughly
+  // every other poll returns genuinely new data. Polling faster would not: the
+  // function would hand back the same bytes and the "live" dot would be
+  // describing nothing.
+  var REFRESH_MS = 60 * 1000;
 
   // Used when the edge has no coordinates for a visitor, so the radar still
   // draws and the caption says plainly what it is centred on instead.
@@ -166,10 +170,10 @@
 
     var lead = topGroups && topGroups[0];
     var stats = [
+      [(counts.kevTotal || 0).toLocaleString("en-CA"), "CVEs exploited in the wild (CISA KEV)"],
+      [String(counts.kevRecent || 0), "added to KEV in the last ten days"],
       [String(counts.ransomware || 0), "ransomware victims listed"],
       [String(counts.c2 || 0), "botnet C2 servers"],
-      [String(counts.countries || 0), "countries involved"],
-      [lead ? lead.name : "-", lead ? "most active group (" + lead.n + ")" : "no group data"],
     ];
     stats.forEach(function (pair) {
       var cell = el("div", "scope-stat");
@@ -179,24 +183,70 @@
     });
   }
 
-  function renderFeed(iocs) {
+  /* One ticker, two feeds. KEV additions and URLhaus submissions are both
+     "something new appeared", so they interleave by time rather than sitting
+     in two lists the reader has to compare. */
+  function renderFeed(threats) {
     var list = doc.getElementById("feedList");
     var count = doc.getElementById("feedCount");
     if (!list) return;
     list.textContent = "";
-    if (count) count.textContent = iocs.length ? iocs.length + " shown" : "";
+    var rows = threats.iocs || [];
+    if (count) count.textContent = rows.length ? rows.length + " shown" : "";
 
-    iocs.slice(0, 9).forEach(function (ioc) {
-      var row = el("li", "feed-row");
-      row.appendChild(el("span", "feed-when", clock(ioc.when)));
+    rows.slice(0, 10).forEach(function (ioc) {
+      var row = {
+        stamp: clock(ioc.when),
+        threat: (ioc.threat || "unknown").replace(/_/g, " "),
+        text: ioc.url || "",
+        sub: ioc.tags || "",
+      };
+      var li = el("li", "feed-row");
+      li.appendChild(el("span", "feed-when", row.stamp));
 
       var what = el("span", "feed-what");
-      what.appendChild(el("span", "feed-threat", ioc.threat || "unknown"));
-      what.appendChild(el("span", null, ioc.url || ""));
-      if (ioc.tags) what.appendChild(el("span", "feed-tags", ioc.tags));
-      row.appendChild(what);
+      what.appendChild(el("span", "feed-threat", row.threat));
+      // Clamped to two lines with an ellipsis by CSS; the title carries the
+      // whole entry, because a truncated CVE id is not worth reading.
+      var body = el("span", "feed-text", row.text);
+      body.setAttribute("title", row.text);
+      what.appendChild(body);
+      if (row.sub) {
+        var sub = el("span", "feed-tags", row.sub);
+        sub.setAttribute("title", row.sub);
+        what.appendChild(sub);
+      }
+      li.appendChild(what);
+      list.appendChild(li);
+    });
+  }
 
-      list.appendChild(row);
+  /* Newly exploited CVEs, newest first. */
+  function renderKev(threats) {
+    var list = doc.getElementById("kevList");
+    var count = doc.getElementById("kevCount");
+    if (!list) return;
+    list.textContent = "";
+    var rows = threats.kev || [];
+    if (count) count.textContent = rows.length ? rows.length + " in ten days" : "";
+
+    rows.slice(0, 5).forEach(function (k) {
+      var li = el("li", "feed-row feed-row-kev");
+      li.appendChild(el("span", "feed-when", String(k.when).slice(5)));
+
+      var what = el("span", "feed-what");
+      what.appendChild(el("span", "feed-threat",
+        k.ransomware ? "ransomware" : "actively exploited"));
+      var body = el("span", "feed-text", k.cve + " \u00b7 " +
+        [k.vendor, k.product].filter(Boolean).join(" "));
+      body.setAttribute("title", k.cve + " \u2014 " + (k.name || "") +
+        " (" + [k.vendor, k.product].filter(Boolean).join(" ") + ")");
+      what.appendChild(body);
+      var sub = el("span", "feed-tags", k.name || "");
+      sub.setAttribute("title", k.name || "");
+      what.appendChild(sub);
+      li.appendChild(what);
+      list.appendChild(li);
     });
   }
 
@@ -220,7 +270,7 @@
       }
     });
     box.appendChild(doc.createTextNode(
-      ". Fetched server-side and cached for ten minutes; your browser only ever talks to this site. " +
+      ". Fetched server-side and cached for two minutes; your browser only ever talks to this site. " +
       "Read " + ago(generated) + "."));
   }
 
@@ -238,6 +288,19 @@
 
   var origin = FALLBACK;
   var isYou = false;
+
+  /* Set when a fetch fails, cleared when one succeeds. Distinguishes "the feed
+     moved" from "this browser is showing you what it last managed to get",
+     which are very different things to a reader deciding whether to trust it. */
+  var lastGood = null;
+  var lastGoodAt = null;
+
+  function staleNote(text) {
+    var box = doc.getElementById("scopeStale");
+    if (!box) return;
+    box.textContent = text || "";
+    box.hidden = !text;
+  }
 
   function load() {
     Promise.all([
@@ -260,6 +323,13 @@
       }
 
       if (!threats || !threats.blips) {
+        // Keep whatever is on screen: a blank panel is worse than old numbers,
+        // as long as the reader is told they are old.
+        if (lastGood) {
+          staleNote("Feed unreachable. Showing the last data this browser received, at " +
+                    lastGoodAt + ".");
+          return;
+        }
         var cap = doc.getElementById("scopeCaption");
         if (cap) {
           cap.textContent = "The feed is unavailable right now. It is fetched server-side, so this " +
@@ -270,9 +340,23 @@
         return;
       }
 
+      lastGood = threats;
+      // 24-hour: the en-CA 12-hour format renders "03:01 p.m." and the sentence
+      // around it already ends in a full stop.
+      lastGoodAt = new Date().toLocaleTimeString("en-CA",
+        { hour: "2-digit", minute: "2-digit", hour12: false });
+
+      var down = (threats.sources || []).filter(function (x) { return !x.ok; });
+      staleNote(down.length
+        ? down.length + " of " + threats.sources.length + " sources did not answer (" +
+          down.map(function (x) { return x.label; }).join(", ") +
+          "). The rest is live, from " + lastGoodAt + "."
+        : "");
+
       var plotted = drawBlips(threats.blips, origin);
       renderStats(threats.counts || {}, threats.topGroups || [], threats.generated);
-      renderFeed(threats.iocs || []);
+      renderKev(threats);
+      renderFeed(threats);
       renderSources(threats.sources || [], threats.generated);
       caption(origin, plotted, isYou);
     });

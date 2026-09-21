@@ -755,8 +755,26 @@ body {
   margin: 3px 0 0;
   font-size: 12.5px;
   line-height: 1.4;
-  color: var(--light-font-color);
+  /* Body weight, not secondary. The card carries a 9% accent tint over the
+     glass, and --light-font-color only cleared 4.5:1 against that in one of
+     the five palettes - 3.94:1 in cyberpunk. The hierarchy here comes from the
+     number above it being 21px and accent-coloured, not from muting this. */
+  color: var(--font-color);
 }
+
+/* Shown only when something upstream failed or the last fetch did. A panel of
+   old numbers with no note is worse than no panel, because it looks live. */
+.scope-stale {
+  margin: 0 0 12px;
+  padding: 8px 11px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--font-color);
+  border-left: 3px solid var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+  border-radius: 0 var(--glass-radius-sm) var(--glass-radius-sm) 0;
+}
+.scope-stale[hidden] { display: none; }
 
 /* ---------- Live feed ---------- */
 .feed { border-top: 1px solid var(--edge); padding-top: 14px; }
@@ -793,7 +811,16 @@ body {
 }
 .feed-row:last-child { border-bottom: 0; }
 .feed-when { color: var(--light-font-color); opacity: .75; }
-.feed-what { min-width: 0; color: var(--font-color); overflow-wrap: anywhere; }
+.feed-what { min-width: 0; color: var(--font-color); }
+.feed-text,
+.feed-tags {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
 .feed-threat {
   display: block;
   font-size: 11px;
