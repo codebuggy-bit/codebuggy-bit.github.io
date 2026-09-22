@@ -288,6 +288,23 @@ instantaneity: *"the publishers cache these feeds themselves, so the copies
 behind this page are 3m old."* Each source is listed with its own age, so a
 stale feed is attributable rather than a vague caveat.
 
+### Why there is no Auth-Key, and what one would not buy
+
+abuse.ch now requires a free `Auth-Key` for its API. It is **not** used here,
+and it would not make anything faster:
+
+- The dumps are *generated every five minutes* whether or not you authenticate.
+  The key controls access to the dumps, not their freshness, and abuse.ch asks
+  explicitly not to fetch them more often than that.
+- The key is passed **in the URL path**
+  (`/v2/files/exports/YOUR-AUTH-KEY/recent.csv`), so any error message that
+  includes the URL would leak it.
+- abuse.ch's one-minute feed is ClamAV signatures, which is not data that can be
+  plotted.
+
+The page's freshness is therefore bounded by the publishers, and the honest
+thing is to say so rather than poll harder and imply otherwise.
+
 ### How it stays inside the limits
 
 Every upstream call happens server-side in `functions/api/threats.js`, once per

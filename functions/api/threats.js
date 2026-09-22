@@ -22,14 +22,21 @@
    function is even called. Polling harder cannot change that; serving without
    making anyone wait can, which is what the stale-while-revalidate below does.
 
-   Rate limits, and why the cache is sized the way it is. Every request here is
-   a single GET on a cache miss, so upstream sees at most one call per TTL per
-   Cloudflare colo, whatever the visitor count:
+   Rate limits. abuse.ch asks not to be fetched more often than every five
+   minutes, which is how often it regenerates its dumps. So each source is
+   revalidated at most once a minute and only downloads a body when the
+   publisher says it has changed (If-None-Match / 304, about 200 bytes). The
+   2.6MB URLhaus CSV and the 1.7MB KEV file therefore transfer roughly once per
+   five minutes instead of on every refresh, which is what the limit exists to
+   prevent - and the panel still notices a new dump within a minute of it being
+   published.
 
-     ransomware.live          no published limit; asked to be reasonable
-     abuse.ch (Feodo, URLhaus) no key, no published limit; bulk download
-                              endpoints, updated every few minutes
-     CISA KEV                 a static file on a CDN, no limit
+     ransomware.live          no published limit; asked to be reasonable.
+                              Sends no ETag, so it is fetched in full, but it
+                              is 77KB
+     abuse.ch (Feodo, URLhaus) no key; dumps regenerated every 5 minutes.
+                              Revalidated, not re-downloaded
+     CISA KEV                 a static file on a CDN, no limit, sends an ETag
      NVD                      NOT used: 5 requests / 30s without a key, and its
                               default sort returns the oldest CVEs first, so it
                               is the weakest of the five for a live ticker. KEV
@@ -76,7 +83,7 @@ const RETENTION_SECONDS = 900;
    KEV fields at all. The key carries a version, and bumping it on any change
    to the payload shape retires the old entries instead of waiting out their
    TTL. */
-const CACHE_VERSION = 7;
+const CACHE_VERSION = 9;
 const UPSTREAM_TIMEOUT_MS = 9000;
 
 const FEEDS = {
@@ -125,22 +132,57 @@ function upstreamAge(response) {
   return Number.isFinite(lm) ? Math.max(0, Math.round((Date.now() - lm) / 1000)) : 0;
 }
 
-async function getJSON(url) {
-  const response = await fetch(url, {
-    headers: { "user-agent": "akashraj.ca threat radar (+https://akashraj.ca/)" },
-    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-  });
+/* Conditional GET. abuse.ch generates its dumps every five minutes and asks
+   not to be fetched more often than that; CISA and Feodo are CDN-cached for the
+   same kind of window. Polling the full 2.6MB URLhaus CSV and the 1.7MB KEV
+   file every twenty seconds was 4.3MB a refresh for data that had not changed,
+   which is exactly the load those limits exist to prevent.
+
+   Sending If-None-Match costs about 200 bytes and returns 304 when the
+   publisher has nothing new, so the refresh can stay frequent - which keeps the
+   panel as current as the publishers allow - without transferring anything. */
+async function getBody(url, etag) {
+  const headers = { "user-agent": "akashraj.ca threat radar (+https://akashraj.ca/)" };
+  if (etag) headers["if-none-match"] = etag;
+  const response = await fetch(url, { headers, signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS) });
+
+  if (response.status === 304) return { notModified: true, etag };
   if (!response.ok) throw new Error(`${response.status}`);
-  return { data: await response.json(), age: upstreamAge(response) };
+
+  return {
+    notModified: false,
+    etag: response.headers.get("etag") || "",
+    age: upstreamAge(response),
+    maxAge: maxAgeOf(response),
+    response,
+  };
 }
 
-async function getText(url) {
-  const response = await fetch(url, {
-    headers: { "user-agent": "akashraj.ca threat radar (+https://akashraj.ca/)" },
-    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-  });
-  if (!response.ok) throw new Error(`${response.status}`);
-  return { data: await response.text(), age: upstreamAge(response) };
+/* How long the publisher says its own copy is good for. Used only to decide
+   whether to bother revalidating, so the cap keeps a silly header from parking
+   a feed for a day. */
+function maxAgeOf(response) {
+  const m = /max-age=(\d+)/.exec(response.headers.get("cache-control") || "");
+  const n = m ? Number(m[1]) : NaN;
+  return Number.isFinite(n) && n > 0 ? Math.min(n, 3600) : 60;
+}
+
+async function getJSON(url, etag) {
+  const r = await getBody(url, etag);
+  if (r.notModified) return r;
+  return { ...r, data: await r.response.json() };
+}
+
+async function getText(url, etag) {
+  const r = await getBody(url, etag);
+  if (r.notModified) return r;
+  return { ...r, data: await r.response.text() };
+}
+
+function clean(r) {
+  if (!r) return r;
+  const { response, ...rest } = r;
+  return rest;
 }
 
 /* ransomware.live: one row per recently posted victim. */
@@ -246,71 +288,118 @@ function summarise(blips) {
   };
 }
 
-async function build() {
+/* build(prev) takes the per-source state from the previous payload so an
+   unchanged feed can be reused without being parsed again. Each source keeps
+   its own ETag and its own parsed rows, so one publisher changing does not
+   force the other three to be refetched. */
+async function build(prev) {
+  const parts = { ...(prev || {}) };
+  const now = Date.now();
+
+  /* Revalidate a source when its window has elapsed, and never sooner. The
+     window is the publisher's own max-age capped at a minute: often enough that
+     a new dump is picked up within 60s, rare enough that the 2.6MB URLhaus CSV
+     and the 1.7MB KEV file are only transferred when they have actually
+     changed. A source that sends no ETag cannot be revalidated, so its window
+     is what keeps it from being downloaded in full on every single build. */
+  const REVALIDATE_MS = 60 * 1000;
+  const want = (name) => {
+    const p = parts[name];
+    if (!p || p.rows === undefined) return true;
+    return now >= (p.nextCheckAt || 0);
+  };
+  const etagOf = (name) => (want(name) ? parts[name]?.etag : undefined);
+
   const [ransom, c2, urlhaus, kev] = await Promise.allSettled([
-    getJSON(FEEDS.ransom.url),
-    getJSON(FEEDS.c2.url),
-    getText(FEEDS.urlhaus.url),
-    getJSON(FEEDS.kev.url),
+    want("ransom") ? getJSON(FEEDS.ransom.url, etagOf("ransom")) : null,
+    want("c2") ? getJSON(FEEDS.c2.url, etagOf("c2")) : null,
+    want("urlhaus") ? getText(FEEDS.urlhaus.url, etagOf("urlhaus")) : null,
+    want("kev") ? getJSON(FEEDS.kev.url, etagOf("kev")) : null,
   ]);
 
   const sources = [];
-  let blips = [];
-  let groups = new Map();
-  let iocs = [];
-  let kevData = { total: 0, recent: [] };
 
-  if (ransom.status === "fulfilled") {
-    const r = parseRansomware(Array.isArray(ransom.value?.data) ? ransom.value.data : []);
-    blips = blips.concat(r.blips);
-    groups = r.groups;
-    sources.push({ ...FEEDS.ransom, ok: true, count: r.blips.length, age: ransom.value?.age ?? 0 });
-  } else {
-    sources.push({ ...FEEDS.ransom, ok: false, error: String(ransom.reason).slice(0, 60) });
+  /* One shape for every feed: reuse if the publisher said 304 or if there was
+     nothing cached to revalidate against, otherwise parse the new body. A
+     failure keeps the rows already held so the panel never loses a feed it has
+     already shown, and shortens the next attempt rather than waiting a full
+     publisher window. */
+  function settle(name, result, parse) {
+    const held = parts[name] || {};
+    // A skipped source is passed as a bare null, which allSettled wraps as a
+    // fulfilled promise whose value is null - not as null itself.
+    if (result === null || (result.status === "fulfilled" && result.value === null)) {
+      if (held.rows === undefined) {
+        sources.push({ ...FEEDS[name], ok: false, error: "not yet loaded", age: 0 });
+        return [];
+      }
+      sources.push({ ...FEEDS[name], ok: true, count: held.rows.length, age: held.age ?? 0, reused: true });
+      return held.rows;
+    }
+    if (result.status !== "fulfilled") {
+      parts[name] = { ...held, nextCheckAt: now + 30000, error: String(result.reason).slice(0, 60) };
+      sources.push({ ...FEEDS[name], ok: false, error: parts[name].error, age: 0 });
+      return held.rows || [];
+    }
+
+    const value = clean(result.value);
+    if (value.notModified || value.data === undefined) {
+      parts[name] = { ...held, etag: value.etag || held.etag, age: value.age ?? held.age ?? 0,
+                      nextCheckAt: now + Math.min(value.maxAge || 60, REVALIDATE_MS / 1000) * 1000 };
+      sources.push({ ...FEEDS[name], ok: true, count: (held.rows || []).length,
+                     age: parts[name].age, reused: true });
+      return held.rows || [];
+    }
+
+    // The entry exists before parsing: a parser that wants to record something
+    // extra alongside the rows (the KEV total, the ransomware group tally) has
+    // nowhere to put it otherwise.
+    parts[name] = { etag: value.etag, age: value.age, rows: [],
+                    nextCheckAt: now + Math.min(value.maxAge || 60, REVALIDATE_MS / 1000) * 1000 };
+    parts[name].rows = parse(value.data);
+    sources.push({ ...FEEDS[name], ok: true, count: parts[name].rows.length, age: value.age });
+    return parts[name].rows;
   }
 
-  if (c2.status === "fulfilled") {
-    const b = parseC2(Array.isArray(c2.value?.data) ? c2.value.data : []);
-    blips = blips.concat(b);
-    sources.push({ ...FEEDS.c2, ok: true, count: b.length, age: c2.value?.age ?? 0 });
-  } else {
-    sources.push({ ...FEEDS.c2, ok: false, error: String(c2.reason).slice(0, 60) });
-  }
+  const ransomRows = settle("ransom", ransom, (d) => {
+    const r = parseRansomware(Array.isArray(d) ? d : []);
+    parts.ransom.groups = [...r.groups.entries()];
+    return r.blips;
+  });
+  const c2Rows = settle("c2", c2, (d) => parseC2(Array.isArray(d) ? d : []));
+  const urlhausRows = settle("urlhaus", urlhaus, (d) => parseUrlhaus(d ?? ""));
+  const kevRows = settle("kev", kev, (d) => {
+    const parsed = parseKev(d ?? {});
+    parts.kev.total = parsed.total;
+    return parsed.recent;
+  });
 
-  if (urlhaus.status === "fulfilled") {
-    iocs = parseUrlhaus(urlhaus.value?.data ?? "");
-    sources.push({ ...FEEDS.urlhaus, ok: true, count: iocs.length, age: urlhaus.value?.age ?? 0 });
-  } else {
-    sources.push({ ...FEEDS.urlhaus, ok: false, error: String(urlhaus.reason).slice(0, 60) });
-  }
-
-  if (kev.status === "fulfilled") {
-    kevData = parseKev(kev.value?.data ?? {});
-    sources.push({ ...FEEDS.kev, ok: true, count: kevData.recent.length, age: kev.value?.age ?? 0 });
-  } else {
-    sources.push({ ...FEEDS.kev, ok: false, error: String(kev.reason).slice(0, 60), age: 0 });
-  }
+  let blips = ransomRows.concat(c2Rows);
+  const groups = new Map(parts.ransom?.groups || []);
+  const iocs = urlhausRows;
+  const kevData = { total: parts.kev?.total || 0, recent: kevRows };
 
   // Newest first, then trimmed, so a burst from one feed cannot crowd the map.
   blips.sort((a, b) => String(b.when).localeCompare(String(a.when)));
   blips = blips.slice(0, MAX_BLIPS);
 
-  return {
+  // FEEDS is keyed differently from the state names; give each an explicit key.
+  const payload = {
     generated: new Date().toISOString(),
-    sources: sources.map(({ label, home, ok, count, error, age }) =>
-      ({ label, home, ok, count: count ?? 0, age: age ?? 0, ...(error ? { error } : {}) })),
+    sources: sources.map(({ label, home, ok, count, error, age, reused }) =>
+      ({ label, home, ok, count: count ?? 0, age: age ?? 0, ...(reused ? { reused: true } : {}),
+         ...(error ? { error } : {}) })),
     counts: {
       ...summarise(blips),
-      kevTotal: kevData.total,
-      kevRecent: kevData.recent.length,
-      kevToday: kevData.recent.filter((k) => k.when === new Date().toISOString().slice(0, 10)).length,
+      kevTotal: parts.kev?.total ?? 0,
+      kevRecent: kevRows.length,
+      kevToday: kevRows.filter((k) => k.when === new Date().toISOString().slice(0, 10)).length,
     },
     blips,
     iocs,
-    kev: kevData.recent,
-    topGroups: [...groups.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
-      .map(([name, n]) => ({ name, n })),
+    kev: kevRows,
   };
+  return { payload, parts };
 }
 
 /* Every response goes out with a five-second browser TTL and no-store is
@@ -330,8 +419,8 @@ function json(body, extra) {
 /* The copy kept at the edge. max-age here is the RETENTION window, not the
    freshness window - freshness is decided from the payload's own generated
    stamp so a stale entry is still available to serve while it refreshes. */
-function store(payload) {
-  return new Response(JSON.stringify(payload), {
+function store(payload, parts) {
+  return new Response(JSON.stringify({ ...payload, _parts: parts }), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": `public, max-age=${RETENTION_SECONDS}`,
@@ -346,9 +435,19 @@ export async function onRequestGet(context) {
 
   const hit = await cache.match(key);
   if (hit) {
-    const body = await hit.text();
+    const stored = await hit.text();
     let age = Infinity;
-    try { age = (Date.now() - Date.parse(JSON.parse(body).generated)) / 1000; } catch (e) { /* rebuild */ }
+    let body = stored;
+    let prev = null;
+    try {
+      const parsed = JSON.parse(stored);
+      age = (Date.now() - Date.parse(parsed.generated)) / 1000;
+      // The per-source state is ours, not the reader's: tens of kilobytes of
+      // ETags and a second copy of every row, on every single poll.
+      prev = parsed._parts || null;
+      delete parsed._parts;
+      body = JSON.stringify(parsed);
+    } catch (e) { /* serve whatever is there */ }
 
     if (age < FRESH_SECONDS) {
       return json(body, { "x-radar-cache": "fresh", "x-radar-age": String(Math.round(age)) });
@@ -356,10 +455,13 @@ export async function onRequestGet(context) {
 
     // Stale: answer now, refresh behind the response. waitUntil keeps the
     // isolate alive for the fetch after the visitor has their bytes.
+    // (prev is read above)
     context.waitUntil(
-      build()
-        .then((payload) => cache.put(key, store(payload)))
-        .catch(() => { /* keep serving the stale copy */ })
+      build(prev)
+        .then(({ payload, parts }) => cache.put(key, store(payload, parts)))
+        // Swallowing this silently made a failing refresh look identical to a
+        // working one: the stale copy keeps being served either way.
+        .catch((err) => console.log("radar refresh failed:", String(err).slice(0, 160)))
     );
     return json(body, {
       "x-radar-cache": "stale",
@@ -368,9 +470,9 @@ export async function onRequestGet(context) {
   }
 
   // Nothing cached at all in this colo - the only request that waits.
-  let payload;
+  let built;
   try {
-    payload = await build();
+    built = await build(null);
   } catch (err) {
     return new Response(JSON.stringify({ error: String(err).slice(0, 120) }), {
       status: 502,
@@ -378,7 +480,7 @@ export async function onRequestGet(context) {
     });
   }
 
-  const response = json(JSON.stringify(payload), { "x-radar-cache": "miss" });
-  context.waitUntil(cache.put(key, store(payload)));
+  const response = json(JSON.stringify(built.payload), { "x-radar-cache": "miss" });
+  context.waitUntil(cache.put(key, store(built.payload, built.parts)));
   return response;
 }
