@@ -260,6 +260,34 @@ its default ordering returns the oldest CVEs first, so it needs date-window
 parameters to be useful at all. KEV covers "newly exploited" better and for
 free.
 
+### How fresh it can actually be
+
+The honest ceiling is the publishers, not this site. Measured from their own
+response headers:
+
+| Source | Publisher `max-age` | So the data is already |
+|---|---|---|
+| abuse.ch Feodo Tracker | 300s | up to 5 minutes old |
+| abuse.ch URLhaus | 300s | up to 5 minutes old |
+| CISA KEV | 2855s | up to 48 minutes old |
+| ransomware.live | not set | sent fresh each time |
+
+So polling faster than about a minute cannot make the data younger — it would
+only make visitors wait. What the function does instead is
+**stale-while-revalidate**: a copy under `FRESH_SECONDS` (20) is served as-is;
+older than that, the stale copy goes out immediately and the refresh runs
+behind the response via `context.waitUntil`. Every request after the first is
+therefore instant regardless of how slow the upstream round trip is — measured
+at 0.9s cold against 0.009s warm.
+
+The page polls every 10s, and the response carries `x-radar-cache` (`fresh` |
+`stale` | `miss`) and `x-radar-age` so the behaviour is inspectable with curl.
+
+The panel reports the publisher's own `Age` header rather than claiming
+instantaneity: *"the publishers cache these feeds themselves, so the copies
+behind this page are 3m old."* Each source is listed with its own age, so a
+stale feed is attributable rather than a vague caveat.
+
 ### How it stays inside the limits
 
 Every upstream call happens server-side in `functions/api/threats.js`, once per

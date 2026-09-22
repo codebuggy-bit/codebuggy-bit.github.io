@@ -30,10 +30,11 @@
   var MAX_KM = 20000;         // antipode, so the whole world fits
   var RING_PX = 180;          // outer radius in the 400x400 viewBox
   var CENTRE = 200;
-  // 20s against a 30s edge cache: most polls return new data, and the ones
-  // that do not come back from the edge in milliseconds. Polling faster than
-  // the cache is refreshed would only re-render identical bytes.
-  var REFRESH_MS = 20 * 1000;
+  // 10s. The edge holds a copy for 20s and serves it instantly, refreshing in
+  // the background, so every poll is cheap whichever way it lands. Going below
+  // this would not make the data younger - see the note on upstream Age in
+  // functions/api/threats.js - it would only re-render identical bytes.
+  var REFRESH_MS = 10 * 1000;
 
   // Used when the edge has no coordinates for a visitor, so the radar still
   // draws and the caption says plainly what it is centred on instead.
@@ -256,6 +257,12 @@
     });
   }
 
+  function mins(seconds) {
+    if (seconds < 90) return Math.round(seconds) + "s";
+    if (seconds < 5400) return Math.round(seconds / 60) + "m";
+    return Math.round(seconds / 3600) + "h";
+  }
+
   function renderSources(sources, generated) {
     var box = doc.getElementById("scopeSources");
     if (!box) return;
@@ -270,7 +277,8 @@
         a.target = "_blank";
         a.rel = "noopener";
         box.appendChild(a);
-        box.appendChild(doc.createTextNode(" (" + src.count + ")"));
+        box.appendChild(doc.createTextNode(" (" + src.count +
+          (src.age ? ", " + mins(src.age) + " old" : "") + ")"));
       } else {
         box.appendChild(doc.createTextNode(src.label + " unavailable"));
       }
@@ -279,6 +287,13 @@
       ". Fetched server-side and cached for thirty seconds; your browser only ever talks to this site. "));
     var agoEl = el("span", "scope-ago");
     agoEl.id = "scopeAgo";
+    var oldest = 0;
+    sources.forEach(function (src) { if (src.age > oldest) oldest = src.age; });
+    if (oldest) {
+      box.appendChild(doc.createTextNode(
+        "The publishers cache these feeds themselves, so the copies behind this page are " +
+        mins(oldest) + " old. "));
+    }
     box.appendChild(doc.createTextNode("Feed built "));
     box.appendChild(agoEl);
     box.appendChild(doc.createTextNode("."));

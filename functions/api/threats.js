@@ -16,6 +16,12 @@
      abuse.ch URLhaus         recent malicious URLs            -> IOC ticker
      CISA KEV                 exploited-in-the-wild CVEs      -> KEV ticker
 
+   Freshness, measured from the publishers' own headers: abuse.ch serves both
+   Feodo and URLhaus with max-age=300 and CISA serves KEV with max-age=2855. The
+   data is therefore already minutes old - nearly an hour for KEV - before this
+   function is even called. Polling harder cannot change that; serving without
+   making anyone wait can, which is what the stale-while-revalidate below does.
+
    Rate limits, and why the cache is sized the way it is. Every request here is
    a single GET on a cache miss, so upstream sees at most one call per TTL per
    Cloudflare colo, whatever the visitor count:
@@ -47,12 +53,22 @@
 
 import { centroid } from "../_lib/centroids.js";
 
-/* Thirty seconds, against a 20s client poll. Every upstream call is a single
-   GET per cache miss, so the worst case is two rounds of four requests a
-   minute per Cloudflare colo no matter how many people are reading. abuse.ch
-   publish no limit and ask only to be reasonable; CISA KEV is a static file on
-   a CDN. Nothing here is close to a threshold. */
-const CACHE_SECONDS = 30;
+/* Stale-while-revalidate, because the honest limit on freshness is upstream and
+   not here.
+
+   Measured from the publishers' own headers: abuse.ch serves both the Feodo
+   blocklist and the recent URLhaus CSV with max-age=300, and CISA serves KEV
+   with max-age=2855. So the data is already up to five minutes old - nearly
+   fifty for KEV - before this function sees it, and polling harder cannot make
+   it younger. What polling harder can do is make a visitor wait, which is the
+   one thing worth engineering away.
+
+   So: FRESH_SECONDS old is served as-is. Older than that, the stale copy is
+   returned immediately and a refresh runs in the background, so every request
+   after the first is instant however long the upstream round trip takes. The
+   entry is kept for RETENTION_SECONDS so there is always something to serve. */
+const FRESH_SECONDS = 20;
+const RETENTION_SECONDS = 900;
 
 /* The edge cache outlives a deploy, so a response stored by the previous
    version of this function keeps being served after the new one ships - the
@@ -60,7 +76,7 @@ const CACHE_SECONDS = 30;
    KEV fields at all. The key carries a version, and bumping it on any change
    to the payload shape retires the old entries instead of waiting out their
    TTL. */
-const CACHE_VERSION = 4;
+const CACHE_VERSION = 7;
 const UPSTREAM_TIMEOUT_MS = 9000;
 
 const FEEDS = {
@@ -97,13 +113,25 @@ const MAX_BLIPS = 260;
 
 const cap = (v, n) => (typeof v === "string" ? v.slice(0, n) : "");
 
+/* The Age header is how long the publisher's own CDN has held this copy, which
+   is the honest answer to "how old is this data" - not how long ago we asked.
+   Two of the four feeds below are cached at the publisher for five minutes and
+   CISA caches KEV for nearly fifty, so no amount of polling here makes the data
+   younger than that. Reporting it is better than implying otherwise. */
+function upstreamAge(response) {
+  const age = Number(response.headers.get("age"));
+  if (Number.isFinite(age)) return age;
+  const lm = Date.parse(response.headers.get("last-modified") || "");
+  return Number.isFinite(lm) ? Math.max(0, Math.round((Date.now() - lm) / 1000)) : 0;
+}
+
 async function getJSON(url) {
   const response = await fetch(url, {
     headers: { "user-agent": "akashraj.ca threat radar (+https://akashraj.ca/)" },
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`${response.status}`);
-  return response.json();
+  return { data: await response.json(), age: upstreamAge(response) };
 }
 
 async function getText(url) {
@@ -112,7 +140,7 @@ async function getText(url) {
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`${response.status}`);
-  return response.text();
+  return { data: await response.text(), age: upstreamAge(response) };
 }
 
 /* ransomware.live: one row per recently posted victim. */
@@ -233,34 +261,34 @@ async function build() {
   let kevData = { total: 0, recent: [] };
 
   if (ransom.status === "fulfilled") {
-    const r = parseRansomware(Array.isArray(ransom.value) ? ransom.value : []);
+    const r = parseRansomware(Array.isArray(ransom.value?.data) ? ransom.value.data : []);
     blips = blips.concat(r.blips);
     groups = r.groups;
-    sources.push({ ...FEEDS.ransom, ok: true, count: r.blips.length });
+    sources.push({ ...FEEDS.ransom, ok: true, count: r.blips.length, age: ransom.value?.age ?? 0 });
   } else {
     sources.push({ ...FEEDS.ransom, ok: false, error: String(ransom.reason).slice(0, 60) });
   }
 
   if (c2.status === "fulfilled") {
-    const b = parseC2(Array.isArray(c2.value) ? c2.value : []);
+    const b = parseC2(Array.isArray(c2.value?.data) ? c2.value.data : []);
     blips = blips.concat(b);
-    sources.push({ ...FEEDS.c2, ok: true, count: b.length });
+    sources.push({ ...FEEDS.c2, ok: true, count: b.length, age: c2.value?.age ?? 0 });
   } else {
     sources.push({ ...FEEDS.c2, ok: false, error: String(c2.reason).slice(0, 60) });
   }
 
   if (urlhaus.status === "fulfilled") {
-    iocs = parseUrlhaus(urlhaus.value);
-    sources.push({ ...FEEDS.urlhaus, ok: true, count: iocs.length });
+    iocs = parseUrlhaus(urlhaus.value?.data ?? "");
+    sources.push({ ...FEEDS.urlhaus, ok: true, count: iocs.length, age: urlhaus.value?.age ?? 0 });
   } else {
     sources.push({ ...FEEDS.urlhaus, ok: false, error: String(urlhaus.reason).slice(0, 60) });
   }
 
   if (kev.status === "fulfilled") {
-    kevData = parseKev(kev.value);
-    sources.push({ ...FEEDS.kev, ok: true, count: kevData.recent.length });
+    kevData = parseKev(kev.value?.data ?? {});
+    sources.push({ ...FEEDS.kev, ok: true, count: kevData.recent.length, age: kev.value?.age ?? 0 });
   } else {
-    sources.push({ ...FEEDS.kev, ok: false, error: String(kev.reason).slice(0, 60) });
+    sources.push({ ...FEEDS.kev, ok: false, error: String(kev.reason).slice(0, 60), age: 0 });
   }
 
   // Newest first, then trimmed, so a burst from one feed cannot crowd the map.
@@ -269,8 +297,8 @@ async function build() {
 
   return {
     generated: new Date().toISOString(),
-    sources: sources.map(({ label, home, ok, count, error }) =>
-      ({ label, home, ok, count: count ?? 0, ...(error ? { error } : {}) })),
+    sources: sources.map(({ label, home, ok, count, error, age }) =>
+      ({ label, home, ok, count: count ?? 0, age: age ?? 0, ...(error ? { error } : {}) })),
     counts: {
       ...summarise(blips),
       kevTotal: kevData.total,
@@ -285,6 +313,32 @@ async function build() {
   };
 }
 
+/* Every response goes out with a five-second browser TTL and no-store is
+   avoided, because the point is that the browser always asks and the edge
+   always answers instantly from a copy it already holds. */
+function json(body, extra) {
+  return new Response(body, {
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "public, max-age=5",
+      "access-control-allow-origin": "https://akashraj.ca",
+      ...extra,
+    },
+  });
+}
+
+/* The copy kept at the edge. max-age here is the RETENTION window, not the
+   freshness window - freshness is decided from the payload's own generated
+   stamp so a stale entry is still available to serve while it refreshes. */
+function store(payload) {
+  return new Response(JSON.stringify(payload), {
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": `public, max-age=${RETENTION_SECONDS}`,
+    },
+  });
+}
+
 export async function onRequestGet(context) {
   const cache = caches.default;
   const key = new Request(
@@ -293,15 +347,27 @@ export async function onRequestGet(context) {
   const hit = await cache.match(key);
   if (hit) {
     const body = await hit.text();
-    return new Response(body, {
-      headers: {
-        "content-type": "application/json; charset=utf-8",
-        "cache-control": `public, max-age=${CACHE_SECONDS}`,
-        "x-radar-cache": "hit",
-      },
+    let age = Infinity;
+    try { age = (Date.now() - Date.parse(JSON.parse(body).generated)) / 1000; } catch (e) { /* rebuild */ }
+
+    if (age < FRESH_SECONDS) {
+      return json(body, { "x-radar-cache": "fresh", "x-radar-age": String(Math.round(age)) });
+    }
+
+    // Stale: answer now, refresh behind the response. waitUntil keeps the
+    // isolate alive for the fetch after the visitor has their bytes.
+    context.waitUntil(
+      build()
+        .then((payload) => cache.put(key, store(payload)))
+        .catch(() => { /* keep serving the stale copy */ })
+    );
+    return json(body, {
+      "x-radar-cache": "stale",
+      "x-radar-age": Number.isFinite(age) ? String(Math.round(age)) : "unknown",
     });
   }
 
+  // Nothing cached at all in this colo - the only request that waits.
   let payload;
   try {
     payload = await build();
@@ -312,16 +378,7 @@ export async function onRequestGet(context) {
     });
   }
 
-  const body = JSON.stringify(payload);
-  const response = new Response(body, {
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": `public, max-age=${CACHE_SECONDS}`,
-      "x-radar-cache": "miss",
-    },
-  });
-
-  // Store a copy so the next visitor in this colo does not refetch upstream.
-  context.waitUntil(cache.put(key, response.clone()));
+  const response = json(JSON.stringify(payload), { "x-radar-cache": "miss" });
+  context.waitUntil(cache.put(key, store(payload)));
   return response;
 }
